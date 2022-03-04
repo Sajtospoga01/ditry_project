@@ -1,0 +1,21 @@
+{% extends base.html %}
+{% load static %}
+
+<html>
+    <head>
+        <title> 
+            {% block title_block %}
+                - Food
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        {% if user.is_authenticated %}
+            {% block body_block %}
+                Food
+            {% endblock %}
+        {% else %}
+            Not logged in.
+        {% endif %}
+    </body>
+</html>

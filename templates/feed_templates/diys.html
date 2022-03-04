@@ -1,0 +1,21 @@
+{% extends base.html %}
+{% load static %}
+
+<html>
+    <head>
+        <title> 
+            {% block title_block %}
+                - DIY
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        {% if user.is_authenticated %}
+            {% block body_block %}
+                DIY content
+            {% endblock %}
+        {% else %}
+            Not logged in.
+        {% end if %}
+    </body>
+</html>

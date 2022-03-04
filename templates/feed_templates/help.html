@@ -1,0 +1,23 @@
+{% extends base.html %}
+{% load static %}
+
+<html>
+    <head>
+        <title>
+            {% block title_block %}
+                - Help
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        {% block body_block %}
+            Placeholder help text
+        {% endblock %}
+        
+        {% if user.is_authenticated %}
+            
+        {% else %}
+            
+        {% endif %}
+    </body>
+</html>

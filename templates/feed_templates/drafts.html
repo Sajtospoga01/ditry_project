@@ -1,0 +1,22 @@
+{% extends base.html %}
+{% load static %}
+
+<html>
+    <head>
+        <title> 
+            {% block title_block %}
+                - drafts
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        {% if user.is_authenticated %}
+            {% block body_block %}
+                User drafts
+                <div></div>
+            {% endblock %}
+        {% else %}
+            Log-in required to view this page
+        {% endif %}
+    </body>
+</html>

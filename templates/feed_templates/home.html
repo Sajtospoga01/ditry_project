@@ -1,0 +1,19 @@
+{% extends base.html %}
+{% load static %}
+
+<html>
+    <head>
+        <title> 
+            {% block title_block %}
+                - Homepage
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        {% if user.is_authenticated %}
+            
+        {% else %}
+            
+        {% endif %}
+    </body>
+</html>
