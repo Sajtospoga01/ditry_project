@@ -1,0 +1,16 @@
+{% extends 'feed_templates/base.html' %}
+
+{% block title_block %}
+{% endblock %}
+
+{% block body_block %}
+<!-- Change the contents of this block at will, this is just a mock -->
+
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    <label for="re_psw">Repeat your password: </label>
+    <input type="password" name="re_psw" placeholder="Re-enter your password">
+    <button type="submit" name="Submit" on_click=>Submit</button>
+{% endblock %}
+
+<script></script>

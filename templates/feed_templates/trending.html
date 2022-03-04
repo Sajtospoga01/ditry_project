@@ -1,0 +1,23 @@
+{% extends base.html %}
+{% load static %}
+
+<html>
+    <head>
+        <title> 
+            {% block title_block %}
+                - trending
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        {% block body_block %}
+            Trendy text
+        {% endblock %}
+        
+        {% if user.is_authenticated %}
+            
+        {% else %}
+            
+        {% endif %}
+    </body>
+</html>

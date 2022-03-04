@@ -1,0 +1,23 @@
+{% extends base.html %}
+{% load static %}
+
+<head>
+    <title>
+        {% block title_block %}
+             - Contact Us!
+        {% endblock %}
+    </title>
+    
+    <body>
+        {% block body_block %}
+            <!--very cool body, asking whoever clicked on this section to please not contact us very kindly :)-->
+            <h1>Very cool</h1>
+            {% if user.is_authenticated %}
+            
+            {% else %}
+            
+            {% endif %}
+            
+        {% endblock }
+    </body>
+</head>

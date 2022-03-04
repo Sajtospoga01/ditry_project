@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+{% load static %}
+{% load template_tags %} 
+
+<!-- writing boilerplate code for now, will change soon -->
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% block title_block %}
+                DITry <!-- change this title maybe ?-->
+            {% endblock %}
+        </title>
+
+        <link rel="stylesheet" href="base.css"> <!-- If using external file for CSS -->
+        
+    </head>
+    <body>
+        <header>
+            <!-- CSS nav bar magic goes here --> 
+        </header>
+
+        <div>
+            {% block body_block %}
+            {% endblock %}
+        </div>
+
+        <footer>
+            <!-- Footer section, edit to do awesome stuff -->
+        </footer>
+    </body>
+
+    <!-- JS goes here if needed-->
+    <script>
+
+    </script> 
+</html>
