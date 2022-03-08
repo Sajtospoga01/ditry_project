@@ -2,7 +2,7 @@ from cgitb import reset
 from operator import mod
 from pyexpat import model
 from statistics import mode
-from tkinter import CASCADE
+from django.db.models import CASCADE
 from turtle import pos
 from unicodedata import category
 from unittest import result
