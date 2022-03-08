@@ -1,17 +1,13 @@
-from operator import mod
-from pyexpat import model
-from statistics import mode
-from tkinter import CASCADE
-from turtle import pos
-from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.constraints import UniqueConstraint
+from django.forms import PasswordInput
 
 # Create your models here.
-class UserProfile(User):
-
+class UserProfile(models.Model):
+    username = models.CharField(max_length=64)
     profile_picture = models.ImageField(blank = True)
+
     def __str__ (self):
         return self.username + ' '+ str(self.id)
 
@@ -29,7 +25,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
-    creator = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_requests_created')
+    creator = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='%(class)s_requests_created')
     title = models.CharField(max_length=128,default="")
     likes = models.IntegerField(default=0)
     picture = models.ImageField(blank = False,upload_to='backend')
@@ -50,8 +46,8 @@ class Comment(models.Model):
         return self.comment
 
 class FollowsUser(models.Model):
-    follower = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_by_user')
-    following = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_to_follow')
+    follower = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='%(class)s_by_user')
+    following = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='%(class)s_to_follow')
 
     def __str__(self):
         return self.follower.username + ' follows: '+self.following.name
@@ -61,8 +57,8 @@ class FollowsUser(models.Model):
         ]
 
 class FollowsCategory(models.Model):
-    follower = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_by_user')
-    following = models.ForeignKey(Category,on_delete=CASCADE,related_name='%(class)s_to_follow')
+    follower = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='%(class)s_by_user')
+    following = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='%(class)s_to_follow')
     class Meta:
         constraints = [
             UniqueConstraint(fields = ['follower','following'], name = 'Follows_category')
@@ -72,18 +68,18 @@ class FollowsCategory(models.Model):
     
 
 class Likes(models.Model):
-    liker = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_by_user')
-    liked_post = models.ForeignKey(Post,on_delete=CASCADE,related_name='%(class)s_on_post')
+    likes = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='%(class)s_by_user')
+    liked_post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='%(class)s_on_post')
     class Meta:
         constraints = [
             UniqueConstraint(fields = ['liker','liked_post'], name = 'Likes')
         ]
     def __str__(self):
-        return self.liker.username + ' liked: '+self.liked_post.id
+        return self.likes.username + ' liked: '+self.liked_post.id
     
 class Categorises(models.Model):
-    post = models.ForeignKey(Post,on_delete=CASCADE,related_name='%(class)s_post')
-    category = models.ForeignKey(Post,on_delete=CASCADE,related_name='%(class)s_in_category')
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='%(class)s_post')
+    category = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='%(class)s_in_category')
 
     class Meta:
         constraints = [
