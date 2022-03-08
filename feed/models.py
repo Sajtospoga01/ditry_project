@@ -10,7 +10,7 @@ from django.db.models.constraints import UniqueConstraint
 
 # Create your models here.
 class UserProfile(User):
-
+    
     profile_picture = models.ImageField(blank = True)
     def __str__ (self):
         return self.username + ' '+ str(self.id)
@@ -32,7 +32,7 @@ class Post(models.Model):
     creator = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_requests_created')
     title = models.CharField(max_length=128,default="")
     likes = models.IntegerField(default=0)
-    picture = models.ImageField(blank = False,upload_to='backend')
+    picture = models.ImageField(null = False,upload_to='backend')
     def __str__(self):
         return self.title
 

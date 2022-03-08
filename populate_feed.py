@@ -10,10 +10,10 @@ from feed.models import Category,Post,UserProfile
 from django.contrib.auth.models import User
 from PIL import ImageFile
 
-def populate():
+from django.core.files.images import ImageFile
+from django.core.files import File
 
-    
-    
+def populate():
     categories_populate = [
         {"name":"craft"},
         {"name":"Diy"},
@@ -32,7 +32,7 @@ def populate():
          "creator":1
         },
         {"id":3,
-         "title":"title1",
+         "title":"title3",
          "likes":0,
          "picture": "sample_3.jpg",
          "creator":1
@@ -49,9 +49,12 @@ def populate():
     for profile in test_profile:
   
         p = add_profile(profile["username"],profile["email"],profile["first_name"],profile["last_name"],profile["password"])
-
+        print("user id:" +str(p.id))
+        id = get_user(p.id)
         for post in post_populate:
-            add_post(post["id"],post["title"],post["likes"],post["picture"],p.id)
+            
+            p = add_post(post["id"],post["title"],post["likes"],post["picture"],id)
+           
 
     for cat in categories_populate:
         print(cat)
@@ -69,7 +72,9 @@ def add_category(name):
 def add_post(id,title,likes,picture,creator):
     def_post = Post.objects.filter(id = id)
     if(def_post.count()==0):
-        c = Post.objects.create(id = id,creator = get_user(creator),title = title,likes = likes,picture = Image.open("sample_images/"+picture))
+        im = ImageFile(Image.open("sample_images/"+picture))
+        c = Post.objects.create(id = id,creator = creator,title = title,likes = likes)
+        c.picture.save(picture, ImageFile(open("sample_images/"+picture,"rb")))
     else:
         c = def_post[0]
     return c
@@ -78,6 +83,7 @@ def add_profile(username,email,first_name,last_name,password):
     def_user = UserProfile.objects.filter(username = username)
   
     if(def_user.count()==0):
+        print("new user")
         user = UserProfile.objects.create_user(username, email, password)
         user.first_name = first_name
         user.last_name = last_name
@@ -85,14 +91,14 @@ def add_profile(username,email,first_name,last_name,password):
       
         return user
     else:
-       
+        print("existing user")
         return def_user[0]   
 
     
 def get_user(id):
-    print(id)
+
     user = UserProfile.objects.get(id = id)
-    
+  
     return user
     
 
