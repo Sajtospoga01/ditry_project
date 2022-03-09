@@ -186,7 +186,6 @@ def delete_folder(request, folder_id):
 @login_required
 def follow_user(request, user_name):
     following_user = request.user
-    #how does it work with user_id since not in model
     follow_user = UserProfile.objects.get(username=user_name)
 
     if FollowsUser.objects.filter(follower=following_user, following= follow_user).exists():
@@ -198,7 +197,7 @@ def follow_user(request, user_name):
 
 
 @login_required
-def add_folder(request:
+def add_folder(request):
     form = FolderForm()
 
     # tests if HTTP POST
@@ -293,8 +292,7 @@ def comment_on_post(request, post_id):
 
 @login_required
 def show_comments_on_post(request, post_id):
-    # or just do it like here:
-    # https://stackoverflow.com/questions/60497516/django-add-comment-section-on-posts-feed
+    #...
     return
 
 @login_required
@@ -350,7 +348,7 @@ def register(request):
     else:
         user_form = UserForm()
 
-    # Render the template depending pn the context.
+    # Render the template depending on the context.
     return render(request,
                   'register/register.html',
                   context = {'user_form': user_form,
