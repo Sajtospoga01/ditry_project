@@ -1,39 +1,72 @@
 <!DOCTYPE html>
 
 {% load static %}
-{% load template_tags %} 
 
-<!-- writing boilerplate code for now, will change soon -->
 
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>
-            {% block title_block %}
-                DITry <!-- change this title maybe ?-->
-            {% endblock %}
-        </title>
 
-        <link rel="stylesheet" href="base.css"> <!-- If using external file for CSS -->
-        
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title_block %}
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="/static/css/base.css" type="text/css">
+
+</head>
+
+<body>
+    <div id="page">
         <header>
-            <!-- CSS nav bar magic goes here --> 
+            <div id="topStrip">
+                <a href="" id="logo">
+                    <img src="{% static 'images/logo.png' %}" alt="logo" />
+                </a>
+                <div id="search">
+                    <div id="border">
+                        <div id="searchPic"><img src="{% static 'images/search.png' %}" alt="search" />
+                        </div>
+                        <form id="searchText" action="">
+                            <input type="text" name="Search" value="Search" onfocus="this.value=''"
+                                onblur="if(this.value==''){this.value='Search'}">
+                        </form>
+                    </div>
+                </div>
+                <div id="login_signup">
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+                    <a href="" id="messagePic"><img src="{% static 'images/notification.png' %}" alt="message" /></a>
+                    {% if user.is_authenticated %}
+                    <a href="" class="lsTest">Hi, accountName</a>
+                    {% else %}
+                    <a href="" class="lsText">Logo In</a>
+                    <div id="topLine"></div>
+                    <a href="" class="lsText">&nbsp&nbspSign Up</a>
+                    {% endif %}
+                </div>
+            </div>
         </header>
 
-        <div>
-            {% block body_block %}
-            {% endblock %}
+        {% block body_block %}
+        {% endblock %}
+
+        <div class="rowLine"></div>
+        <div id="bottom">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+            <a href="" class="helpInfo">About</a>
+            <a href="" class="helpInfo">Help</a>
+            <a href="" class="helpInfo">Contact us</a>
         </div>
+        <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
+    </div>
+</body>
 
-        <footer>
-            <!-- Footer section, edit to do awesome stuff -->
-        </footer>
-    </body>
+<!-- JS goes here if needed-->
+<script>
 
-    <!-- JS goes here if needed-->
-    <script>
+</script>
 
-    </script> 
 </html>

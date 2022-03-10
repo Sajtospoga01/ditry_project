@@ -1,0 +1,154 @@
+#page #cat {
+    width: 800px;
+    height: 100px;
+    justify-content: space-around;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+#page #cat #homeButton {
+    font-family: 'Passion One', cursive;
+    font-size: 23px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: #4F81FF;
+    text-decoration: none;
+}
+
+#page #cat #homeButton:hover {
+    font-size: 30px;
+}
+
+#page #cat #homeButton #buttonUnderline {
+    background-color: #4F81FF;
+    width: 70px;
+    height: 2px;
+    border: 2px solid #ffffff;
+}
+
+#page #cat .otherButton {
+    font-family: 'Passion One', cursive;
+    border: 5px solid;
+    border-left: 26px solid;
+    border-right: 26px solid;
+    border-radius: 15px;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#page #cat .otherButton:hover {
+    font-size: 25px;
+}
+
+#page #choose {
+    display: flex;
+    align-self: flex-end;
+}
+
+#page #choose #chooseButton {
+    font-family: 'Passion One', cursive;
+    font-size: 20px;
+    color: #707070;
+    border: 0px;
+    outline: none;
+}
+
+#page #choose #chooseButton:hover {
+    color: #5b5b61;
+}
+
+#page #postPics {
+    width: 1100px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+#page #postPics .picLine {
+    width: 365px;
+    border: 30px solid #ffffff;
+    border-right: 0px;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+#page #postPics .picLine .pic {
+    width: 365px;
+    height: 200px;
+    background-color: #d8d8d8;
+    border-bottom: 30px solid #ffffff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+}
+
+#page #postPics .picLine .pic .image {
+    align-self: center;
+    position: absolute;
+    top: -50px;
+}
+
+
+#page #postPics .picLine .pic .allPicOpera {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 365px;
+    position: relative;
+    color: #ffffff;
+}
+
+#page #postPics .picLine .pic .allPicOpera:hover {
+    background-color: rgba(134, 134, 134, 0.4);
+}
+
+#page #postPics .picLine .pic .allPicOpera .followPic {
+    width: 30px;
+    transform: translate(16px, -10px);
+}
+
+#page #postPics .picLine .pic .allPicOpera .authorName {
+    width: 150px;
+    word-wrap: break-word;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+#page #postPics .picLine .pic .allPicOpera .authorName:hover {
+    text-decoration: underline;
+}
+
+#page #paging {
+    display: flex;
+    justify-content: space-around;
+    width: 500px;
+}
+
+#page #paging a,
+#page #paging span,
+#page #paging a:active,
+#page #paging span:active {
+    background-color: #fafafa;
+    border: 8px solid #fafafa;
+    border-right: 18px solid #fafafa;
+    border-left: 18px solid #fafafa;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #4F81FF;
+    text-decoration: none;
+}
+
+#page #paging a:hover,
+#page #paging span:hover {
+    text-decoration: underline;
+}

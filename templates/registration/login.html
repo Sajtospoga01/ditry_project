@@ -1,11 +1,71 @@
-{% extends 'feed_templates/base.html' %}
+<!DOCTYPE html>
 
-{% block title_block %}
-{% endblock %}
+{% load static %}
 
-{% block body_block %}
-<!--This will probably change, but thats fine, this is just a placeholder for now-->
-<h1>Log In</h1>
-    {% csrf_token %}
-    {{% user_login.as_p %}}
-{% endblock %}
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Login
+    </title>
+    <link rel="stylesheet" href="/static/css/login.css" type="text/css">
+
+</head>
+
+<body>
+    <div id="page">
+        <header>
+            <div id="topStrip">
+                <a href="" id="logo">
+                    <img src="{% static 'images/logowhite.png' %}" alt="logo" />
+                </a>
+                <div id="login_signup">
+                    <a href="" class="tipText">New user?</a>
+                    <a href="" class="lsText">&nbspSign up</a>
+                </div>
+            </div>
+        </header>
+
+        <div id="loginBorder">
+            <div id="loginFrame">
+                <span>Wecome to our website!</span>
+                {% csrf_token %}
+                {{ user_form.as_p }}
+                <div id="emailFrame">
+                    <form id="emailText" action="">
+                        <input type="text" name="emailText" value="Email" onfocus="this.value=''"
+                            onblur="if(this.value==''){this.value='Email'}">
+                    </form>
+                </div>
+                <div id="PasswordFrame">
+                    <form id="PasswordText" action="">
+                        <input type="text" name="PasswordText" value="Password" onfocus="this.value=''"
+                            onblur="if(this.value==''){this.value='Password'}">
+                    </form>
+                </div>
+                <a href="" id="loginButton"><span>Log in</span></a>
+                <a href="" id="forgetpw">Forget passwords?</a>
+            </div>
+        </div>
+
+        <div class="rowLine"></div>
+        <div id="bottom">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+            <a href="" class="helpInfo">About</a>
+            <a href="" class="helpInfo">Help</a>
+            <a href="" class="helpInfo">Contact us</a>
+        </div>
+        <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
+    </div>
+</body>
+
+<!-- JS goes here if needed-->
+<script>
+
+</script>
+
+</html>

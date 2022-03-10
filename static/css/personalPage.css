@@ -1,0 +1,202 @@
+#page  #frame{
+    width: 900px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    border: 30px solid rgb(255, 255, 255);
+    border-right: 10px solid rgb(255, 255, 255);
+    /* background-color: #16A082; */
+    align-items: center;
+}
+
+#page  #frame  #author{
+    display: flex;
+    flex-direction: row;
+}
+
+#page  #frame  #author a #authorProfile{ 
+    width: 120px;
+    border: 20px solid rgb(255, 255, 255);
+}
+
+#page  #frame  #author #authorDetail{
+    border: 20px solid rgb(255, 255, 255);
+    width: 240px;
+}
+
+#page  #frame  #author #authorDetail #name{
+    word-wrap: break-word;
+    font-size: 30px;
+    font-weight: 900;
+    text-decoration: none;
+    color: black;
+}
+
+#page  #frame  #author #authorDetail #following{
+    border-bottom: 5px solid #ffffff;
+}
+
+
+#page  #frame  #author #authorDetail #location{
+    display: flex;
+    align-items: center;
+}
+
+#page  #frame  #author #authorDetail #location #locationText{
+    border: 10px solid rgb(255, 255, 255);
+    opacity: 0.5;
+    font-size: 8px;
+}
+
+#page  #frame  #author #authorDetail #authorOpera{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#page  #frame  #author #authorDetail #authorOpera .button{
+    border: 5px solid;
+    border-left: 26px solid;
+    border-right: 26px solid;
+    border-radius: 15px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    border-color: #16A082;
+    color: #ffffff;
+    text-decoration: none;
+    background-color:#16A082 ;
+    font-weight: 900;
+}
+
+#page  #frame  #author #authorDetail #authorOpera .button:hover{
+    box-shadow: rgb(119, 119, 119) 0px 5px 10px 1px;
+}
+
+#page  #frame #paFrame{
+    width: 350px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#page  #frame #paFrame{
+    border: 20px solid rgb(255, 255, 255);
+}
+
+#page  #frame #paFrame #postButton{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#page  #frame #paFrame #postButton a{
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 500;
+    color: #707070;
+}
+
+#page  #frame #paFrame #postButton #buttonUnderline1{
+    background-color: #4F81FF;
+    width: 70px;
+    height: 2px;
+    border: 2px solid #ffffff;
+    border-radius: 20px;
+}
+
+#page  #frame #paFrame #attemptsButton a{
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 500;
+    color: #707070;
+}
+
+#page  #frame #paFrame #postButton a:hover,#page  #frame #paFrame #attemptsButton a:hover{
+    color: #000000;
+}
+
+#page  #frame #folderAndPics{
+    width: 1100px;
+    display: flex;
+    flex-direction: row;
+}
+
+#page  #frame #folderAndPics #folders{
+    width: 300px;
+    border-radius: 30px;
+    border: 2px solid rgb(255, 255, 255);
+    border-color: #707070;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#page  #frame #folderAndPics #folders #foldersText{
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: 900;
+    color: #707070;
+    border-bottom: 10px solid rgb(255, 255, 255);
+}
+
+#page  #frame #folderAndPics #folders #customFrame{
+    width: 200px;
+}
+
+#page  #frame #folderAndPics #folders #customFrame .folder{
+    align-self: flex-start;
+    border-bottom: 30px solid rgb(255, 255, 255);
+}
+
+#page  #frame #folderAndPics #folders #customFrame .folder .icon{
+    border: 11px solid rgb(255, 255, 255);
+    border-top: 0px solid rgb(255, 255, 255);
+    border-bottom: 0px solid rgb(255, 255, 255);
+    border-radius: 50%;
+}
+
+#page  #frame #folderAndPics #folders #customFrame .folder a{
+    border-left: 20px solid rgb(255, 255, 255);
+    color: #707070;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#page  #frame #folderAndPics #folders #customFrame .folder a:hover{
+    color: #000000;
+}
+
+#page  #frame #folderAndPics #picFrame{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#page  #frame #folderAndPics #picFrame .image{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-left: 100px solid rgb(255, 255, 255);
+}
+
+#page  #frame #folderAndPics #picFrame .image a img{
+    width: 400px;
+    border: 1.5px solid rgb(255, 255, 255);
+    border-radius: 30px;
+}
+
+#page  #frame #folderAndPics #picFrame .image a img:hover{
+    border: 1.5px solid #4F81FF;
+    border-radius: 30px;
+}
+
+#page  #frame #folderAndPics #picFrame #addPost{
+    border: 30px solid rgb(255, 255, 255);
+}
+
+#page  #frame #folderAndPics #picFrame #addPost #addPostButton{
+    width: 50px;
+}

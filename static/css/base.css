@@ -1,0 +1,131 @@
+#page {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+#page #topStrip {
+    height: 150px;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+#page #topStrip #logo,
+#page #topStrip #logo:hover {
+    width: 400px;
+    height: 150px;
+    display: flex;
+    cursor: pointer;
+}
+
+#page #topStrip #search,
+#page #topStrip #search:hover {
+    width: 400px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: text;
+}
+
+#page #topStrip #search #border {
+    width: 400px;
+    height: 35px;
+    border: 1.5px solid rgb(70, 70, 70);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    opacity: 0.4;
+}
+
+#page #topStrip #search #border:hover {
+    border: 1.5px solid #4F81FF;
+    opacity: 1;
+}
+
+#page #topStrip #search #border #searchPic {
+    border-left: 8px solid #ffffff;
+    border-right: 8px solid #ffffff;
+    border-top: 5px solid #ffffff;
+    border-radius: 10px;
+}
+
+#page #topStrip #search #border input {
+    height: 30px;
+    width: 340px;
+    font-weight: 900px;
+    font-size: larger;
+    letter-spacing: 0.5px;
+    border: 0px;
+    outline: none;
+}
+
+#page #topStrip #login_signup {
+    border: 2px;
+    width: 300px;
+    height: 150px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+#page #topStrip #login_signup #messagePic {
+    width: 40px;
+    height: 20px;
+}
+
+#page #topStrip #login_signup .lsText {
+    width: 65px;
+    height: 20px;
+    font-size: 20px;
+    font-family: 'Passion One', cursive;
+    color: #707070;
+    text-decoration: none;
+}
+
+#page #topStrip #login_signup .lsText:hover {
+    color: #4F81FF;
+    text-decoration: none;
+}
+
+#page #topStrip #login_signup #topLine {
+    background-color: #A6A6A6;
+    width: 2px;
+    height: 30px;
+}
+
+#page .rowLine {
+    background-color: #A6A6A6;
+    opacity: 0.2;
+    width: 1200px;
+    height: 2px;
+    border: 8px solid #ffffff;
+}
+
+#page #bottom {
+    display: flex;
+    width: 400px;
+    height: 35px;
+    justify-content: space-around;
+}
+
+#page #bottom .helpInfo {
+    font-size: 18px;
+    font-family: 'Passion One', cursive;
+    color: #707070;
+    text-decoration: none;
+}
+
+#page #bottom .helpInfo:hover {
+    color: #4F81FF;
+    text-decoration: none;
+}
+
+#page #copyright {
+    color: #707070;
+    font-size: xx-small;
+}

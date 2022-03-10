@@ -1,0 +1,85 @@
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
+
+
+{% block title_block %}
+    picture detail
+{% endblock %}
+
+
+
+{% block body_block %}
+<link rel="stylesheet" href="/static/css/picDetail.css" type="text/css">
+
+<br><br>
+<div id="detail">
+    <div>
+        <a href=""><img src="{% static 'images/back.png' %}" alt="back" /></a>
+    </div>
+    <div id="frame">
+        <div id="pic">
+            <a href=""><img src="{{ MEDIA_URL }}samplePic9.png" alt="samplePic9" /></a>
+        </div>
+        <div id="authorCom">
+            <div class="Allopera">
+                <div class="normal">
+                    <a href=""><img src="{% static 'images/heart.png' %}" alt="heart" /></a>
+                    589
+                    <a href=""><img src="{% static 'images/share.png' %}" alt="share" /></a>
+                    73
+                </div>
+                <div id="download">
+                    <a href=""><img src="{% static 'images/download2.png' %}" alt="download2" /></a>
+                </div>
+            </div>
+            <div id="author">
+                <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+                <div id="authorDetail">
+                    <a href="" id="name">Name</a>
+                    <div id="location">
+                        <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
+                        <a id="locationText">Location</a>
+                    </div>
+                    <div id="authorOpera">
+                        <a class="button" href="">Follow</a>
+                        <a class="button" href="">&nbsp&nbspDM&nbsp&nbsp</a>
+                    </div>
+                </div>
+            </div>
+            <div id="description">description</div>
+            <div id="comments">
+                <div id="sumNum">32 Comments</div>
+                <div class="comment">
+                    <a class="otherprofile" href=""><img src="{{ MEDIA_URL }}profile.png" alt="commProfile" /></a>
+                    <div class="commFrame">
+                        <a href="">comment name</a>
+                        <div class="commentText">Comment Text</div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <a class="otherprofile" href=""><img src="{{ MEDIA_URL }}profile.png" alt="commProfile" /></a>
+                    <div class="commFrame">
+                        <a href="">comment name</a>
+                        <div class="commentText">Comment Text</div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <a class="otherprofile" href=""><img src="{{ MEDIA_URL }}profile.png" alt="commProfile" /></a>
+                    <div class="commFrame">
+                        <a href="">comment name</a>
+                        <div class="commentText">Comment Text</div>
+                    </div>
+                </div>
+            </div>
+            <div id="myComment">
+                <a class="otherprofile" href=""><img src="{{ MEDIA_URL }}profile.png" alt="myProfile" /></a>
+                <div>
+                    <input type="text" name="myCommentText" value="myCommentText" onfocus="this.value=''"
+                    onblur="if(this.value==''){this.value='myCommentText'}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+{% endblock %}
