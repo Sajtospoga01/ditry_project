@@ -8,19 +8,18 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Like
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
-from feed.forms import PostForm, UserForm, FolderForm
-from datetime from datetime
+from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm
+from datetime import datetime
 
 # FolderForm does not exist yet
 
+
 def home(request):
     # all posts uploaded to diTRY
-    ## should posts maybe just be pictures 
     posts = Post.objects.all()
     visitor_cookie_handler(request)
     context_dict = {'posts': posts}
     return render(request, 'feed_templates/home.html', context=context_dict)
-
 
 
 def about(request):
@@ -39,7 +38,7 @@ def contact_us(request):
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed_templates/trending.html', context={'posts'=posts})
+    return render(request, 'feed_templates/trending.html', context={'posts':posts})
 
 
 @login_required
@@ -55,7 +54,6 @@ def follow_category(request, category_name_slug):
         FollowsCategory.objects.filter(follower=following_user, following=follows_category).save()
 
     return redirect(reverse('feed:show_category', kwargs={'category_slug': category_name_slug}))
-
 
 
 @login_required
@@ -76,21 +74,19 @@ def add_post(request):
     # post should be automatically added to 'my posts'
 
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = UserPostsForm(request.POST)
 
         if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            
+            form.save()
             post_id = post.id
 
             return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
         else:
             # if form not valid print errors
             print(form.errors)
-            
-    # might have to add kwargs={'user_name':user_name}
+
     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
+
 
 @login_required
 def add_post_to_category(request, category_slug, post_id):
@@ -108,11 +104,12 @@ def show_post(request, post_id):
         post = Post.objects.get(id = post_id)
         context_dict['post'] = post
         context_dict['likes'] = post.likes
-        # maybe also show comments associated with posts
+        # maybe also return comments associated with posts
     except Post.DoesNotExist:
         context_dict['post'] = None
 
     return render(request, 'feed_templates/post.html', context = context_dict)
+
 
 @login_required
 def show_folder(request, folder_name_slug):
@@ -131,28 +128,32 @@ def show_folder(request, folder_name_slug):
     # template show_folder.html does not exist yet, might have to change name
     return render(request, 'feed_templates/show_folder.html',context=context_dict)
 
+
 @login_required
 def all_folders(request, user_name):
     # returns all folders that a user account has
+    # maybe use query for this
     return
+
 
 @login_required
 def show_user(request, user_name):
-    # should return user and user_name
     user = UserProfile.objects.get(username=user_name)
-    return
+    return render(request,'feed_templates/personalPage.html', context={'user':user})
+
 
 @login_required
 def all_followed_category(request):
     # returns categories that a user follows
+    # use query for this
     return
+
 
 @login_required
 def show_category(request, category_id):
     category = Category.objects.get(id=category_id)
     posts = Queries.get_posts_in_category(category_id)
     return render(request, 'feed_templates/show_category.html', context ={'posts':posts, 'category':category})
-
 
 
 @login_required
@@ -165,16 +166,17 @@ def helper_delete_post(request,post):
 def delete_saved_post(request, post_id, folder_name_slug):
     # needs to check if post in specific folder and if folder by request.user
     post = get_object_or_404(Post, id=post_id)
-    helper_delete_post(request,post_id)
+    helper_delete_post(request,post)
     return redirect(reverse('feed:show_folder',
                                         kwargs={'folder_name_slug':
                                                 folder_name_slug, 'username':request.user.username}))
 
+
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if(post.creator == request.user):
-        helper_delete_post(request, post_id)
+    if post.creator == request.user:
+        helper_delete_post(request, post)
     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
@@ -210,12 +212,13 @@ def add_folder(request):
         if form.is_valid():
             # Saves new folder to the database.
             form.save(commit=True)
-            return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
+            return redirect(reverse('feed:ll_folders',kwargs={'username':request.user.username}))
         
         else:
             print(form.errors)
 
     return render(request, 'feed_templates/add_folder.html', {'form': form})
+
 
 @login_required
 def like_post(request,post_id):
@@ -232,12 +235,12 @@ def like_post(request,post_id):
         post.likes += 1
 
     post.save()
-    #should redirect to post that was liked or disliked
+    # should redirect to post that was liked or disliked
     return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
+
 
 @login_required
 def save_post(request, folder_name_slug ,post_id):
-
     try:
         folder = Folder.objects.get(slug=folder_name_slug)
     except Folder.DoesNotExist:
@@ -249,7 +252,7 @@ def save_post(request, folder_name_slug ,post_id):
 
     if request.method == 'POST':
         pin = get_object_or_404(Post, post_id)
-        form = PostForm(request.POST)
+        form = UserPostsForm(request.POST)
 
         if form.is_valid():
             if folder:
@@ -262,12 +265,13 @@ def save_post(request, folder_name_slug ,post_id):
                 saved_post.folder = folder
                 saved_post.save()
 
-                return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
+                return redirect(reverse('feed:show_user',
+                                        kwargs={'username':request.user.username,'folder_name_slug':folder_name_slug}))
         else:
             print(form.errors)
 
     context_dict = {'form': form, 'folder': folder}
-    return render(request, 'feed_templates/add_post.html', context=context_dict)
+    return render(request, 'feed_templates/addPost.html', context=context_dict)
 
 
 @login_required
@@ -290,15 +294,30 @@ def like_comment(request, comment_id):
 
     return redirect(reverse('feed:show_comments_on_post', kwargs={'post_id':post_id}))
 
+
 @login_required
 def comment_on_post(request, post_id):
-    #...
-    return
+    form = UserCommentForm()
+    if request.medthod == 'POST':
+        form = UserCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post_id = post_id
+            comment.user_id = request.user.id
+            comment.save()
+
+        else:
+            print(form.errors)
+
+    return redirect(reverse('feed:show_comments_on_post',
+                            kwargs={'post_id': post_id}))
+
 
 @login_required
 def show_comments_on_post(request, post_id):
-    #...
+    #maybe use query for this
     return
+
 
 @login_required
 def delete_comment(request, comment_id):
@@ -307,7 +326,7 @@ def delete_comment(request, comment_id):
         Comment.objects.filter(id=comment_id, user_id=request.user).delete()
         post_id = this_comment.post_id
         return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
-    except this_comment.DoesNotExist:
+    except Comment.DoesNotExist:
         return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
@@ -325,11 +344,11 @@ def search(request):
             if query is not None:
                 # filters post by if search term in title
                 for p in all_posts.filter(Q(title__icontains = query)):
-                    if p not in matching posts:
+                    if p not in matching_posts:
                         matching_posts.append(p)
 
-
     return render(request,'feed_templates/search.html', {'matching_posts': matching_posts})
+
 
 def register(request):
     registered = False
@@ -354,18 +373,22 @@ def register(request):
 
     # Render the template depending on the context.
     return render(request,
-                  'register/register.html',
+                  'registration/register.html',
                   context = {'user_form': user_form,
                              'registered': registered})
 
+
 @login_required
 def update_profile(request):
+   form = EditProfileForm
    if request.method=='POST':
        form = EditProfileForm(request.POST)
        if form.is_valid:
            form.save()
-    #update_profile does no exist yet, might have to change name
-    return render(request, 'register/update_profile.html', context={'user_form':form})
+           return redirect(reverse('feed:account', kwargs={'username':request.user.username}))
+
+   #update_profile does not exist yet, might have to change name
+   return render(request, 'register/update_profile.html', context={'user_form':form})
 
 
 def user_login(request):
@@ -398,6 +421,7 @@ def user_logout(request):
     # Take the user back to the homepage.
     return redirect(reverse('feed:home'))
 
+
 # helper function
 def get_server_side_cookie(request,cookie,default_val=None):
     val = request.session.get(cookie)
@@ -409,7 +433,6 @@ def get_server_side_cookie(request,cookie,default_val=None):
 def visitor_cookie_handler(request):
     # number of visits to website with default value 1
     visits = int((get_server_side_cookie(request,'visits', '1')))
-
 
     last_visit_cookie = get_server_side_cookie(request,'last_visit',
                                             str(datetime.now()))

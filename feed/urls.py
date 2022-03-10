@@ -22,7 +22,7 @@ urlpatterns = [
     path('show-post/<post_id>/<comment_id>/delete-comment/', views.delete_comment, name='delete_comment'),
     path('show-post/<post_id>/comments/', views.show_comments_on_post, name='show_comments_on_post'),
     
-    # user_name cannot be register, login, logout, help, ...
+    # user_name cannot be 'register', 'login', 'logout', 'help', etc.
     path('<username>/', views.show_user, name='account'),
     path('<username>/folders/', views.all_folders, name='all_folders'),
     path('<username>/folders/add-folder/', views.add_folders, name='add_folders'),
@@ -41,7 +41,7 @@ urlpatterns = [
     
     path('search/', views.search, name = 'search'),
     
-    path('add-post-to-category/', view.add_post_to_category, name='add_post_to_category')
-    path('<slug:category_slug>/', views.show_category, name='show_category')
+    path('add-post-to-category/', view.add_post_to_category, name='add_post_to_category'),
+    path('<slug:category_slug>/', views.show_category, name='show_category'),
 
 ]
