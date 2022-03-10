@@ -1,3 +1,4 @@
+from unittest import result
 from django.db.models import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
@@ -75,7 +76,7 @@ class FollowsCategory(models.Model):
             UniqueConstraint(fields = ['follower','following'], name = 'Follows_category')
         ]
     def __str__(self):
-        return self.follower.username + ' follows: '+self.following.username
+        return self.follower.username + ' follows: '+self.following.name
     
 
 class Likes(models.Model):
@@ -86,7 +87,7 @@ class Likes(models.Model):
             UniqueConstraint(fields = ['liker','liked_post'], name = 'Likes')
         ]
     def __str__(self):
-        return self.liker.username + ' liked: '+self.liked_post.id
+        return self.liker.username + ' liked: '+str(self.liked_post.id)
     
 class Categorises(models.Model):
     post = models.ForeignKey(Post,on_delete=CASCADE,related_name='%(class)s_post')
@@ -104,7 +105,7 @@ class Functions:
         return Categorises.objects.get_or_create(post = post,category = category)
 
     def connect_user_likes_post(user,post):
-        return Likes.objects.get_or_create(liker = post,liked_post = post)
+        return Likes.objects.get_or_create(liker = user,liked_post = post)
 
     def connect_user_follows_category(user,category):
         return FollowsCategory.objects.get_or_create(follower = user,following = category)
@@ -112,66 +113,167 @@ class Functions:
     def connect_user_follows_user(user,followed):
         return FollowsUser.objects.get_or_create(follower = user,following = followed)
 
+    def set_original(original_id,attempt_id):
+        attempt = Post.objects.get(id = attempt_id)
+        print(attempt)
+        print(original_id)
+        attempt.original = original_id
+        print("read value: "+str(attempt.original))
+        attempt.save()
+    def user_exists(user):
+        if(UserProfile.objects.filter(id = user).count()>0):
+            return True
+        else:
+            return False
+
+    def post_exists(post):
+        if(Post.objects.filter(id = post).count()>0):
+            return True
+        else:
+            return False
+
+    def category_exists(category):
+        if(Category.objects.filter(name = category).count()>0):
+            return True
+        else:
+            return False
+
+    def comment_exists(comment):
+        if(comment.objects.filter(id = comment).count()>0):
+            return True
+        else:
+            return False
+
+
+
     
 
 class Queries:
-    #TODO: 
-    # get_post_likes
-    # get_follows_category
-    # get_category_followers
-    # get_original
-    # get_attempts
 
-
-    
     #takes user id
+    def get_original(post):
+        try:
+            post_object = Post.objects.get(id = post)
+            original_post = Post.objects.get(id = post_object.original)
+            #return one post object
+            return original_post
+        except:
+            return None
+
+    #takes post id
+    def get_attempts(post):
+        try:
+            post_object = Post.objects.get(id = post)
+            attempts = Post.objects.filter(original = post_object.id)
+            #return a query of attempts
+            return attempts
+        except:
+            return None
+
+    #takes post id
     def get_liked_posts(user):
-        user_object = UserProfile.objects.get(id = id)
-        filtered_likes = Likes.objects.filter(liker = user_object).values("liked_post")
-        results = Post.objects.filter(id__in = filtered_likes)
-        #returns a query of posts
-        return results
+        try:
+            user_object = UserProfile.objects.get(id = user)
+            filtered_likes = Likes.objects.filter(liker = user_object).values("liked_post")
+            results = Post.objects.filter(id__in = filtered_likes)
+            #returns a query of posts
+            return results
+        except:
+            return None
+
+    #takes post id
+    def get_post_likes(post):
+        try:
+            post_object = Post.objects.get(id = post)
+            filtered_likes = Likes.objects.filter(liked_post = post_object).values("liker")
+            results = UserProfile.objects.filter(id__in = filtered_likes)
+            #returns a query of users
+            return results
+        except:
+            return None
+
+    #takes user id
+    def get_category_following(user):
+        try:
+            user_object = UserProfile.objects.get(id = user)
+            filtered_category = FollowsCategory.objects.filter(follower = user_object).values("following")
+            results = Category.objects.filter(id__in = filtered_category)
+            #return a query of categories
+            return results
+        except:
+            return None
+
+    #takes category name
+    def get_category_follows(category):
+        try:
+            category_object = Category.objects.get(name = category)
+            filtered_users = FollowsCategory.objects.filter(following = category_object).values("follower")
+            results = UserProfile.objects.filter(id__in = filtered_users)
+            #return a query of users
+            return results
+        except:
+            return None
+    
 
 
     # takes a category name
     def get_posts_in_category(category): 
-        category_object = Category.objects.get(name = category)
-        filtered_posts = Categorises.objects.filter(category = category_object).values("post")
-        results = Post.objects.filter(id__in = filtered_posts)
-        #returns a query of posts
-        return results
+        try:
+            category_object = Category.objects.get(name = category)
+            filtered_posts = Categorises.objects.filter(category = category_object).values("post")
+            results = Post.objects.filter(id__in = filtered_posts)
+            #returns a query of posts
+            return results
+        except:
+            return None
 
     #takes a post id
     def get_category_of_post(post):
-        post_object = Post.objects.get(id = post)
-       
-        filtered_posts = Categorises.objects.filter(post = post_object).values("category")
-        results = Category.objects.filter(id__in = filtered_posts)
-        #returns a query of categories
-        return results
+        try:
+            post_object = Post.objects.get(id = post)
+        
+            filtered_posts = Categorises.objects.filter(post = post_object).values("category")
+            results = Category.objects.filter(id__in = filtered_posts)
+            #returns a query of categories
+            return results
+        except:
+            return None
 
     # takes a user id
     def get_user_posts(user):
-        user_object = UserProfile.objects.get(id = user)
-        result = Post.objects.filter(creator = user_object)
-        #returns a query of posts
-        return result
+        try:
+            user_object = UserProfile.objects.get(id = user)
+            result = Post.objects.filter(creator = user_object)
+            #returns a query of posts
+            return result
+        except:
+            return None
 
     #takes a user id
     def get_user_following(user):
-        user_object = User.objects.get(id = user)
-        filtered_users = FollowsUser.objects.filter(follower = user_object).values("following")
-    
-        result = UserProfile.objects.filter(id__in = filtered_users)
-        #returns a query of userprofiles
-        return result
+        try:
+                
+            user_object = UserProfile.objects.get(id = user)
+            filtered_users = FollowsUser.objects.filter(follower = user_object).values("following")
+        
+            result = UserProfile.objects.filter(id__in = filtered_users)
+            #returns a query of userprofiles
+            return result
+
+        except:
+            return None
 
     
     #takes a user id
     def get_user_follows(user):
-        user_object = User.objects.get(id = user)
-        filtered_users = FollowsUser.objects.filter(following = user_object).values("follower")
+        try:
+            user_object = UserProfile.objects.get(id = user)
+            filtered_users = FollowsUser.objects.filter(following = user_object).values("follower")
+        
+            result = UserProfile.objects.filter(id__in = filtered_users)
+            #returns a query of userprofiles
+            return result
+        except:
+            return None
+
     
-        result = UserProfile.objects.filter(id__in = filtered_users)
-        #returns a query of userprofiles
-        return result
