@@ -81,6 +81,7 @@ def add_post(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.save()
+            
             post_id = post.id
 
             return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
@@ -88,8 +89,8 @@ def add_post(request):
             # if form not valid print errors
             print(form.errors)
             
-    # might have to add kwargs={'user_id':user_id}
-    return redirect(reverse('feed:my_account'))
+    # might have to add kwargs={'user_name':user_name}
+    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 @login_required
 def add_post_to_category(request, category_slug, post_id):
@@ -97,7 +98,7 @@ def add_post_to_category(request, category_slug, post_id):
     category = Category.objects.get(slug=category_name_slug)
     # post is added to category
     Functions.connect_post_to_category(post, category).save()
-    return redirect(reverse('feed:show_category'))
+    return redirect(reverse('feed:show_category',kwargs={'category_slug': category_name_slug}))
 
 
 @login_required
@@ -115,7 +116,7 @@ def show_post(request, post_id):
 
 @login_required
 def show_folder(request, folder_name_slug):
-    # maybe also need user_id to get folder
+    # maybe also need user_name to get folder
     context_dict={}
     try:
         folder = Folder.objects.get(slug=folder_name_slug)
@@ -131,7 +132,7 @@ def show_folder(request, folder_name_slug):
     return render(request, 'feed_templates/show_folder.html',context=context_dict)
 
 @login_required
-def all_folders(request, user_id):
+def all_folders(request, user_name):
     # returns all folders that a user account has
     return
 
@@ -148,31 +149,33 @@ def all_followed_category(request):
 
 @login_required
 def show_category(request, category_id):
+    category = Category.objects.get(id=category_id)
     posts = Queries.get_posts_in_category(category_id)
-    return render(request, 'feed_templates/show_category.html', context ={'posts':posts})
+    return render(request, 'feed_templates/show_category.html', context ={'posts':posts, 'category':category})
 
 
 
 @login_required
-def helper_delete_post(request,post_id):
-    post = get_object_or_404(Post, id=post_id)
+def helper_delete_post(request,post):
     if request.method == 'POST':
         post.delete()
 
 
 @login_required
 def delete_saved_post(request, post_id, folder_name_slug):
+    # needs to check if post in specific folder and if folder by request.user
+    post = get_object_or_404(Post, id=post_id)
     helper_delete_post(request,post_id)
     return redirect(reverse('feed:show_folder',
                                         kwargs={'folder_name_slug':
-                                                folder_name_slug}))
+                                                folder_name_slug, 'username':request.user.username}))
 
 @login_required
 def delete_post(request, post_id):
-    helper_delete_post(request, post_id)
-    return redirect(reverse('feed:show_folder',
-                                        kwargs={'folder_name_slug':
-                                                folder_name_slug}))
+    post = get_object_or_404(Post, id=post_id)
+    if(post.creator == request.user):
+        helper_delete_post(request, post_id)
+    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
 @login_required
@@ -180,7 +183,7 @@ def delete_folder(request, folder_id):
     folder = get_object_or_404(Post, id=folder_id)
     if request.method == 'POST':
         folder.delete()
-    return redirect(reverse('feed:my_account'))
+    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
 @login_required
@@ -193,7 +196,7 @@ def follow_user(request, user_name):
     else:
         FollowsUser.objects.filter(follower=following_user, following=follow_user).save()
 
-    return redirect(reverse('feed:show_user', kwargs={'user_id':user_id}))
+    return redirect(reverse('feed:account', kwargs={'username':user_name}))
 
 
 @login_required
@@ -207,7 +210,7 @@ def add_folder(request):
         if form.is_valid():
             # Saves new folder to the database.
             form.save(commit=True)
-            return redirect(reverse('feed:my_account'))
+            return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
         
         else:
             print(form.errors)
@@ -230,7 +233,7 @@ def like_post(request,post_id):
 
     post.save()
     #should redirect to post that was liked or disliked
-    return redirect(reverse('feed:home'))
+    return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
 
 @login_required
 def save_post(request, folder_name_slug ,post_id):
@@ -242,7 +245,7 @@ def save_post(request, folder_name_slug ,post_id):
 
     # Cannot add post into none existing folder
     if folder is None:
-        return redirect(reverse('feed:my_account'))
+        return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
     if request.method == 'POST':
         pin = get_object_or_404(Post, post_id)
@@ -253,12 +256,13 @@ def save_post(request, folder_name_slug ,post_id):
                 saved_post = form.save(commit=False)
                 saved_post.likes = pin.likes
                 saved_post.title = pin.title
+                saved_post.creator = pin.creator
 
                 # folder currently not in model, how to save in specific folder?
                 saved_post.folder = folder
                 saved_post.save()
 
-                return redirect(reverse('feed:my_account'))
+                return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
         else:
             print(form.errors)
 
@@ -269,6 +273,7 @@ def save_post(request, folder_name_slug ,post_id):
 @login_required
 def like_comment(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
+    post_id = comment.post_id
 
     try:
         # name of comment_likes class might have to  be changed
@@ -282,8 +287,8 @@ def like_comment(request, comment_id):
         comment.likes += 1
 
     comment.save()
-    # should redirect to post on which comment was liked or disliked
-    return redirect(reverse('feed:home'))
+
+    return redirect(reverse('feed:show_comments_on_post', kwargs={'post_id':post_id}))
 
 @login_required
 def comment_on_post(request, post_id):
@@ -303,8 +308,7 @@ def delete_comment(request, comment_id):
         post_id = this_comment.post_id
         return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
     except this_comment.DoesNotExist:
-        # might have to insert kwargs with request.user
-        return redirect(reverse('feed:my_account'))
+        return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
 @login_required
