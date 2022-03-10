@@ -1,0 +1,215 @@
+#page #detail{
+    display: flex;
+    justify-content: space-around;
+    width: 1000px;
+}
+
+#page #detail #frame{
+    box-shadow: rgb(119, 119, 119) 10px 10px 50px 5px;
+    width: 900px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: row;
+    border: 30px solid rgb(255, 255, 255);
+    border-right: 10px solid rgb(255, 255, 255);
+}
+
+#page #detail #frame #pic{
+    align-self: center;
+    width: 450px;
+}
+
+#page #detail #frame #pic a img{
+    width: 400px;
+    border-radius: 20px;
+}
+
+#page #detail #frame #pic a img:hover{
+    border: 1px solid #4F81FF;
+}
+
+#page #detail #frame #authorCom{
+    width: 420px;
+}
+
+#page #detail #frame #authorCom .Allopera {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(255, 255, 255);
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+#page #detail #frame #authorCom .Allopera .normal{
+    background-color: rgb(255, 255, 255);
+    color: #707070;
+    font-size: 25px;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#page #detail #frame #authorCom .Allopera .normal a img{
+    width: 35px;
+}
+
+#page #detail #frame #authorCom .Allopera #download a img{
+    width: 35px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    align-self: flex-end;
+}
+
+#page #detail #frame #authorCom .Allopera .normal a img:hover ,#page #detail #frame #authorCom .Allopera #download a img:hover{
+    width: 36px;
+}
+
+
+#page #detail #frame #authorCom #author{
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: row;
+}
+
+#page #detail #frame #authorCom #author a #authorProfile{ 
+    width: 120px;
+    border: 20px solid rgb(255, 255, 255);
+}
+
+#page #detail #frame #authorCom #author #authorDetail{
+    border: 20px solid rgb(255, 255, 255);
+    width: 240px;
+}
+
+#page #detail #frame #authorCom #author #authorDetail #name{
+    word-wrap: break-word;
+    font-size: 30px;
+    font-weight: 900;
+    text-decoration: none;
+    color: black;
+}
+
+#page #detail #frame #authorCom #author #authorDetail #location{
+    display: flex;
+    align-items: center;
+}
+
+#page #detail #frame #authorCom #author #authorDetail #location #locationText{
+    border: 10px solid rgb(255, 255, 255);
+    opacity: 0.5;
+    font-size: 8px;
+}
+
+#page #detail #frame #authorCom #author #authorDetail #authorOpera{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#page #detail #frame #authorCom #author #authorDetail #authorOpera .button{
+    border: 5px solid;
+    border-left: 26px solid;
+    border-right: 26px solid;
+    border-radius: 15px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    border-color: #16A082;
+    color: #ffffff;
+    text-decoration: none;
+    background-color:#16A082 ;
+    font-weight: 900;
+}
+
+#page #detail #frame #authorCom #author #authorDetail #authorOpera .button:hover{
+    font-size: 16px;
+}
+
+#page #detail #frame #description{
+    word-wrap: break-word;
+    font-size: 30px;
+    font-weight: 900;
+    text-decoration: none;
+    color: black;
+    width: 400px;
+    height: 150px;
+    border: 20px solid rgb(255, 255, 255);
+}
+
+#page #detail #frame #comments #sumNum{
+    word-wrap: break-word;
+    border: 20px solid rgb(255, 255, 255);
+    font-size: 20px;
+    font-weight: 500;
+
+}
+
+#page #detail #frame #comments .comment{
+    /* background-color: rgb(160, 146, 120); */
+    border: 20px solid rgb(255, 255, 255);
+    display: flex;
+    flex-direction: row;
+}
+
+.otherprofile img{
+    width: 60px;
+    border: 10px solid rgb(255, 255, 255);
+    border-top: 0px;
+    border-left: 0px;
+}
+
+.commFrame{
+    background-color: rgb(255, 255, 255);
+    width: 400px;
+    height: 60px;
+    border: 1.5px solid rgb(70, 70, 70);
+    border-radius: 20px;
+    display: flex;
+    justify-content:flex-start;
+    flex-direction: column;
+    opacity: 0.4;
+}
+
+.commFrame:hover,#page #detail #frame #myComment input:hover{
+    border: 2px solid #4F81FF;
+    opacity: 1;
+}
+
+#page #detail #frame #comments .comment .commFrame a{
+    text-decoration: none;
+    border: 7px solid rgb(255, 255, 255);
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 900;
+    color: black;
+}
+
+#page #detail #frame #comments .comment .commFrame .commentText{
+    border-left: 7px solid rgb(255, 255, 255);
+    border-radius: 20px;
+    font-size: 10px;
+    overflow:auto; 
+}
+
+#page #detail #frame #myComment{
+    border: 20px solid rgb(255, 255, 255);
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    align-items: center; 
+}
+
+#page #detail #frame #myComment input{
+    height: 50px;
+    width: 303px;
+    font-weight: 900px;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    border: 1.5px solid #707070;
+    outline: none;
+    border-radius: 20px;
+    opacity: 0.4;
+    color: black;
+    transform: translate(0px,-8px);
+}
+

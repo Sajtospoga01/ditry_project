@@ -1,0 +1,61 @@
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
+
+
+{% block title_block %}
+    picture detail
+{% endblock %}
+
+
+
+{% block body_block %}
+<link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
+
+<br><br>
+<div id="detail">
+    <div>
+        <a href=""><img src="{% static 'images/back.png' %}" alt="back" /></a>
+    </div>
+    <div id="frame">
+        <div id="pic">
+            <form><input type="file" id="file"></form>
+        </div>
+        <div id="authorCom">
+            <div class="Allopera">
+                <div id="choose">
+                    <select id="chooseButton">
+                        <option value="Craft">Craft</option>
+                        <option value="DIY">DIY</option>
+                        <option value="Food">Food</option>
+                    </select>
+                </div>
+                <div id="more">
+                    <a href=""><img src="{% static 'images/more.png' %}" alt="more" /></a>
+                </div>
+            </div>
+            <div id="author">
+                <form id="titleText" action="">
+                    <input type="text" name="titleText" value="Add your title" onfocus="this.value=''"
+                        onblur="if(this.value==''){this.value='Add your title'}">
+                </form>
+                <div id="authorFrame">
+                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+                    <div id="authorDetail">
+                        <span id="name">Name</span>
+                    </div>
+                </div>
+                <form id="descriText" action="">
+                    <input type="text" name="descriText" value="Tell every one what your picture is about" onfocus="this.value=''"
+                        onblur="if(this.value==''){this.value='Tell every one what your picture is about'}">
+                </form>
+            </div>
+            <div id="save">
+                <div id="saveFrame">
+                    <a href="" id="saveButton">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+{% endblock %}

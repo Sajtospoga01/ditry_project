@@ -1,0 +1,61 @@
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    personal page
+{% endblock %}
+
+{% block body_block %}
+<link rel="stylesheet" href="/static/css/personalPage.css" type="text/css">
+
+<div id="frame">
+    <div id="author">
+        <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+        <div id="authorDetail">
+            <a href="" id="name">Name</a>
+            <div id="following">66 following</div>
+            <div id="location">
+                <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
+                <a id="locationText">Location</a>
+            </div>
+            <div id="authorOpera">
+                <a class="button" href="">Share</a>
+                <a class="button" href="">Edit profile</a>
+            </div>
+        </div>
+    </div>
+    <div id="paFrame">
+        <div id="postButton">
+            <a href="">&nbspPosts</a>
+            <div id="buttonUnderline1"></div>
+        </div>
+        <div id="attemptsButton">
+            <a href="">Attempts</a>
+            <div id="buttonUnderline2"></div>
+        </div>
+    </div>
+    <div id="folderAndPics">
+        <div id="folders">
+            <span id="foldersText">Folders</span>
+            <div id="customFrame">
+                <div class="folder">
+                    <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
+                    <a href=""><span>Folder Name</span></a>
+                </div>
+                <div class="folder">
+                    <a href="" style="border-color:blue" class="icon"></a>
+                    <a href=""><span>Folder Name2</span></a>
+                </div>
+            </div>
+        </div>
+        <div id="picFrame">
+            <div class="image">
+                <a href=""><img src="{{ MEDIA_URL }}samplePic1.png" alt="samplePic1"></a>
+                <a id="addPost" href=""><img id="addPostButton" src="{% static 'images/addPost.png' %}" alt="addPost"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+{% endblock %}

@@ -1,23 +1,13 @@
-{% extends base.html %}
-{% load static %}
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
 
-<html>
-    <head>
-        <title>
-            {% block title_block %}
-                - Help
-            {% endblock %}
-        </title>
-    </head>
-    <body>
-        {% block body_block %}
-            Placeholder help text
-        {% endblock %}
-        
-        {% if user.is_authenticated %}
-            
-        {% else %}
-            
-        {% endif %}
-    </body>
-</html>
+{% block title_block %}
+    Help
+{% endblock %}
+
+
+{% block body_block %}
+<div style="height: 500px;">
+    <span style="font-size: 30px; font-weight: 900;">Here is Help page.</span>
+</div>
+{% endblock %}
