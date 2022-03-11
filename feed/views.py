@@ -23,7 +23,7 @@ def home(request):
 
 
 def about(request):
-    return render(request,'feed_templates/about.html')
+    return render(request,'feed_templates/about.html' )
 
 
 def help(request):
@@ -57,29 +57,28 @@ def follow_category(request, category_name_slug):
 
 
 @login_required
-def show_my_posts(request, user_name):
-    ### might have to be changed if separate model for my_posts
-    posts = Queries.get_user_posts(user_name)
-    return render(request, 'feed_templates/show_my_posts.html', context ={'posts':posts})
+def show_my_attempts(request):
+    my_attempts = Post.objects.filter(creator=request.user, original__isnull=False)
+    return render(request, 'attempts.html',context={'attempts':my_attempts})
 
 
 @login_required
-def show_my_attempts(request,user_name):
-    #... uses my_attempts model
-    return
-
-
-@login_required
-def add_post(request):
-    # post should be automatically added to 'my posts'
+def add_post(request,boolean_attempt, attempt_post_id=None):
+    # boolean_attempt is True if user posts an attempt
+    # if it is an attempt, id of original is also an input argument
 
     if request.method == 'POST':
         form = UserPostsForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            post_id = Post.id
+            post = form.save()
 
+            if boolean_attempt and attempt_post_id!=None:
+                # if it is an attempt redirect to show all attempts
+                Queries.set_original(attempt_post_id, attempt)
+                return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
+
+            post_id = post.id
             return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
         else:
             # if form not valid print errors
@@ -104,11 +103,16 @@ def show_post(request, post_id):
         post = Post.objects.get(id = post_id)
         context_dict['post'] = post
         context_dict['likes'] = post.likes
-        # maybe also return comments associated with posts
+
+        comments = Queries.get_comment_on_post(post)
+        context_dict['comments'] = comments
+
+        attempts = get_attempts(post_id)
+        context_dict['attempts'] = attempts
     except Post.DoesNotExist:
         context_dict['post'] = None
 
-    return render(request, 'feed_templates/post.html', context = context_dict)
+    return render(request, 'feed_templates/picDetail.html', context = context_dict)
 
 
 @login_required
@@ -139,21 +143,48 @@ def all_folders(request, user_name):
 @login_required
 def show_user(request, user_name):
     user = UserProfile.objects.get(username=user_name)
-    return render(request,'feed_templates/personalPage.html', context={'user':user})
+    posts = Queries.get_user_posts(user_name)
+    return render(request,'feed_templates/personalPage.html', context={'user':user, 'posts':posts})
 
 
 @login_required
 def all_followed_category(request):
-    # returns categories that a user follows
-    # use query for this
+    # url might need to be deleted if helper function to display on personal page
+    categories = get_category_following(request.user.id)
+    return
+
+@login_required
+def all_followed_users(request):
+    follows = get_user_following(request.user.id)
+    ## also needs sepaparate url if not helper function to display on personal page
     return
 
 
 @login_required
+def show_category_helper(category_id):
+    # helper function
+    category = Category.objects.get(id=category_id)
+
 def show_category(request, category_id):
     category = Categorises.objects.get(id=category_id)
     posts = Queries.get_posts_in_category(category_id)
-    return render(request, 'feed_templates/show_category.html', context ={'posts':posts, 'category':category})
+    return category, posts
+
+@login_required
+def show_crafts(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
+
+@login_required
+def show_diys(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed_templates/diys.html', context={'posts':posts, 'category':category})
+
+
+@login_required
+def show_food(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
 
 
 @login_required
@@ -211,13 +242,13 @@ def add_folder(request):
 
         if form.is_valid():
             # Saves new folder to the database.
-            form.save(commit=True)
+            form.save()
             return redirect(reverse('feed:ll_folders',kwargs={'username':request.user.username}))
         
         else:
             print(form.errors)
 
-    return render(request, 'feed_templates/add_folder.html', {'form': form})
+    return render(request, 'feed_templates/add_folder.html', context={'form': form})
 
 
 @login_required
@@ -228,7 +259,9 @@ def like_post(request,post_id):
     try:
         already_Liked = Likes.objects.get(liked_post=post, liker=request.user)
         Likes.objects.filter(liked_post=post, liker=request.user).delete()
-        post.likes -= 1
+        if post.likes>0:
+            post.likes -= 1
+
 
     except Likes.DoesNotExist:
         Likes.objects.create(liked_post=post, liker=request.user)
@@ -314,12 +347,6 @@ def comment_on_post(request, post_id):
 
 
 @login_required
-def show_comments_on_post(request, post_id):
-    #maybe use query for this
-    return
-
-
-@login_required
 def delete_comment(request, comment_id):
     try:
         this_comment = Comment.objects.get(id=comment_id, user_id=request.user)
@@ -338,16 +365,25 @@ def search(request):
         # gets all search terms
         queries = request.GET['q'].split()
         all_posts = Post.objects.all()
+        all_users = UserProfile.objects.all()
         matching_posts = []
+        matching_users = []
         # loops through all search terms
         for query in queries:
             if query is not None:
+
                 # filters post by if search term in title
                 for p in all_posts.filter(Q(title__icontains = query)):
                     if p not in matching_posts:
                         matching_posts.append(p)
 
-    return render(request,'feed_templates/search.html', {'matching_posts': matching_posts})
+                # filter users by if search term is in username
+                for u in all_users.filter(Q(username__icontains = query)):
+                    if u not in matching_users:
+                        matching_users.append(u)
+
+    return render(request,'feed_templates/search.html',
+                  context = {'matching_posts': matching_posts, 'matching_users':matching_users})
 
 
 def register(request):
