@@ -64,7 +64,7 @@ def show_my_attempts(request):
 
 @login_required
 def add_post(request,boolean_attempt, attempt_post_id=None):
-    # boolean_attempt is True if user posts an attempt
+    # boolean_attempt is True if user posts an attempt, otherwise False if original post
     # if it is an attempt, id of original is also an input argument
 
     if request.method == 'POST':
@@ -92,13 +92,13 @@ def add_post_to_category(request, category_name_slug, post_id):
     post = Post.objects.get(id = post_id)
     category = Categorises.objects.get(slug=category_name_slug)
     # post is added to category
-    Functions.connect_post_to_category(post, category).save()
+    Functions.connect_post_to_category(post, category)
     return redirect(reverse('feed:show_category',kwargs={'category_slug': category_name_slug}))
 
 
 @login_required
 def show_post(request, post_id):
-    context_dict= {}
+    context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
         context_dict['post'] = post
@@ -107,7 +107,7 @@ def show_post(request, post_id):
         comments = Queries.get_comment_on_post(post)
         context_dict['comments'] = comments
 
-        attempts = get_attempts(post_id)
+        attempts = Queries.get_attempts(post_id)
         context_dict['attempts'] = attempts
     except Post.DoesNotExist:
         context_dict['post'] = None
@@ -118,7 +118,7 @@ def show_post(request, post_id):
 @login_required
 def show_folder(request, folder_name_slug):
     # maybe also need user_name to get folder
-    context_dict={}
+    context_dict = {}
     try:
         folder = Folder.objects.get(slug=folder_name_slug)
         posts = Post.objects.filter(folder=folder)
@@ -150,12 +150,12 @@ def show_user(request, user_name):
 @login_required
 def all_followed_category(request):
     # url might need to be deleted if helper function to display on personal page
-    categories = get_category_following(request.user.id)
+    categories = Queries.get_category_following(request.user.id)
     return
 
 @login_required
 def all_followed_users(request):
-    follows = get_user_following(request.user.id)
+    follows = Queries.get_user_following(request.user.id)
     ## also needs sepaparate url if not helper function to display on personal page
     return
 
@@ -383,7 +383,7 @@ def search(request):
                         matching_users.append(u)
 
     return render(request,'feed_templates/search.html',
-                  context = {'matching_posts': matching_posts, 'matching_users':matching_users})
+                  context={'matching_posts': matching_posts, 'matching_users':matching_users})
 
 
 def register(request):
@@ -392,7 +392,7 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
 
-        if user_form.is_valid() :
+        if user_form.is_valid():
             user = user_form.save()
 
             user.set_password(user.password)
@@ -410,7 +410,7 @@ def register(request):
     # Render the template depending on the context.
     return render(request,
                   'registration/register.html',
-                  context = {'user_form': user_form,
+                  context={'user_form': user_form,
                              'registered': registered})
 
 
