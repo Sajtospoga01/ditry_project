@@ -36,12 +36,12 @@ urlpatterns = [
     path('<username>/update-profile/', views.update_profile,name='update_profile'),
     path('<username>/all-followed-categories/', views.all_followed_categories,name='all_followed_categories'),
     
-    path('follow-user/<username>/', view.follow_user, name='follow_user'),
-    path('follow-category/<slug:category_slug>/', view.follow_category, name='follow_category'),
+    path('follow-user/<username>/', views.follow_user, name='follow_user'),
+    path('follow-category/<slug:category_slug>/', views.follow_category, name='follow_category'),
     
     path('search/', views.search, name = 'search'),
     
-    path('add-post-to-category/', view.add_post_to_category, name='add_post_to_category'),
+    path('add-post-to-category/', views.add_post_to_category, name='add_post_to_category'),
     path('<slug:category_slug>/', views.show_category, name='show_category'),
 
 ]

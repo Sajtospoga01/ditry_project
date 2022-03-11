@@ -28,6 +28,7 @@ class Category(models.Model):
     
 
 class Post(models.Model):
+    # folder #
     id = models.AutoField(primary_key=True)
     creator = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_requests_created')
     title = models.CharField(max_length=128,default="")
@@ -92,6 +93,19 @@ class Categorises(models.Model):
     def __str__(self):
         return self.post.id + ' belongs to: ' +self.category.name
 
+
+class Folder(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=32, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['id','name'], name = 'Folder')
+        ]
+
 class Queries:
     def get_posts_in_category(category):
         results = Category.objects.select_related().get(Category.name == category)
@@ -103,6 +117,3 @@ class Queries:
 
     def get_user_follows(user):
         result = UserProfile.objects.select_related().get(UserProfile.user.username == user)
-
-
-
