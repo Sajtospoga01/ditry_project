@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from feed.models import Post, Folder, UserProfile, Likes
+from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
 from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm
 from datetime import datetime
@@ -72,10 +72,10 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
 
         if form.is_valid():
             post = form.save()
-
+            attempt_id = post.id
             if boolean_attempt and attempt_post_id!=None:
                 # if it is an attempt redirect to show all attempts
-                Queries.set_original(attempt_post_id, attempt)
+                Queries.set_original(attempt_post_id, attempt_id)
                 return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
 
             post_id = post.id
