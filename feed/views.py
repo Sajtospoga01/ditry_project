@@ -71,15 +71,12 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
         form = UserPostsForm(request.POST)
 
         if form.is_valid():
-            form.save()
-<<<<<<< HEAD
+            post = form.save()
+
             if boolean_attempt and attempt_post_id!=None:
                 # if it is an attempt redirect to show all attempts
                 Queries.set_original(attempt_post_id, attempt)
                 return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
-=======
-            post_id = Post.id
->>>>>>> fd9763cf625fd87f5afa74efb97b0e89d0c24533
 
             post_id = post.id
             return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
@@ -164,14 +161,12 @@ def all_followed_users(request):
 
 
 @login_required
-<<<<<<< HEAD
 def show_category_helper(category_id):
     # helper function
     category = Category.objects.get(id=category_id)
-=======
+
 def show_category(request, category_id):
     category = Categorises.objects.get(id=category_id)
->>>>>>> fd9763cf625fd87f5afa74efb97b0e89d0c24533
     posts = Queries.get_posts_in_category(category_id)
     return category, posts
 
@@ -264,7 +259,9 @@ def like_post(request,post_id):
     try:
         already_Liked = Likes.objects.get(liked_post=post, liker=request.user)
         Likes.objects.filter(liked_post=post, liker=request.user).delete()
-        post.likes -= 1
+        if post.likes>0:
+            post.likes -= 1
+
 
     except Likes.DoesNotExist:
         Likes.objects.create(liked_post=post, liker=request.user)
