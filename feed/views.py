@@ -57,22 +57,27 @@ def follow_category(request, category_name_slug):
 
 
 @login_required
-def show_my_attempts(request,user_name):
-    #... uses my_attempts model
-    return
+def show_my_attempts(request):
+    my_attempts = Post.objects.filter(creator=request.user, original__isnull=False)
+    return render(request, 'attempts.html',context={'attempts':my_attempts})
 
 
 @login_required
-def add_post(request):
-    # post should be automatically added to 'my posts'
+def add_post(request,boolean_attempt, attempt_post_id=None):
+    # boolean_attempt is True if user posts an attempt
+    # if it is an attempt, id of original is also an input argument
 
     if request.method == 'POST':
         form = UserPostsForm(request.POST)
 
         if form.is_valid():
             form.save()
-            post_id = post.id
+            if boolean_attempt and attempt_post_id!=None:
+                # if it is an attempt redirect to show all attempts
+                Queries.set_original(attempt_post_id, attempt)
+                return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
 
+            post_id = post.id
             return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
         else:
             # if form not valid print errors
@@ -97,7 +102,12 @@ def show_post(request, post_id):
         post = Post.objects.get(id = post_id)
         context_dict['post'] = post
         context_dict['likes'] = post.likes
-        # maybe also return comments associated with posts
+
+        comments = Queries.get_comment_on_post(post)
+        context_dict['comments'] = comments
+
+        attempts = get_attempts(post_id)
+        context_dict['attempts'] = attempts
     except Post.DoesNotExist:
         context_dict['post'] = None
 
@@ -138,8 +148,14 @@ def show_user(request, user_name):
 
 @login_required
 def all_followed_category(request):
-    # returns categories that a user follows
-    # use query for this
+    # url might need to be deleted if helper function to display on personal page
+    categories = get_category_following(request.user.id)
+    return
+
+@login_required
+def all_followed_users(request):
+    follows = get_user_following(request.user.id)
+    ## also needs sepaparate url if not helper function to display on personal page
     return
 
 
@@ -222,7 +238,7 @@ def add_folder(request):
 
         if form.is_valid():
             # Saves new folder to the database.
-            form.save(commit=True)
+            form.save()
             return redirect(reverse('feed:ll_folders',kwargs={'username':request.user.username}))
         
         else:
@@ -322,12 +338,6 @@ def comment_on_post(request, post_id):
 
     return redirect(reverse('feed:show_comments_on_post',
                             kwargs={'post_id': post_id}))
-
-
-@login_required
-def show_comments_on_post(request, post_id):
-    #maybe use query for this
-    return
 
 
 @login_required
