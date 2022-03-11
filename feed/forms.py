@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from feed.models import Post ## post changes to something else once models.py has been created
+from feed.models import Post, Folder, Comment
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(max_length=36)
@@ -22,12 +22,10 @@ class UserLoginForm(forms.ModelForm):
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
     image = forms.ImageField()
-    likes = forms.IntegerField(default=0)
-    comments = forms.CharField(max_length=248)
-
+    
     class Meta:
         model = Post
-        fields = ('title','image','likes','comments')
+        fields = ('title','image')
 
 class EditProfileForm(forms.ModelForm):
     username = forms.CharField(max_length=36)
@@ -42,8 +40,12 @@ class UserCommentForm(forms.ModelForm):
     content = forms.CharField(max_length=128)
 
     class Meta:
-        model = User
+        model = Comment
         fields = {'user', 'content'}
 
 class FolderForm(forms.ModelForm):
     foldername = forms.CharField()
+
+    class Meta:
+        model = Folder
+        fields = {'name'}
