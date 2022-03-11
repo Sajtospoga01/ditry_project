@@ -22,7 +22,7 @@ class UserLoginForm(forms.ModelForm):
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
     image = forms.ImageField()
-
+    
     class Meta:
         model = Post
         fields = ('title','image')
