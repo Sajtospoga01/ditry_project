@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from feed.models import Post, Folder, UserProfile, Like
+from feed.models import Post, Folder, UserProfile, Likes
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
 from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm
 from datetime import datetime
@@ -45,7 +45,7 @@ def trending(request):
 def follow_category(request, category_name_slug):
     # user follows category and is redirected to this category
     following_user = request.user
-    follows_category = Category.objects.get(slug=category_name_slug)
+    follows_category = Categorises.objects.get(slug=category_name_slug)
 
     if FollowsCategory.objects.filter(follower=following_user, following=follows_category).exists():
         # if user already follows category, clicking on follow again, makes user unfollow category
@@ -72,10 +72,14 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
 
         if form.is_valid():
             form.save()
+<<<<<<< HEAD
             if boolean_attempt and attempt_post_id!=None:
                 # if it is an attempt redirect to show all attempts
                 Queries.set_original(attempt_post_id, attempt)
                 return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
+=======
+            post_id = Post.id
+>>>>>>> fd9763cf625fd87f5afa74efb97b0e89d0c24533
 
             post_id = post.id
             return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
@@ -87,9 +91,9 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
 
 
 @login_required
-def add_post_to_category(request, category_slug, post_id):
+def add_post_to_category(request, category_name_slug, post_id):
     post = Post.objects.get(id = post_id)
-    category = Category.objects.get(slug=category_name_slug)
+    category = Categorises.objects.get(slug=category_name_slug)
     # post is added to category
     Functions.connect_post_to_category(post, category).save()
     return redirect(reverse('feed:show_category',kwargs={'category_slug': category_name_slug}))
@@ -160,9 +164,14 @@ def all_followed_users(request):
 
 
 @login_required
+<<<<<<< HEAD
 def show_category_helper(category_id):
     # helper function
     category = Category.objects.get(id=category_id)
+=======
+def show_category(request, category_id):
+    category = Categorises.objects.get(id=category_id)
+>>>>>>> fd9763cf625fd87f5afa74efb97b0e89d0c24533
     posts = Queries.get_posts_in_category(category_id)
     return category, posts
 
@@ -257,7 +266,7 @@ def like_post(request,post_id):
         Likes.objects.filter(liked_post=post, liker=request.user).delete()
         post.likes -= 1
 
-    except Like.DoesNotExist:
+    except Likes.DoesNotExist:
         Likes.objects.create(liked_post=post, liker=request.user)
         post.likes += 1
 
@@ -308,13 +317,13 @@ def like_comment(request, comment_id):
 
     try:
         # name of comment_likes class might have to  be changed
-        already_Liked = Comment_likes.objects.get(liked_comment=comment, liker=request.user)
-        Likes.objects.filter(liked_post=post, liker=request.user).delete()
+        already_Liked = Likes.objects.get(liked_comment=comment, liker=request.user)
+        Likes.objects.filter(liked_post=Post, liker=request.user).delete()
         comment.likes -= 1
 
-    except Like.DoesNotExist:
+    except Likes.DoesNotExist:
         # name of comment_likes class might have to  be changed
-        Comment_likes.objects.create(liked_post=post, liker=request.user)
+        Likes.objects.create(liked_post=Post, liker=request.user)
         comment.likes += 1
 
     comment.save()
