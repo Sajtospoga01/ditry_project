@@ -1,23 +1,15 @@
-{% extends base.html %}
-{% load static %}
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
 
-<head>
-    <title>
-        {% block title_block %}
-             - Contact Us!
-        {% endblock %}
-    </title>
-    
-    <body>
-        {% block body_block %}
-            <!--very cool body, asking whoever clicked on this section to please not contact us very kindly :)-->
-            <h1>Very cool</h1>
-            {% if user.is_authenticated %}
-            
-            {% else %}
-            
-            {% endif %}
-            
-        {% endblock }
-    </body>
-</head>
+{% block title_block %}
+    contact us
+{% endblock %}
+
+
+{% block body_block %}
+    <!--very cool body, asking whoever clicked on this section to please not contact us very kindly :)-->
+    <h1>Very cool!</h1>
+<div style="height: 500px;">
+    <span style="font-size: 30px; font-weight: 900;">Here is contact us page.</span>
+</div>
+{% endblock %}

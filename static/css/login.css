@@ -1,0 +1,217 @@
+#page {
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    background-image: url(background.png);
+    background-position: center center;
+    /* 背景图不平铺 */
+    background-attachment: fixed;
+    /* 让背景图基于容器大小伸缩 */
+    background-size: cover;
+    /* 设置背景颜色，背景图加载过程中会显示背景色 */
+    background-color: #ffffff;
+}
+
+#page #topStrip {
+    height: 150px;
+    width: 1200px;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+#page #topStrip #logo,
+#page #topStrip #logo:hover {
+    display: flex;
+    cursor: pointer;
+}
+
+#page #topStrip #logo img{
+    width: 304px;
+}
+
+#page #topStrip #login_signup {
+    width: 300px;
+    height: 150px;
+    align-items: center;
+    justify-content: flex-end;
+    display: flex;
+}
+
+#page #topStrip #login_signup .tipText {
+    border-right: 7px solid #4f81ff00;
+    width: 80px;
+    height: 20px;
+    font-size: 16px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#page #topStrip #login_signup .lsText {
+    width: 65px;
+    height: 20px;
+    font-size: 20px;
+    font-family: 'Passion One', cursive;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#page #topStrip #login_signup .lsText:hover {
+    color: #4F81FF;
+    text-decoration: none;
+}
+
+#page #loginBorder{
+    height: 900px;
+    width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#page #loginBorder #loginFrame{
+    background-color: rgb(255, 255, 255);
+    opacity: 1;
+    width: 500px;
+    height: 400px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 20px;
+}
+
+#page #loginBorder #loginFrame span{
+    font-family: 'Passion One', cursive;
+    color: black;
+    font-size: 40px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+#page #loginBorder #loginFrame #emailFrame{
+    width: 350px;
+    height: 45px;
+    border: 1.5px solid rgba(70, 70, 70, 0);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: #eeeeee;
+}
+
+#page #loginBorder #loginFrame #emailFrame:hover{
+    border: 1.5px solid #4F81FF;
+}
+
+#page #loginBorder #loginFrame #emailFrame #emailText input{
+    border: 0px;
+    border-left: 20px solid #ffffff00;
+    font-size: 20px;
+    letter-spacing: 2px;
+    outline: none;
+    width: 320px;
+    background-color: #eeeeee;
+    color: #a7a7a7b2;
+}
+
+#page #loginBorder #loginFrame #emailFrame #emailText input:hover{
+    color: #272727;
+}
+
+
+#page #loginBorder #loginFrame #PasswordFrame{
+    width: 350px;
+    height: 45px;
+    border: 1.5px solid rgba(70, 70, 70, 0);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: #eeeeee;
+}
+
+#page #loginBorder #loginFrame #PasswordFrame:hover{
+    border: 1.5px solid #4F81FF;
+}
+
+#page #loginBorder #loginFrame #PasswordFrame #PasswordText input{
+    border: 0px;
+    border-left: 20px solid #ffffff00;
+    font-size: 20px;
+    letter-spacing: 2px;
+    outline: none;
+    width: 320px;
+    background-color: #eeeeee;
+    color: #a7a7a7b2;
+}
+
+#page #loginBorder #loginFrame #PasswordFrame #PasswordText input:hover{
+    color: #272727;
+}
+
+
+#page #loginBorder #loginFrame #loginButton{
+    width: 350px;
+    height: 45px;
+    border: 1.5px solid rgba(70, 70, 70, 0);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1ab99679;
+    text-decoration: none;
+}
+
+#page #loginBorder #loginFrame #loginButton:hover{
+    border: 1.5px solid #1AB996;
+}
+
+#page #loginBorder #loginFrame #loginButton span{
+    font-size: 30px;
+    color: #ffffff;
+    text-shadow: #6E6E6E 1px 0 0, #6E6E6E 0 1px 0, #6E6E6E -1px 0 0, #6E6E6E 0 -1px 0;
+}
+
+#page #loginBorder #loginFrame #forgetpw{
+    text-decoration: none;
+    color: #a7a7a7f3;
+}
+
+#page #loginBorder #loginFrame #forgetpw:hover{
+    text-decoration: none;
+    color: #4F81FF;
+}
+
+#page .rowLine {
+    background-color: #ffffff;
+    width: 1200px;
+    height: 2px;
+}
+
+#page #bottom {
+    display: flex;
+    width: 400px;
+    height: 35px;
+    justify-content: space-around;
+    border-top: 20px solid rgba(255, 255, 255, 0);
+}
+
+#page #bottom .helpInfo {
+    font-size: 18px;
+    font-family: 'Passion One', cursive;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#page #bottom .helpInfo:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#page #copyright {
+    color: #ffffff;
+    font-size: xx-small;
+}

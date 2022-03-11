@@ -1,0 +1,176 @@
+#page #detail{
+    display: flex;
+    justify-content: space-around;
+    width: 1000px;
+}
+
+#page #detail #frame{
+    box-shadow: rgb(119, 119, 119) 10px 10px 50px 5px;
+    width: 900px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: row;
+    border: 30px solid rgb(255, 255, 255);
+    border-right: 10px solid rgb(255, 255, 255);
+    align-items: center;
+    justify-content: space-around;
+
+}
+
+#page #detail #frame #pic form{
+    display: flex;
+    align-items: center;
+    background-color: rgb(226, 226, 226);
+    height: 600px;
+    border-radius: 20px;
+    border: 2px solid #ffffff;
+}
+
+#page #detail #frame #pic form:hover{
+    border-color: #2d7ef7;
+}
+
+
+#page #detail #frame #pic form input{
+    width: 300px;
+    border-left:100px solid rgb(226, 226, 226)
+}
+
+
+
+#page #detail #frame #authorCom{
+    width: 400px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#page #detail #frame #authorCom .Allopera {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items:flex-start;
+}
+
+#page #detail #frame #authorCom .Allopera #choose {
+    border-right:30px solid #ffffff;
+    border-bottom: 50px solid rgb(255, 255, 255);
+}
+
+#page #detail #frame #authorCom .Allopera #choose #chooseButton {
+    font-size: 20px;
+    color: #000000;
+    outline: none;
+    letter-spacing: 2px;
+    background-color: #e9e9e9;
+    border:5px solid;
+    border-right:15px;
+    border-left:15px;
+    border-radius: 7px;
+    border-color:#e9e9e9;
+}
+
+#page #detail #frame #authorCom .Allopera #choose #chooseButton:hover {
+    color: #5b5b61;
+}
+
+#page #detail #frame #authorCom .Allopera #more a img{
+    width: 30px;
+    border-top: 5px solid #ffffff;
+}
+
+#page #detail #frame #authorCom #author{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 400px;
+}
+
+#page #detail #frame #authorCom #author #titleText input:hover{
+    border-bottom: 2px solid #2d7ef7;
+}
+
+#page #detail #frame #authorCom #author #titleText input {
+    height: 60px;
+    width: 416px;
+    font-weight: 600px;
+    font-size: 38px;
+    color: #707070;
+    letter-spacing: 0.5px;
+    border: 0px;
+    outline: none;
+    border-bottom: 2px solid #e4e4e4;
+}
+
+#page #detail #frame #authorCom #author #authorFrame{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#page #detail #frame #authorCom #author #authorFrame a #authorProfile{ 
+    width: 60px;
+    border: 20px solid rgb(255, 255, 255);
+    border-left: 0px;
+    border-right: 0px;
+}
+
+#page #detail #frame #authorCom #author #authorFrame #name{
+    border: 20px solid rgb(255, 255, 255);
+    border-left: 5px solid rgb(255, 255, 255);;
+    width: 240px;
+}
+
+#page #detail #frame #authorCom #author #descriText input:hover{
+    border-bottom: 2px solid #2d7ef7;
+}
+
+#page #detail #frame #authorCom #author #descriText input {
+    height: 40px;
+    width: 416px;
+    font-size: 15px;
+    color: #a0a0a0;
+    letter-spacing: 0.5px;
+    border: 0px;
+    outline: none;
+    border-bottom: 2px solid #e4e4e4;
+}
+
+#page #detail #frame #authorCom #save{
+    display: flex;
+    justify-content: flex-end;
+}
+
+#page #detail #frame #authorCom #save #saveFrame{
+    border: 7px solid;
+    border-top: 5px solid;
+    border-right: 1px solid;
+    border-left: 1px solid;
+    border-color: #ffffff;
+    border-radius: 8px;
+}
+
+#page #detail #frame #authorCom #save #saveFrame:hover{
+    border-color: #880a0a;
+}
+
+#page #detail #frame #authorCom #save #saveFrame #saveButton {
+    font-family: 'Passion One', cursive;
+    border: 7px solid;
+    border-left: 26px solid;
+    border-right: 26px solid;
+    border-radius: 7px;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #e23c3c; 
+    border-color: #e23c3c;
+}
+
+
+
+#page #detail #frame #authorCom .save:hover{
+    font-size: 16px;
+}
