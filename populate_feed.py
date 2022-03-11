@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ditry_project.settings')
 from PIL import Image
 import django
 django.setup()
-from feed.models import Category,Post,UserProfile,Categorises,Functions,FollowsUser
+from feed.models import Category,Post, Queries,UserProfile,Categorises,Functions,FollowsUser,Comment
 from django.contrib.auth.models import User
 from PIL import ImageFile
 
@@ -75,6 +75,34 @@ def populate():
             "following":"dummy2"
         }
     ]
+    user_likes = [
+        {
+            "liker":"bob",
+            "liked_post":1
+        }
+
+    ]
+    attempts = [
+        {
+            "original":1,
+            "attempt":2
+        }
+    ]
+    user_follows_category = [
+        {
+            "follower":"bob",
+            "following":"Diy"
+        }
+    ]
+    comments = [
+        {
+            "id":1,
+            "post_id":1,
+            "user_id":1,
+            "comment":"That is dope!"
+        }
+    ]
+
 
     
     for profile in test_profile:
@@ -99,6 +127,14 @@ def populate():
         connect_post_to_category(ptc["post_id"],ptc["category_name"])
     for follow in user_follows:
         user_follows_user(follow["follower"],follow["following"])
+    for likes in user_likes:
+        connect_likes(likes["liker"],likes["liked_post"])
+    for attempt in attempts:
+        attempt_on_post(attempt["original"],attempt["attempt"])
+    for follow in user_follows_category:
+        user_follows_categories(follow["follower"],follow["following"])
+    for comment in comments:
+        add_comment(comment["id"],comment["post_id"],comment["user_id"],comment["comment"])
         
     
 def add_category(name):
@@ -112,6 +148,7 @@ def add_post(id,title,likes,picture,creator):
         im = ImageFile(Image.open("sample_images/"+picture))
         Post.objects.get_or_create(id = id,creator = creator,title = title,likes = likes)
         c = Post.objects.get(id = id)
+        
         c.picture.save(picture, ImageFile(open("sample_images/"+picture,"rb")))
     else:
         c = def_post[0]
@@ -130,8 +167,13 @@ def add_profile(username,email,first_name,last_name,password):
         return user
     else:
         print("existing user")
-        return def_user[0]   
+        return def_user[0]  
 
+def connect_likes(username,post_id):
+    user_object = UserProfile.objects.get(username = username)
+    post_object = Post.objects.get(id = post_id)
+    connect = Functions.connect_user_likes_post(user_object,post_object)
+    print(connect)
 
 def connect_post_to_category(post_id,category_name):
     post = Post.objects.get(id = post_id)
@@ -143,7 +185,14 @@ def user_follows_user(follower_name,following_name):
     following = UserProfile.objects.get(username = following_name)
     Functions.connect_user_follows_user(follower,following)
 
+def attempt_on_post(original_id,attempt_id):
+    print("creating attempt: "+str(original_id)+" "+str(attempt_id))
+    Functions.set_original(original_id,attempt_id)
 
+def user_follows_categories(username,category_name):
+    follower = UserProfile.objects.get(username = username)
+    following = Category.objects.get(name = category_name)
+    Functions.connect_user_follows_category(follower,following)
 
 
 def get_user(id):
@@ -151,6 +200,13 @@ def get_user(id):
     user = UserProfile.objects.get(id = id)
     
     return user
+
+def add_comment(id,post_id,user_id,comment):
+    user = UserProfile.objects.get(id = user_id)
+    post = Post.objects.get(id = post_id)
+    comment = Comment.objects.get_or_create(id = id,post = post,user = user, comment = comment)
+    c = Comment.objects.get(id = id,post = post,user =user)
+    print(c)
 
 
     

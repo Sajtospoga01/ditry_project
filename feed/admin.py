@@ -1,13 +1,10 @@
 from django.contrib import admin
-from feed.models import UserProfile,Category,Post,Comment,Categorises,FollowsUser
-
+from feed.models import Category,Post,UserProfile,Comment,FollowsCategory
 
 admin.site.register(Category)
-admin.site.register(Comment)
-admin.site.register(Post)
 admin.site.register(UserProfile)
-admin.site.register(Categorises)
-admin.site.register(FollowsUser)
-
-
+admin.site.register(Post)
+admin.site.register(Comment)
+admin.site.register(FollowsCategory)
 # Register your models here.
+
