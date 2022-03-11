@@ -46,8 +46,8 @@ class Post(models.Model):
 
 class Comment(models.Model):  
     id = models.AutoField(primary_key=True)
-    post_id = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='%(class)s_on_post')
-    user_id = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='%(class)s_by_user')
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='%(class)s_on_post')
+    user = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='%(class)s_by_user')
     class Meta:
         constraints = [
             UniqueConstraint(fields = ['id', 'post_id','user_id'], name = 'Comment')
@@ -149,8 +149,17 @@ class Functions:
     
 
 class Queries:
-
+    #takes post id
+    def get_comment_on_post(post):
+        try:
+            post = Post.objects.get(id = post)
+            comments = Comment.objects.filter(post = post)    
+            return comments       
+        except:
+            return None
     #takes user id
+
+
     def get_original(post):
         try:
             post_object = Post.objects.get(id = post)
@@ -275,5 +284,11 @@ class Queries:
             return result
         except:
             return None
+
+    
+        
+
+
+    
 
     

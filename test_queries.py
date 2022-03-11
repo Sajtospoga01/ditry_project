@@ -120,6 +120,16 @@ def test_get_category_following():
         for category in categories:
             print("\t"+category.name)
 
+def test_get_comment():
+    print("\ntest_get_comment...\n")
+    posts = Post.objects.all()
+    for post in posts:
+        print(str(post)+" has comment:")
+        comments = Queries.get_comment_on_post(post.id)
+        for comment in comments:
+            print("\t"+str(comment))
+            print("\tposted by "+str(comment.user))
+
 
 if __name__ == '__main__':
     test_category_in_post()
@@ -134,3 +144,4 @@ if __name__ == '__main__':
     test_get_original()
     test_get_category_follows()
     test_get_category_following()
+    test_get_comment()

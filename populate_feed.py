@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ditry_project.settings')
 from PIL import Image
 import django
 django.setup()
-from feed.models import Category,Post, Queries,UserProfile,Categorises,Functions,FollowsUser
+from feed.models import Category,Post, Queries,UserProfile,Categorises,Functions,FollowsUser,Comment
 from django.contrib.auth.models import User
 from PIL import ImageFile
 
@@ -94,6 +94,15 @@ def populate():
             "following":"Diy"
         }
     ]
+    comments = [
+        {
+            "id":1,
+            "post_id":1,
+            "user_id":1,
+            "comment":"That is dope!"
+        }
+    ]
+
 
     
     for profile in test_profile:
@@ -124,6 +133,8 @@ def populate():
         attempt_on_post(attempt["original"],attempt["attempt"])
     for follow in user_follows_category:
         user_follows_categories(follow["follower"],follow["following"])
+    for comment in comments:
+        add_comment(comment["id"],comment["post_id"],comment["user_id"],comment["comment"])
         
     
 def add_category(name):
@@ -189,6 +200,13 @@ def get_user(id):
     user = UserProfile.objects.get(id = id)
     
     return user
+
+def add_comment(id,post_id,user_id,comment):
+    user = UserProfile.objects.get(id = user_id)
+    post = Post.objects.get(id = post_id)
+    comment = Comment.objects.get_or_create(id = id,post = post,user = user, comment = comment)
+    c = Comment.objects.get(id = id,post = post,user =user)
+    print(c)
 
 
     
