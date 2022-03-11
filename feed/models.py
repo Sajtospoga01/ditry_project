@@ -1,3 +1,4 @@
+from queue import Empty
 from unittest import result
 from django.db.models import CASCADE
 from django.db import models
@@ -54,6 +55,15 @@ class Comment(models.Model):
     def __str__(self):
         return self.comment
 
+class Folder(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=32, null = False)
+    user = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_user_folder')
+    private = models.BooleanField(default=False,null = False)
+    
+
+
+
 class FollowsUser(models.Model):
     follower = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_by_user')
     following = models.ForeignKey(UserProfile,on_delete=CASCADE,related_name='%(class)s_to_follow')
@@ -97,6 +107,16 @@ class Categorises(models.Model):
     def __str__(self):
         return str(self.post.id) + ' belongs to: ' +self.category.name
 
+class In_folder(models.Model):
+    folder = models.ForeignKey(Folder,on_delete=CASCADE)
+    post = models.ForeignKey(Post,on_delete=CASCADE)
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields = ['folder','post'], name = 'stores')
+        ]
+    def __str__(self):
+        return self.post.title+' is in: ' +str(self.folder.name)
+
 class Functions:
     def connect_post_to_category(post,category):
         return Categorises.objects.get_or_create(post = post,category = category)
@@ -109,6 +129,10 @@ class Functions:
 
     def connect_user_follows_user(user,followed):
         return FollowsUser.objects.get_or_create(follower = user,following = followed)
+
+    def connect_post_in_folder(post,folder):
+        return In_folder.objects.get_or_create(folder = folder,post = post)
+
 
     def set_original(original_id,attempt_id):
         attempt = Post.objects.get(id = attempt_id)
@@ -146,6 +170,7 @@ class Functions:
     
 
 class Queries:
+    #gets comments on a specific post
     #takes post id
     def get_comment_on_post(post):
         try:
@@ -154,9 +179,9 @@ class Queries:
             return comments       
         except:
             return None
-    #takes user id
 
-
+    #gets the original post of an attempt post
+    #takes a post id
     def get_original(post):
         try:
             post_object = Post.objects.get(id = post)
@@ -166,6 +191,7 @@ class Queries:
         except:
             return None
 
+    #gets attempts to a specific post
     #takes post id
     def get_attempts(post):
         try:
@@ -176,6 +202,7 @@ class Queries:
         except:
             return None
 
+    #gets posts liked by a specific user
     #takes post id
     def get_liked_posts(user):
         try:
@@ -187,6 +214,7 @@ class Queries:
         except:
             return None
 
+    #gets users who liked a specific post
     #takes post id
     def get_post_likes(post):
         try:
@@ -198,6 +226,7 @@ class Queries:
         except:
             return None
 
+    #gets which categories a specific user is following
     #takes user id
     def get_category_following(user):
         try:
@@ -209,6 +238,7 @@ class Queries:
         except:
             return None
 
+    #gets which users follow the specific category
     #takes category name
     def get_category_follows(category):
         try:
@@ -221,8 +251,8 @@ class Queries:
             return None
     
 
-
-    # takes a category name
+    #gets the posts in a specific category
+    #takes a category name
     def get_posts_in_category(category): 
         try:
             category_object = Category.objects.get(name = category)
@@ -233,6 +263,7 @@ class Queries:
         except:
             return None
 
+    #gets categories that a post is present in
     #takes a post id
     def get_category_of_post(post):
         try:
@@ -245,7 +276,8 @@ class Queries:
         except:
             return None
 
-    # takes a user id
+    #gets posts posted by a specific user
+    #takes a user id
     def get_user_posts(user):
         try:
             user_object = UserProfile.objects.get(id = user)
@@ -255,6 +287,7 @@ class Queries:
         except:
             return None
 
+    #gets who is a specific user is following
     #takes a user id
     def get_user_following(user):
         try:
@@ -269,7 +302,7 @@ class Queries:
         except:
             return None
 
-    
+    #gets who is following a specific user
     #takes a user id
     def get_user_follows(user):
         try:
@@ -282,6 +315,29 @@ class Queries:
         except:
             return None
 
+    
+    #gets the posts in a folder
+    #takes folder id
+    def get_posts_in_folder(folder):
+        try:
+            folder_object = Folder.objects.get(id = folder)
+            filtered_posts = In_folder.objects.filter(folder = folder_object).values("post")
+            result = Post.objects.filter(id__in = filtered_posts)
+            #returns query of posts
+            return result
+        except:
+            return None
+
+    #gets folders for a specific user
+    #takes user id
+    def get_user_folders(user):
+        try:
+            user_object = UserProfile.objects.get(id = user)
+            result = Folder.objects.filter(user = user_object)
+            #return query of folders
+            return result
+        except:
+            return None
     
         
 

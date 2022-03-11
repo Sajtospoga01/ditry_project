@@ -17,7 +17,7 @@ urlpatterns = [
     path('add-post-to-category/', views.add_post_to_category, name='add_post_to_category'),
     path('food/', views.show_food, name='show_food'),
     path('diys/', views.show_diys, name='show_diys'),
-    path('drafts/', views.show_drafts, name='show_drafts'),
+    #path('drafts/', views.show_drafts, name='show_drafts'),
     
     path('show-post/<int:post_id>/', views.show_post, name='show_post'),
     path('show-post/<int:post_id>/like-post/', views.like_post, name='like_post'),
@@ -29,7 +29,7 @@ urlpatterns = [
     # user_name cannot be 'register', 'login', 'logout', 'help', etc.
     path('<str:username>/', views.show_user, name='account'),
     path('<str:username>/folders/', views.all_folders, name='all_folders'),
-    path('<str:username>/folders/add-folder/', views.add_folders, name='add_folders'),
+    #path('<str:username>/folders/add-folder/', views.add_folders, name='add_folders'),
     path('<str:username>/folders/<slug:folder_name_slug>/', views.show_folder, name='show_folder'),
     path('<str:username>/folders/<slug:folder_name_slug>/delete-folder/', views.delete_folder, name='delete_folder'),
     path('<str:username>/folders/<slug:folder_name_slug>/<int:post_id>/del-saved-post/', views.delete_saved_post,
@@ -37,7 +37,7 @@ urlpatterns = [
     path('<str:username>/my-attempts/', views.show_my_attempts, name='show_my_attempts'),
     path('<str:username>/my-posts/<int:post_id>/delete-post/', views.delete_post, name='delete_post'),
     path('<str:username>/update-profile/', views.update_profile,name='update_profile'),
-    path('<str:username>/all-followed-categories/', views.all_followed_categories,name='all_followed_categories'),
+    #path('<str:username>/all-followed-categories/', views.all_followed_categories,name='all_followed_categories'),
     
 
     path('follow-user/<str:username>/', views.follow_user, name='follow_user'),
