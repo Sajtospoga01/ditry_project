@@ -23,7 +23,7 @@ def home(request):
 
 
 def about(request):
-    return render(request,'feed_templates/about.html')
+    return render(request,'feed_templates/about.html' )
 
 
 def help(request):
@@ -54,13 +54,6 @@ def follow_category(request, category_name_slug):
         FollowsCategory.objects.filter(follower=following_user, following=follows_category).save()
 
     return redirect(reverse('feed:show_category', kwargs={'category_slug': category_name_slug}))
-
-
-@login_required
-def show_my_posts(request, user_name):
-    ### might have to be changed if separate model for my_posts
-    posts = Queries.get_user_posts(user_name)
-    return render(request, 'feed_templates/show_my_posts.html', context ={'posts':posts})
 
 
 @login_required
@@ -108,7 +101,7 @@ def show_post(request, post_id):
     except Post.DoesNotExist:
         context_dict['post'] = None
 
-    return render(request, 'feed_templates/post.html', context = context_dict)
+    return render(request, 'feed_templates/picDetail.html', context = context_dict)
 
 
 @login_required
@@ -139,7 +132,8 @@ def all_folders(request, user_name):
 @login_required
 def show_user(request, user_name):
     user = UserProfile.objects.get(username=user_name)
-    return render(request,'feed_templates/personalPage.html', context={'user':user})
+    posts = Queries.get_user_posts(user_name)
+    return render(request,'feed_templates/personalPage.html', context={'user':user, 'posts':posts})
 
 
 @login_required
@@ -150,10 +144,27 @@ def all_followed_category(request):
 
 
 @login_required
-def show_category(request, category_id):
+def show_category_helper(category_id):
+    # helper function
     category = Category.objects.get(id=category_id)
     posts = Queries.get_posts_in_category(category_id)
-    return render(request, 'feed_templates/show_category.html', context ={'posts':posts, 'category':category})
+    return category, posts
+
+@login_required
+def show_crafts(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
+
+@login_required
+def show_diys(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed_templates/diys.html', context={'posts':posts, 'category':category})
+
+
+@login_required
+def show_food(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
 
 
 @login_required
@@ -217,7 +228,7 @@ def add_folder(request):
         else:
             print(form.errors)
 
-    return render(request, 'feed_templates/add_folder.html', {'form': form})
+    return render(request, 'feed_templates/add_folder.html', context={'form': form})
 
 
 @login_required
@@ -338,16 +349,25 @@ def search(request):
         # gets all search terms
         queries = request.GET['q'].split()
         all_posts = Post.objects.all()
+        all_users = UserProfile.objects.all()
         matching_posts = []
+        matching_users = []
         # loops through all search terms
         for query in queries:
             if query is not None:
+
                 # filters post by if search term in title
                 for p in all_posts.filter(Q(title__icontains = query)):
                     if p not in matching_posts:
                         matching_posts.append(p)
 
-    return render(request,'feed_templates/search.html', {'matching_posts': matching_posts})
+                # filter users by if search term is in username
+                for u in all_users.filter(Q(username__icontains = query)):
+                    if u not in matching_users:
+                        matching_users.append(u)
+
+    return render(request,'feed_templates/search.html',
+                  context = {'matching_posts': matching_posts, 'matching_users':matching_users})
 
 
 def register(request):
