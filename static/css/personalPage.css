@@ -5,7 +5,6 @@
     flex-direction: column;
     border: 30px solid rgb(255, 255, 255);
     border-right: 10px solid rgb(255, 255, 255);
-    /* background-color: #16A082; */
     align-items: center;
 }
 
@@ -32,7 +31,14 @@
     color: black;
 }
 
-#page  #frame  #author #authorDetail #following{
+#page  #frame  #author #authorDetail #followFrame{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 220px;
+}
+
+#page  #frame  #author #authorDetail #followFrame .follow{
     border-bottom: 5px solid #ffffff;
 }
 
@@ -144,6 +150,10 @@
 
 #page  #frame #folderAndPics #folders #customFrame{
     width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #page  #frame #folderAndPics #folders #customFrame .folder{
@@ -167,6 +177,18 @@
 
 #page  #frame #folderAndPics #folders #customFrame .folder a:hover{
     color: #000000;
+}
+
+#page  #frame #folderAndPics #folders #customFrame #operaFrame{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 60px;
+    width: 150px;
+}
+
+#page  #frame #folderAndPics #folders #customFrame #operaFrame .addDeleteCat .addDeleteCatButton{
+    width: 50px;
 }
 
 #page  #frame #folderAndPics #picFrame{
