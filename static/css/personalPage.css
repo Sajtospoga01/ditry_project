@@ -147,21 +147,23 @@
     align-items: center;
 }
 
-#page  #frame #folderAndPics #folders #foldersText{
+#page  #frame #folderAndPics #folders .foldersText{
     letter-spacing: 0.5px;
     text-decoration: none;
     font-size: 25px;
     font-weight: 900;
     color: #707070;
-    border-bottom: 10px solid rgb(255, 255, 255);
+    border-bottom: 20px solid rgb(255, 255, 255);
+    border-left: 20px solid #ffffff;
 }
 
 #page  #frame #folderAndPics #folders #customFrame{
     width: 200px;
+    height: 700px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content:space-between;
+    align-items:center;
 }
 
 #page  #frame #folderAndPics #folders #customFrame .folder{
@@ -187,7 +189,7 @@
     color: #000000;
 }
 
-#page  #frame #folderAndPics #folders #customFrame #operaFrame{
+#page  #frame #folderAndPics #folders #customFrame .operaFrame{
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -195,8 +197,13 @@
     width: 150px;
 }
 
-#page  #frame #folderAndPics #folders #customFrame #operaFrame .addDeleteCat .addDeleteCatButton{
+#page  #frame #folderAndPics #folders #customFrame .operaFrame .addDeleteCat .addDeleteCatButton{
     width: 50px;
+}
+
+#page  #frame #folderAndPics #folders #customFrame #catFrame{
+    width: 500px;
+    height: 200px;
 }
 
 #page  #frame #folderAndPics #picFrame{
