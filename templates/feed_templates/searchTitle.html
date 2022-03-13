@@ -1,0 +1,67 @@
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
+
+
+{% block title_block %}
+    Search
+{% endblock %}
+
+{% block body_block %}
+<link rel="stylesheet" href="/static/css/searchTitle.css" type="text/css">
+<div id="frame">
+    <div id="tipText"><span>All results have been shown below.</span></div>
+    <div class="rowLine"></div>
+    <div id="catFrame">
+        <div id="cat1">
+            Title
+            <div class="buttonUnderline"></div>
+        </div>
+        <div id="cat2">
+            <a href="">User</a>
+            <div class="buttonUnderline"></div>
+        </div>
+    </div>
+    <div id="resultFrame">
+        <div class="picFrame">
+            <div class="subpicFrame">
+                <a href=""><img src="{{ MEDIA_URL }}samplePic1.png" alt="samplePic1" /></a>
+            </div>
+            <div class="titleFrame"><a href="">Title</a></div>
+        </div>
+        <div class="picFrame">
+            <div class="subpicFrame">
+                <a href=""><img src="{{ MEDIA_URL }}samplePic2.png" alt="samplePic2" /></a>
+            </div>
+            <div class="titleFrame"><a href="">Title</a></div>
+        </div>
+        <div class="picFrame">
+            <div class="subpicFrame">
+                <a href=""><img src="{{ MEDIA_URL }}samplePic3.png" alt="samplePic3" /></a>
+            </div>
+            <div class="titleFrame"><a href="">Title</a></div>
+        </div>
+        <div class="picFrame">
+            <div class="subpicFrame">
+                <a href=""><img src="{{ MEDIA_URL }}samplePic4.png" alt="samplePic4" /></a>
+            </div>
+            <div class="titleFrame"><a href="">Title</a></div>
+        </div>
+        <div class="picFrame">
+            <div class="subpicFrame">
+                <a href=""><img src="{{ MEDIA_URL }}samplePic5.png" alt="samplePic5" /></a>
+            </div>
+            <div class="titleFrame"><a href="">Title</a></div>
+        </div>
+    </div>
+    <br>
+    <div id="paging">
+        <span>Previous</span>
+        <a href="">1</a>
+        <a href="">2</a>
+        <a href="">3</a>
+        <a href="">4</a>
+        <a href="">5</a>
+        <span>Next</span>
+    </div><br>
+</div>
+{% endblock %}
