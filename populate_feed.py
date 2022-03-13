@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ditry_project.settings')
 from PIL import Image
 import django
 django.setup()
-from feed.models import Category,Post, Queries,UserProfile,Categorises,Functions,FollowsUser,Comment
+from feed.models import Category, Folder,Post, Queries,UserProfile,Categorises,Functions,FollowsUser,Comment
 from django.contrib.auth.models import User
 from PIL import ImageFile
 
@@ -21,19 +21,19 @@ def populate():
     post_populate = [
         {"id":1,
          "title":"title1",
-         "likes":0,
+         "likes":23,
          "picture": "sample_1.jpg",
          "creator":1
         },
         {"id":2,
          "title":"title2",
-         "likes":0,
+         "likes":54,
          "picture": "sample_2.jpg",
          "creator":1
         },
         {"id":3,
          "title":"title3",
-         "likes":0,
+         "likes":92,
          "picture": "sample_3.jpg",
          "creator":1
         }        
@@ -102,7 +102,20 @@ def populate():
             "comment":"That is dope!"
         }
     ]
-
+    folders = [
+        {
+            "id":1,
+            "name":"Folder name",
+            "user":1,
+            "private":False
+        }
+    ]
+    folder_post = [
+        {
+            "folder":1,
+            "post":1
+        }
+    ]
 
     
     for profile in test_profile:
@@ -135,6 +148,11 @@ def populate():
         user_follows_categories(follow["follower"],follow["following"])
     for comment in comments:
         add_comment(comment["id"],comment["post_id"],comment["user_id"],comment["comment"])
+    for folder in folders:
+        add_folder(folder["id"],folder["name"],folder["user"],folder["private"])
+    for con in folder_post:
+        connect_folder_to_post(con["folder"],con["post"])
+    
         
     
 def add_category(name):
@@ -169,6 +187,7 @@ def add_profile(username,email,first_name,last_name,password):
         print("existing user")
         return def_user[0]  
 
+
 def connect_likes(username,post_id):
     user_object = UserProfile.objects.get(username = username)
     post_object = Post.objects.get(id = post_id)
@@ -194,6 +213,14 @@ def user_follows_categories(username,category_name):
     following = Category.objects.get(name = category_name)
     Functions.connect_user_follows_category(follower,following)
 
+def add_folder(id,name,user,private):
+    user_object = UserProfile.objects.get(id = user)
+    Folder.objects.get_or_create(id = id,name = name,user = user_object,private = private)
+
+def connect_folder_to_post(folder,post):
+    folder_object = Folder.objects.get(id = folder)
+    post_object = Post.objects.get(id = post)
+    Functions.connect_post_in_folder(post_object,folder_object)
 
 def get_user(id):
 

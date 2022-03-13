@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    personal page
+    Your page
 {% endblock %}
 
 {% block body_block %}
@@ -13,7 +13,10 @@
         <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
         <div id="authorDetail">
             <a href="" id="name">Name</a>
-            <div id="following">66 following</div>
+            <div id="followFrame">
+                <div class="follow">66 following</div>
+                <div class="follow">23 followers</div>
+            </div>
             <div id="location">
                 <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
                 <a id="locationText">Location</a>
@@ -45,6 +48,10 @@
                 <div class="folder">
                     <a href="" style="border-color:blue" class="icon"></a>
                     <a href=""><span>Folder Name2</span></a>
+                </div>
+                <div id="operaFrame">
+                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
                 </div>
             </div>
         </div>

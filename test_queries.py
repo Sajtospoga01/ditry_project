@@ -8,7 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ditry_project.settings')
 from PIL import Image
 import django
 django.setup()
-from feed.models import Category, Queries, User,Post, UserProfile
+from feed.models import Category, Folder, Queries, User,Post, UserProfile
 
 def test_category_in_post():
     print("\nPost in category test...\n")
@@ -130,6 +130,29 @@ def test_get_comment():
             print("\t"+str(comment))
             print("\tposted by "+str(comment.user))
 
+def test_get_posts_in_folder():
+    print("\ntest_get_posts_in_folder...\n")
+    folders = Folder.objects.all()
+    for folder in folders:
+        print(folder)
+        posts = Queries.get_posts_in_folder(folder.id)
+        for post in posts:
+            print(post)
+
+def test_get_user_folders():
+    print("\ntest_get_user_folders...\n")
+    users = UserProfile.objects.all()
+    for user in users:
+        print(user)
+        folders = Queries.get_user_folders(user.id)
+        for folder in folders:
+            print("\t"+str(folder))
+        
+
+
+
+
+
 
 if __name__ == '__main__':
     test_category_in_post()
@@ -145,3 +168,5 @@ if __name__ == '__main__':
     test_get_category_follows()
     test_get_category_following()
     test_get_comment()
+    test_get_posts_in_folder()
+    test_get_user_folders()

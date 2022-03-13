@@ -72,8 +72,8 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
 
         if form.is_valid():
             post = form.save()
-            attempt_id = post.id
             if boolean_attempt and attempt_post_id!=None:
+                attempt_id = post.id
                 # if it is an attempt redirect to show all attempts
                 Queries.set_original(attempt_post_id, attempt_id)
                 return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
@@ -111,6 +111,8 @@ def show_post(request, post_id):
         context_dict['attempts'] = attempts
     except Post.DoesNotExist:
         context_dict['post'] = None
+        context_dict['likes'] = None
+        context_dict['comments'] = None
 
     return render(request, 'feed_templates/picDetail.html', context = context_dict)
 
@@ -144,14 +146,12 @@ def all_folders(request, user_name):
 def show_user(request, user_name):
     user = UserProfile.objects.get(username=user_name)
     posts = Queries.get_user_posts(user_name)
-    return render(request,'feed_templates/personalPage.html', context={'user':user, 'posts':posts})
+    followed_categories = Queries.get_category_following(request.user.id)
+
+    context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories}
+    return render(request,'feed_templates/personalPage.html', context=context_dict)
 
 
-@login_required
-def all_followed_category(request):
-    # url might need to be deleted if helper function to display on personal page
-    categories = Queries.get_category_following(request.user.id)
-    return
 
 @login_required
 def all_followed_users(request):
@@ -160,13 +160,8 @@ def all_followed_users(request):
     return
 
 
-@login_required
-def show_category_helper(category_id):
-    # helper function
+def show_category_helper( category_id):
     category = Category.objects.get(id=category_id)
-
-def show_category(request, category_id):
-    category = Categorises.objects.get(id=category_id)
     posts = Queries.get_posts_in_category(category_id)
     return category, posts
 
@@ -187,7 +182,6 @@ def show_food(request, category_id):
     return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
 
 
-@login_required
 def helper_delete_post(request,post):
     if request.method == 'POST':
         post.delete()
@@ -306,7 +300,7 @@ def save_post(request, folder_name_slug ,post_id):
     context_dict = {'form': form, 'folder': folder}
     return render(request, 'feed_templates/addPost.html', context=context_dict)
 
-
+# might not need this view, if not needed also delete url for it
 @login_required
 def like_comment(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
@@ -358,16 +352,15 @@ def delete_comment(request, comment_id):
 
 
 @login_required
-def search(request):
+def search_title(request):
     # for reference:
     #https://stackoverflow.com/questions/38006125/how-to-implement-search-function-in-django
     if request.method == 'GET':
         # gets all search terms
         queries = request.GET['q'].split()
         all_posts = Post.objects.all()
-        all_users = UserProfile.objects.all()
         matching_posts = []
-        matching_users = []
+
         # loops through all search terms
         for query in queries:
             if query is not None:
@@ -377,13 +370,28 @@ def search(request):
                     if p not in matching_posts:
                         matching_posts.append(p)
 
+    return render(request,'feed_templates/searchTitle.html',
+                  context={'matching_posts': matching_posts})
+
+
+@login_required
+def search_user(request):
+    if request.method == 'GET':
+        # gets all search terms
+        queries = request.GET['q'].split()
+        matching_users = []
+
+        # loops through all search terms
+        for query in queries:
+            if query is not None:
                 # filter users by if search term is in username
                 for u in all_users.filter(Q(username__icontains = query)):
                     if u not in matching_users:
                         matching_users.append(u)
 
-    return render(request,'feed_templates/search.html',
-                  context={'matching_posts': matching_posts, 'matching_users':matching_users})
+    return render(request,'feed_templates/searchUser.html',
+                  context={'matching_users':matching_users})
+
 
 
 def register(request):
@@ -416,9 +424,10 @@ def register(request):
 
 @login_required
 def update_profile(request):
-   form = EditProfileForm
-   if request.method=='POST':
+   form = EditProfileForm()
+   if request.method == 'POST':
        form = EditProfileForm(request.POST)
+
        if form.is_valid:
            form.save()
            return redirect(reverse('feed:account', kwargs={'username':request.user.username}))
