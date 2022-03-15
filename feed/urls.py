@@ -1,7 +1,7 @@
 from django.urls import path
 from feed import views
 
-app_name ='feed'
+app_name ='feed_templates'
 
 urlpatterns = [
     path('', views.home, name ='home'),
