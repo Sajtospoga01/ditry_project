@@ -7,6 +7,7 @@ from django.conf import settings
 from feed.models import Category, Folder,Post, Queries,UserProfile,Categorises,Functions,FollowsUser,Comment
 from django.contrib.auth.models import User
 from django.core.files.images import ImageFile
+
 # some maybe unnecessary project structure tests, might be added to
 
 class ProjectStructureTests(TestCase):
@@ -19,6 +20,49 @@ class ProjectStructureTests(TestCase):
         is_app_configured = 'feed' in settings.INSTALLED_APPS
 
         self.assertTrue(is_app_configured, f"Feed app missing from INSTALLED_APPS in settings.py")
+
+# all views tests, incredibly incomplete
+
+class HomePageTest(TestCase):
+    def setUp(self):
+        self.views_module = importlib.import_module('feed.views')
+        self.views_module_listing = dir(self.views_module)
+
+        self.project_urls_module = importlib.import_module('ditry_project.urls')
+
+    def test_view_exists(self):
+        name_exists = 'home' in self.views_module_listing
+        is_callable = callable(self.views_module.index)
+
+        self.assertTrue(name_exists, f"The home() view does not exist.")
+        self.assertTrue(is_callable, f"home() view is not a function")
+
+    def test_mappings_exists(self):
+        home_mapping_exists = False
+
+        for mapping in self.project_urls_module.urlpatterns:
+            if hasattr(mapping, 'name'):
+                if mapping.name == 'home':
+                    home_mapping_exists = True
+
+        self.assertTrue(index_mapping_exists, f"The home url mapping could not be found.")
+        self.assertEqual(reverse('feed:home'), '/home/', f"home url lookup failed.")
+
+    def test_home_view_with_no_posts(self):
+        response = self.client.get(reverse('feed:home'))
+
+        self.assertEqual(response.status_code, 200, f"Home page not returned with status code 200.")
+        self.assertContains(reponse, 'Feed empty.', f"'Feed empty.' message not displayed.") ## not implemented
+        self.assertQuerysetEqual(response.context['posts'], [], f" Non-empty posts context.") ## also not checked
+
+    def test_home_view_with_posts(self):
+        HelperMethods.add_post()
+        #and again and again
+        response = self.client.get(reverse('feed:home'))
+        self.assertEqual(response.status_code, 200,f"Home page not returned with status code 200.")
+        self.assertContains() # a couple these
+        num_posts = len(response.context['posts'])
+        self.assertEqual(num_posts, 3, f"Wrong number of posts passed in response.")
 
 # all database related tests, getting there
 
@@ -43,12 +87,16 @@ class ModelTests(TestCase):
         post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
 
         comment = Comment.objects.create(post_id = 1, user_id =1, comment = "test comment", likes = 0)
+        comment.save()
 
     def test_category_model(self):
         c_diy = Category.objects.get(name = "diy")
         self.assertTrue(c_diy.id>=0, f"Category id not autofilled.")
         c_food = Category.objects.get(name = "food")
         self.assertTrue(c_food.id > c_diy.id, f"Category id doesn't increment.")
+
+    def test_category_slug(self):
+        pass
 
     def test_post_model(self):
         post = Post.objects.get(id = 1)
@@ -89,13 +137,115 @@ class UniqueConstraintTests(TestCase):
 
 class QueryTests(TestCase):
     def setup(self):
-        pass
+        for name in ["diy", "food"]:
+            c = Category.objects.get_or_create(name=name)
+            c.save()
+
+        user1 = UserProfile.objects.create_user("bobs", "bob@gmail.com", "abc123")
+        user1.first_name = "bob"
+        user1.last_name = "smith"
+        user1.save()
+        user2 = UserProfile.objects.create_user("alicej", "alice@gmail.com", "password")
+        user2.first_name = "alice"
+        user2.last_name = "jones"
+        user2.save()
+
+        post = Post.objects.create(id = 1, creator = user1, title = "test", likes = 0)
+        post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
+
+        attempt_post = Post.objects.create(id = 2, creator = user2, title = "test attempt", likes =0)
+        attempt_post.picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
+        Functions.set_original(1,2)
+
+        comment1 = Comment.objects.create(post_id = 1, user_id =1, comment = "test comment", likes = 0)
+        comment1.save()
+        comment2 = Comment.objects.create(post_id = 1, user_id = 2, comment = "another test comment", likes = 0)
+        comment2.save()
+
+        Functions.connect_user_likes_post(1,1)
+        Functions.connect_user_likes_post(2,1)
+        Functions.connect_user_likes_post(1,2)
+
+        Functions.connect_user_follows_category(1,1)
+        Functions.connect_user_follows_category(1,2)
+        Functions.connect_user_follows_category(2,1)
+
+        Functions.connect_post_to_category(1,1)
+        Functions.connect_post_to_category(2,1)
+
+        Functions.connect_user_follows_user(2,1)
+
+        folder = Folder.create(id = 1, name = "test folder", user = 1)
+        folder.save()
+        Functions.connect_post_in_folder(1,1)
+
+    def test_get_comment_on_post(self):
+        comments = Queries.get_comment_on_post(1)
+        self.assertEqual(len(comments), 2, f"Expected 2 comments, found {len(comments)}.")
+        self.assertContains(comments, Comment.objects.get(comment = "test comment"), f"Expected to find 'test comment' in comments.")
+
+    def test_get_original(self):
+        original = Queries.get_original(2)
+        self.assertEqual(original.id, 1, f"Original post expected to have id 1, has id {original.id}.")
+
+    def test_get_attempts(self):
+        attempts = Queries.get_attempts(1)
+        self.assertEqual(len(attempts), 1, f"Expected 1 attempt, found {len(attempts)}.")
+        self.assertContains(attempts, Post.objects.get(id = 2), f"Expected post with id 2 to be in attempts of post 1.")
+
+    def test_get_liked_posts(self):
+        liked_posts = Queries.get_liked_posts(1)
+        self.assertEqual(len(liked_posts),2, f"Expected user 1 to have liked 2 posts.")
+        self.assertContains(liked_posts, Post.objects.get(id=2), f"Expected post 2 in user one's liked posts.")
+
+    def test_get_post_likes(self):
+        post_likes = Queries.get_post_likes(1)
+        self.assertEqual(len(post_likes),2, f"Expected post 1 to have 2 likes.")
+        self.assertContains(post_likes, User.objects.get(username="bobs"), f"Expected post 1 to be liked by user bobs.")
+
+    def test_get_category_following(self):
+        category_following = Queries.get_category_following(1)
+        self.assertEqual(len(category_following), 2, f"Expected user 1 to follow 2 categories.")
+        self.assertContains(category_following, Category.objects.get(name="diy"), f"Expected user 1 to be following the diy category.")
+
+    def test_get_category_follows(self):
+        follows_category = Queries.get_category_follows(1)
+        self.assertEqual(len(follows_category), 2, f"Expected two users to be following category 1.")
+        self.assertContains(follows_category, User.objects.get(username = "alicej"), "Expected alicej to be following category 1.")
+
     def test_get_posts_in_category(self):
-        pass
+        posts_in_category = Queries.get_posts_in_category(1)
+        self.assertEqual(len(posts_in_category), 2, f"Expected two posts in category 1.")
+        self.assertContains(posts_in_category, Post.objects.get(id = 1), "Expected post 1 to be in category 1.")
+
+    def test_get_category_of_post(self):
+        category = Queries.get_category_of_post(1)
+        self.assertEqual(category[0], Category.objects.get(id=1), f"Expected query to return category 1.")
+    
     def test_get_user_posts(self):
-        pass
+        posts = Queries.get_user_posts(1)
+        self.assertEqual(posts[0], Post.objects.get(id =1). f"Expected query to return post 1.")
+
+    def test_get_user_following(self):
+        following = Queries.get_user_following(2)
+        self.assertEqual(following[0], User.objects.get(username = "alicej"), f"Query expected to return user alicej.")
+
     def test_get_user_follows(self):
-        pass
+        followers = Queries.get_user_follows(1)
+        self.assertEqual(followers[0], User.objects.get(username = "bobs"), f"Expected query to return user bobs.")
+        followers = Queries.get_user_follows(2)
+        self.assertEqual(len(followers), 0, f"Expected query to return empty list.")
+    
+    def test_get_posts_in_folder(self):
+        posts = Queries.get_posts_in_folder(1)
+        self.assertEqual(len(posts), 1, f"Expected query to return only 1 post.")
+        self.assertContains(posts, Post.objects.get(id = 1), f"Expected query to return post 1.")
+    
+    def test_get_user_folders(self):
+        folders = Queries.get_user_folders(1)
+        self.assertEqual(len(folders), 1, f"Expected query to return only 1 folder.")
+        self.assertContains(folders, Folder.objects.get(id = 1), f"Expected query to return folder 1.")
+
 
 # tests for the population script, done except one
 class PopulationScriptTests(TestCase):
