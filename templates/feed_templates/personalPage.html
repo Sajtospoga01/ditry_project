@@ -14,8 +14,8 @@
         <div id="authorDetail">
             <a href="" id="name">Name</a>
             <div id="followFrame">
-                <div class="follow">66 following</div>
-                <div class="follow">23 followers</div>
+                <div class="follow"><a href>66 following</a></div>
+                <div class="follow"><a href>23 followers</a></div>
             </div>
             <div id="location">
                 <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
@@ -39,19 +39,32 @@
     </div>
     <div id="folderAndPics">
         <div id="folders">
-            <span id="foldersText">Folders</span>
             <div id="customFrame">
-                <div class="folder">
-                    <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
-                    <a href=""><span>Folder Name</span></a>
+                <div class="forderFrame">
+                    <span class="foldersText">Folders</span>
+                    <div class="folder">
+                        <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
+                        <a href=""><span>Folder Name</span></a>
+                    </div>
+                    <div class="folder">
+                        <a href="" style="border-color:blue" class="icon"></a>
+                        <a href=""><span>Folder Name2</span></a>
+                    </div>
+                    <div class="operaFrame">
+                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                    </div>
                 </div>
-                <div class="folder">
-                    <a href="" style="border-color:blue" class="icon"></a>
-                    <a href=""><span>Folder Name2</span></a>
-                </div>
-                <div id="operaFrame">
-                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
-                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                <div class="catFrame">
+                    <span class="foldersText">Categories</span>
+                    <div class="folder">
+                        <a href="" style="border-color:rgb(0, 255, 13)"  class="icon"></a>
+                        <a href=""><span>Category</span></a>
+                    </div>
+                    <div class="operaFrame">
+                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,143 @@
+#frame{
+    width: 1200px;
+    height: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#frame #tipText{
+    align-self: flex-start;
+}
+
+#frame #tipText span{
+    border-left: 40px solid #ffffff00;
+    font-size: medium;
+    color: #707070c5;
+}
+
+#frame #resultFrame{
+    width: 1100px;
+    height: 950px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    align-items:center;
+    justify-content:flex-start;
+    flex-wrap: wrap;
+    background-color: #ffffff;
+}
+
+#frame  #resultFrame  #author{
+    display: flex;
+    flex-direction: row;
+    background-color: #F3F3F3;
+}
+
+#frame  #resultFrame  #author a #authorProfile{ 
+    width: 100px;
+    border: 20px solid #F3F3F3;
+}
+
+#frame  #resultFrame  #author #authorDetail{
+    border: 20px solid #F3F3F3;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#frame  #resultFrame  #author #authorDetail #name{
+    word-wrap: break-word;
+    font-size: 30px;
+    font-weight: 900;
+    text-decoration: none;
+    color: black;
+}
+
+#frame  #resultFrame  #author #authorDetail #following{
+    border-bottom: 5px solid #F3F3F3;
+}
+
+
+#frame  #resultFrame  #author #authorDetail #location{
+    display: flex;
+    align-items: center;
+}
+
+#frame  #resultFrame  #author #authorDetail #location #locationText{
+    border: 10px solid #F3F3F3;
+    opacity: 0.5;
+    font-size: 8px;
+}
+
+#frame  #resultFrame  #author #authorDetail #authorOpera{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#frame  #resultFrame  #author #authorDetail #authorOpera .button{
+    border: 5px solid;
+    border-left: 26px solid;
+    border-right: 26px solid;
+    border-radius: 15px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    border-color: #16A082;
+    color: #ffffff;
+    text-decoration: none;
+    background-color:#16A082 ;
+    font-weight: 900;
+}
+
+#frame  #resultFrame  #author #authorDetail #authorOpera .button:hover{
+    box-shadow: rgb(119, 119, 119) 0px 5px 10px 1px;
+}
+
+
+#frame #resultFrame .spaceFrame{
+    border: 20px solid #00000000;
+}
+
+#frame #resultFrame .picFrame{
+    width: 500px;
+    height: 180px;
+    background-color: #F3F3F3;
+    border-radius: 20px;
+    display: flex;
+    align-items:center;
+    justify-content:space-around;
+    border: 2px solid #00000000;
+}
+
+#frame #resultFrame .picFrame:hover{
+    border: 2px solid #4F81FF;
+}
+
+#frame #paging {
+    display: flex;
+    align-self: center;
+    justify-content: space-around;
+    width: 500px;
+}
+
+#frame #paging a,
+#frame #paging span,
+#frame #paging a:active,
+#frame #paging span:active {
+    background-color: #fafafa;
+    border: 8px solid #fafafa;
+    border-right: 18px solid #fafafa;
+    border-left: 18px solid #fafafa;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #4F81FF;
+    text-decoration: none;
+}
+
+#frame #paging a:hover,
+#frame #paging span:hover {
+    text-decoration: underline;
+}
