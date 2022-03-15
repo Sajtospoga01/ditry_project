@@ -5,8 +5,8 @@ from django.db.models.constraints import UniqueConstraint
 from django.template.defaultfilters import slugify
 from django.core.validators import MinValueValidator, MinLengthValidator, validate_image_file_extension
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 # Create your models here.
-
 
 class Validators:
 

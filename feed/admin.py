@@ -22,6 +22,5 @@ admin.site.register(Comment)
 admin.site.register(FollowsCategory)
 admin.site.register(Folder)
 admin.site.register(In_folder)
-
 # Register your models here.
 

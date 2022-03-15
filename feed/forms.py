@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from feed.models import Post, Folder, Comment
+from feed.models import Post, Folder, Comment, UserProfile
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(max_length=36)
@@ -10,7 +10,12 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username','password','email','profile_picture')
-    
+
+class UserProfileForm(forms.ModelForm):
+    class meta:
+        model = UserProfile
+        fields = ('website','picture')
+
 class UserLoginForm(forms.ModelForm):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())

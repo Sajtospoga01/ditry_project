@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
-from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm
+from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserProfileForm
 from datetime import datetime
 
 # FolderForm does not exist yet
@@ -399,22 +399,29 @@ def register(request):
 
     if request.method == 'POST':
         user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
 
-        if user_form.is_valid():
+
+        if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
 
             user.set_password(user.password)
 
+            user.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
             if 'picture' in request.FILES:
                 user.profile_picture = request.FILES['picture']
-            user.save()
+            profile.save()
             registered = True
             
         else:
-            print(user_form.errors, )
+            print(user_form.errors, profile_form.errors)
     else:
         user_form = UserForm()
-
+        profile_form = UserProfileForm()
     # Render the template depending on the context.
     return render(request,
                   'registration/register.html',
