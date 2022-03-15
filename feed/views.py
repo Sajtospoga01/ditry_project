@@ -31,7 +31,7 @@ def help(request):
 
 
 def contact_us(request):
-    return render(request,'feed_templates/contact.html')
+    return render(request,'feed_templates/contact-us.html')
 
 
 @login_required
