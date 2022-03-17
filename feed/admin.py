@@ -1,26 +1,67 @@
 from django.contrib import admin
 from feed.models import Category,Post,UserProfile,Comment,FollowsCategory,Folder,In_folder, Queries
 
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('creator', 'title', 'picture', 'likes')
+class CommentInline(admin.TabularInline):
+    model = Comment
 
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('creator', 'title', 'likes', 'comments')
+
+    inlines = [CommentInline]
+
+    def comments(self, obj):
+        return len(Queries.get_comment_on_post(obj.id))
+
+class PostInline(admin.TabularInline):
+    model = Post
+
+class FollowCategoryInline(admin.TabularInline):
+    model = FollowsCategory
 
 class UserAdmin(admin.ModelAdmin):
-    list_disply = ('username', 'email', 'posts', 'follows', 'followers')
+    list_display = ('user', 'email', 'posts', 'follows', 'followers')
 
+    inlines = [PostInline, FollowCategoryInline]
+
+    def email(self, obj):
+        return obj.user.email
     def posts(self,obj):
-        return Queries.get_user_posts(obj.id).count()
+        p = Queries.get_user_posts(obj.user.id)
+        if p != None: return len(p)
+        return 0
     def follows(self,obj):
-        return Queries.get_user_follows(obj.id).count()
+        f = Queries.get_user_follows(obj.user.id)
+        if f != None: return len(f)
+        return 0
     def followers(self,obj):
-        return Queries.get_user_following(obj.id).count()
+        f = Queries.get_user_following(obj.user.id)
+        if f != None: return len(f)
+        return 0
 
-admin.site.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('comment', 'user', 'post', 'likes')
+
+class InFolderInline(admin.TabularInline):
+    model = In_folder
+
+class FolderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'posts', 'private')
+
+    inlines = [InFolderInline]
+
+    def posts(self, obj):
+        p = Queries.get_posts_in_folder(obj.id)
+        if p!= None: return len(p)
+        return 0
+
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(UserProfile, UserAdmin)
 admin.site.register(Post, PostAdmin)
-admin.site.register(Comment)
-admin.site.register(FollowsCategory)
-admin.site.register(Folder)
-admin.site.register(In_folder)
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(Folder, FolderAdmin)
 # Register your models here.
-
+# follows category not included, can be done through each userprofile
+# same with in_folder through folder admin
