@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.test import TestCase
 from django.conf import settings
 
-from feed.models import Category, Folder,Post, Queries,UserProfile,Categorises,Functions,FollowsUser,Comment
+from feed.models import *
 from django.contrib.auth.models import User
 from django.core.files.images import ImageFile
 
@@ -45,18 +45,18 @@ class HomePageTest(TestCase):
                 if mapping.name == 'home':
                     home_mapping_exists = True
 
-        self.assertTrue(index_mapping_exists, f"The home url mapping could not be found.")
+        self.assertTrue(home_mapping_exists, f"The home url mapping could not be found.")
         self.assertEqual(reverse('feed:home'), '/home/', f"home url lookup failed.")
 
     def test_home_view_with_no_posts(self):
         response = self.client.get(reverse('feed:home'))
 
         self.assertEqual(response.status_code, 200, f"Home page not returned with status code 200.")
-        self.assertContains(reponse, 'Feed empty.', f"'Feed empty.' message not displayed.") ## not implemented
+        self.assertContains(response, 'Feed empty.', f"'Feed empty.' message not displayed.") ## not implemented
         self.assertQuerysetEqual(response.context['posts'], [], f" Non-empty posts context.") ## also not checked
 
     def test_home_view_with_posts(self):
-        HelperMethods.add_post()
+        # add post
         #and again and again
         response = self.client.get(reverse('feed:home'))
         self.assertEqual(response.status_code, 200,f"Home page not returned with status code 200.")
@@ -109,10 +109,10 @@ class ModelTests(TestCase):
         test_post = Post.objects.get(id=1)
         test_comment = Comment.objects.get(id = 1)
 
-        assertEqual(str(category_diy), "diy", f"Category string method doesn't work. Expected 'diy' and got '{str(category_diy)}'.")
-        assertEqual(str(user_alice), "alicej1", f"UserProfile string method doesn't work. Expected 'alicej1' and got '{str(user_alice)}'.")
-        assertEqual(str(test_post), "test", f"Post string method doesn't work. Expected 'test' and got '{str(test_post)}'.")
-        assertEqual(str(test_comment), "test comment", f"Comment string method doesn't work. Expected 'test comment' and got '{str(test_comment)}'.")
+        self.assertEqual(str(category_diy), "diy", f"Category string method doesn't work. Expected 'diy' and got '{str(category_diy)}'.")
+        self.assertEqual(str(user_alice), "alicej1", f"UserProfile string method doesn't work. Expected 'alicej1' and got '{str(user_alice)}'.")
+        self.assertEqual(str(test_post), "test", f"Post string method doesn't work. Expected 'test' and got '{str(test_post)}'.")
+        self.assertEqual(str(test_comment), "test comment", f"Comment string method doesn't work. Expected 'test comment' and got '{str(test_comment)}'.")
 
     def test_likes_are_positive(self):
         p = Post.objects.create(creator = User.objects.get(username = "alicej"),title = "likes_test",likes = -1)
@@ -132,7 +132,7 @@ class UniqueConstraintTests(TestCase):
         pass
     def test_categorises_unique(self):
         pass
-    def test_folder_unique(self);
+    def test_folder_unique(self):
         pass
 
 class QueryTests(TestCase):
@@ -224,7 +224,7 @@ class QueryTests(TestCase):
     
     def test_get_user_posts(self):
         posts = Queries.get_user_posts(1)
-        self.assertEqual(posts[0], Post.objects.get(id =1). f"Expected query to return post 1.")
+        self.assertEqual(posts[0], Post.objects.get(id =1), f"Expected query to return post 1.")
 
     def test_get_user_following(self):
         following = Queries.get_user_following(2)
@@ -311,7 +311,7 @@ class PopulationScriptTests(TestCase):
             self.assertEqual(users[i].password, exp_users[i]["password"], f"{users[i].username}'s password is incorrect.")
 
     def test_user_follows(self):
-        follow = FollowUser.objects.get(follower = "bob")
+        follow = FollowsUser.objects.get(follower = "bob")
         self.assertEqual(follow.following, "dummy2", f"Bob not following dummy2.")
 
     def test_user_likes(self):
@@ -319,8 +319,8 @@ class PopulationScriptTests(TestCase):
         self.assertEqual(1, len(like), f"Bob has liked {len(like)} posts - expected 1.")
         self.assertEqual(like[0].liked_post, 1, f"Expected liked post to have id 1, was {like[0].liked_post.id}")
 
-    def test_attemps(self):
-        ## unimplemented
+    def test_attempts(self):
+        pass
 
     def test_user_follows_category(self):
         follow = FollowsCategory.objects.get(follower = "bob")
@@ -339,7 +339,7 @@ class PopulationScriptTests(TestCase):
         self.assertFalse(folder.private, f"Expected folder to be public.")
 
     def test_folders_post(self):
-        folder_content = In_Folder.objects.filter(folder = 1)
+        folder_content = In_folder.objects.filter(folder = 1)
         self.assertEqual(len(folder_content), 1, f"Expected folder to contain 1 post, conttains {len(folder_content)}.")
         self.assertEqual(folder_content[0].post, 1, f"Expected folder to contain post 1, contains post {folder_content[0].post}.")
     
@@ -352,14 +352,14 @@ class AdminTests(TestCase):
 # helper functions, for helping
 class Helper:
     def create_user_object():
-    user = User.objects.get_or_create(username='bobs',
+        user = User.objects.get_or_create(username='bobs',
                                       first_name='bob',
                                       last_name='smith',
                                       email='test@test.com')[0]
-    user.set_password('testabc123')
-    user.save()
+        user.set_password('testabc123')
+        user.save()
 
-    return user
+        return user
 
 def create_super_user_object():
     return User.objects.create_superuser('admin', 'admin@test.com', 'testpassword')
