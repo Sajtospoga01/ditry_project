@@ -31,36 +31,37 @@
         <div id="signBorder">
             <div id="signFrame">
                 <span>Join us!</span>
+                <form action="feed_templates:register" method="POST">
                 {% csrf_token %}
-                {{ user_form.as_p }}
-                <div id="nameFrame">
-                    <div id="name1">
-                        <form id="firstName" action="">
-                            <input type="text" name="firstName" value="First Name" onfocus="this.value=''"
-                                onblur="if(this.value==''){this.value='First Name'}">
+                    <div id="nameFrame">
+                        <div id="name1">
+                            <form id="firstName" action="">
+                                <input type="text" name="firstName" value="First Name" onfocus="this.value=''"
+                                    onblur="if(this.value==''){this.value='First Name'}" required>
+                            </form>
+                        </div>
+                        <div id="name2">
+                            <form id="lastName" action="">
+                                <input type="text" name="lastName" value="Last Name" onfocus="this.value=''"
+                                    onblur="if(this.value==''){this.value='Last Name'}" required>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="regisEmailFrame">
+                        <form id="regisEmailText" action="">
+                            <input type="text" name="regisEmailText" value="Email" onfocus="this.value=''"
+                                onblur="if(this.value==''){this.value='Email'}">
                         </form>
                     </div>
-                    <div id="name2">
-                        <form id="lastName" action="">
-                            <input type="text" name="lastName" value="Last Name" onfocus="this.value=''"
-                                onblur="if(this.value==''){this.value='Last Name'}">
-                        </form>
-                    </div>
-                </div>
-                <div id="regisEmailFrame">
-                    <form id="regisEmailText" action="">
-                        <input type="text" name="regisEmailText" value="Email" onfocus="this.value=''"
-                            onblur="if(this.value==''){this.value='Email'}">
+                    <div id="PasswordFrame">
+                        <form id="PasswordText" action="">
+                            <input type="text" name="PasswordText" value="Password" onfocus="this.value=''"
+                                onblur="if(this.value==''){this.value='Password'}" required>
                     </form>
                 </div>
-                <div id="PasswordFrame">
-                    <form id="PasswordText" action="">
-                        <input type="text" name="PasswordText" value="Password" onfocus="this.value=''"
-                            onblur="if(this.value==''){this.value='Password'}">
-                    </form>
+                <input id="loginButton" type="submit"><span>Create</span>
+                </form>
                 </div>
-                <a href="" id="loginButton"><span>Create</span></a>
-            </div>
         </div>
 
         <div class="rowLine"></div>
@@ -68,9 +69,9 @@
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-            <a href="{% url 'about' %}" class="helpInfo">About</a>
-            <a href="{% url 'help' %}" class="helpInfo">Help</a>
-            <a href="{% url 'contact' %}" class="helpInfo">Contact us</a>
+            <a href="{% url 'feed_templates:about' %}" class="helpInfo">About</a>
+            <a href="{% url 'feed_templates:help' %}" class="helpInfo">Help</a>
+            <a href="{% url 'feed_templates:contact_us' %}" class="helpInfo">Contact us</a>
         </div>
         <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
     </div>
