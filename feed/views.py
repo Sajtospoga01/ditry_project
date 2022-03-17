@@ -4,13 +4,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
-from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserProfileForm
+from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm
 from datetime import datetime
-
 # FolderForm does not exist yet
 
 
@@ -394,41 +394,6 @@ def search_user(request):
 
 
 
-def register(request):
-    registered = False
-
-    if request.method == 'POST':
-        user_form = UserForm(request.POST)
-        profile_form = UserProfileForm(request.POST)
-
-
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-
-            user.set_password(user.password)
-
-            user.save()
-
-            profile = profile_form.save(commit=False)
-            profile.user = user
-
-            if 'picture' in request.FILES:
-                user.profile_picture = request.FILES['picture']
-            profile.save()
-            registered = True
-            
-        else:
-            print(user_form.errors, profile_form.errors)
-    else:
-        user_form = UserForm()
-        profile_form = UserProfileForm()
-    # Render the template depending on the context.
-    return render(request,
-                  'registration/register.html',
-                  context={'user_form': user_form,
-                             'registered': registered})
-
-
 @login_required
 def update_profile(request):
    form = EditProfileForm()
@@ -443,6 +408,19 @@ def update_profile(request):
    return render(request, 'register/update_profile.html', context={'user_form':form})
 
 
+def register(request):
+    form = UserForm()
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, 'Accouont was created for ' + user)
+            return redirect('feed_templates:login')
+    context = {'form':form}
+
+    return render(request,'feed_templates/register.html',context)
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -451,19 +429,13 @@ def user_login(request):
         user = authenticate(username=username, password=password)
 
         if user:
-            if user.is_active:
                 login(request, user)
                 return redirect(reverse('feed:home'))
-            else:
-                # inactive account
-                return HttpResponse("Your diTry account is disabled.")
         else:
             # invalid login details
-            print(f"Invalid login details: {username}, {password}")
-            return HttpResponse("Invalid login details supplied.")
-
-    else:
-        return render(request, 'registration/login.html')
+            messages.info(request,'Username or Password is incorrect')
+    context = {}
+    return render(request, 'feed_templates/login.html',context)
 
 
 @login_required

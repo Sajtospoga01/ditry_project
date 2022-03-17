@@ -1,5 +1,5 @@
 from django.contrib import admin
-from feed.models import Category,Post,UserProfile,Comment,FollowsCategory,Folder,In_folder
+from feed.models import Category,Post,UserProfile,Comment,FollowsCategory,Folder,In_folder, Queries
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('creator', 'title', 'picture', 'likes')
@@ -9,11 +9,11 @@ class UserAdmin(admin.ModelAdmin):
     list_disply = ('username', 'email', 'posts', 'follows', 'followers')
 
     def posts(self,obj):
-        return get_user_posts(obj.id).count()
+        return Queries.get_user_posts(obj.id).count()
     def follows(self,obj):
-        return get_user_follows(obj.id).count()
+        return Queries.get_user_follows(obj.id).count()
     def followers(self,obj):
-        return get_user_following(obj.id).count()
+        return Queries.get_user_following(obj.id).count()
 
 admin.site.register(Category)
 admin.site.register(UserProfile, UserAdmin)

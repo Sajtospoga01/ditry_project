@@ -1,6 +1,6 @@
 from django.db.models import CASCADE
 from django.db import models
-from django.contrib.auth.models import User
+from django.forms import ModelForm
 from django.db.models.constraints import UniqueConstraint
 from django.template.defaultfilters import slugify
 from django.core.validators import MinValueValidator, MinLengthValidator, validate_image_file_extension
@@ -20,13 +20,16 @@ class Validators:
                 "Cannot find \"original\" post with id "+str(value))
 
 
-class UserProfile(User):
-
-    profile_picture = models.ImageField(
+class UserProfile(models.Model):
+    user = models.OneToOneField(User,on_delete=CASCADE, default="bio")
+    website = models.URLField(blank=True)
+    bio = models.CharField(max_length=256,blank=True,)
+    profile_picture = models.ImageField( upload_to='profile_images',
         blank=True, validators=[validate_image_file_extension])
 
     def __str__(self):
-        return self.username + ' ' + str(self.id)
+        return self.user.username
+        # return self.username + ' ' + str(self.id)
 
 
 class Category(models.Model):
