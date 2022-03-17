@@ -26,15 +26,15 @@ class UserAdmin(admin.ModelAdmin):
     def email(self, obj):
         return obj.user.email
     def posts(self,obj):
-        p = Queries.get_user_posts(obj.user.id)
+        p = Queries.get_user_posts(obj.id)
         if p != None: return len(p)
         return 0
     def follows(self,obj):
-        f = Queries.get_user_follows(obj.user.id)
+        f = Queries.get_user_follows(obj.id)
         if f != None: return len(f)
         return 0
     def followers(self,obj):
-        f = Queries.get_user_following(obj.user.id)
+        f = Queries.get_user_following(obj.id)
         if f != None: return len(f)
         return 0
 
