@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from unittest import result
 from django.db.models import CASCADE
 from django.db import models
@@ -12,13 +13,17 @@ from django.contrib.auth.models import User
 class Validators:
 
     def validate_origin_post(value):
-        print(value)
-        query = Post.objects.filter(id=value)
-        if (query.count() > 0 or value == None):
-            return value
-        else:
-            raise ValidationError(
-                "Cannot find \"original\" post with id "+str(value))
+        
+        try:
+            query = Post.objects.filter(id=value)
+            if (query.count() > 0 or value == None and value == -1):
+                return value
+            else:
+                raise ValidationError(
+                    "Cannot find \"original\" post with id "+str(value))
+        except:
+
+            return None
 
 
 class UserProfile(User):
@@ -59,7 +64,7 @@ class Post(models.Model):
     picture = models.ImageField(null=False, upload_to='backend', validators=[
                                 validate_image_file_extension])
     original = models.IntegerField(
-        null=True, validators=[Validators.validate_origin_post])
+        blank= False, validators=[Validators.validate_origin_post],default=-1)
 
     def __str__(self):
         return self.title
@@ -244,9 +249,12 @@ class Queries:
     def get_original(post):
         try:
             post_object = Post.objects.get(id=post)
-            original_post = Post.objects.get(id=post_object.original)
-            # return one post object
-            return original_post
+            if(post_object.original == -1):
+                return None
+            else:
+                original_post = Post.objects.get(id=post_object.original)
+                # return one post object
+                return original_post
         except:
             return None
 
@@ -409,7 +417,7 @@ class Queries:
     def get_user_attempts(user):
         try:
             user_object = UserProfile.objects.get(id = user)
-            result = Post.objects.filter(creator = user_object).exclude(original = None)
+            result = Post.objects.filter(creator = user_object).exclude(original = -1)
             return result
 
         except:

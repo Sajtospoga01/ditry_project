@@ -148,6 +148,16 @@ def test_get_user_folders():
         folders = Queries.get_user_folders(user.id)
         for folder in folders:
             print("\t"+str(folder))
+
+def test_get_user_attempts():
+    print("\ntest_get_user_attempts...\n")
+    users = UserProfile.objects.all()
+    for user in users:
+        print(user)
+        attempts = Queries.get_user_attempts(user.id)
+        if attempts != None:
+            for attempt in attempts:
+                print("\t"+ str(attempt))
         
 
 
@@ -171,3 +181,5 @@ if __name__ == '__main__':
     test_get_comment()
     test_get_posts_in_folder()
     test_get_user_folders()
+    test_get_user_attempts()
+

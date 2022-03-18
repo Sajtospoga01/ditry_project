@@ -29,7 +29,7 @@ def populate():
          "title":"title2",
          "likes":54,
          "picture": "sample_2.jpg",
-         "creator":1
+         "creator":2
         },
         {"id":3,
          "title":"title3",
@@ -80,7 +80,6 @@ def populate():
             "liker":"bob",
             "liked_post":1
         }
-
     ]
     attempts = [
         {
@@ -127,7 +126,7 @@ def populate():
     user = get_user(id)
     for post in post_populate:
             
-            p = add_post(post["id"],post["title"],post["likes"],post["picture"],user)
+            p = add_post(post["id"],post["title"],post["likes"],post["picture"],get_user(post["creator"]))
            
 
     for cat in categories_populate:
@@ -234,10 +233,6 @@ def add_comment(id,post_id,user_id,comment):
     comment = Comment.objects.get_or_create(id = id,post = post,user = user, comment = comment)
     c = Comment.objects.get(id = id,post = post,user =user)
     print(c)
-
-
-    
-
 
 if __name__ == '__main__':
     print('Starting feed population script')
