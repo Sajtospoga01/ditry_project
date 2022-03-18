@@ -176,13 +176,11 @@ class QueryTests(TestCase):
 
     def test_get_user_following(self):
         following = Queries.get_user_following(2)
-        user = User.objects.get(username = "bobs")
-        self.assertEqual(following[0], UserProfile.objects.get(user = user), f"Query expected to return user bobs.")
+        self.assertEqual(following[0], UserProfile.objects.get(username = "bobs"), f"Query expected to return user bobs.")
 
     def test_get_user_follows(self):
         followers = Queries.get_user_follows(1)
-        user = User.objects.get(username = "alicej")
-        self.assertEqual(followers[0], UserProfile.objects.get(user = user), f"Expected query to return user alicej.")
+        self.assertEqual(followers[0], UserProfile.objects.get(username = "alicej"), f"Expected query to return user alicej.")
         followers = Queries.get_user_follows(2)
         self.assertEqual(len(followers), 0, f"Expected query to return empty list.")
     
@@ -316,7 +314,7 @@ class AdminTests(TestCase):
         self.assertTrue('Posts' in response_body, "Post model not found in admin interface.")
         self.assertTrue('Comments' in response_body, "Comment model not found in admin interface.")
         self.assertTrue('Folders' in response_body, "Folder model not found in admin interface.")
-        self.assertTrue('User profiles' in response_body, "UserProfile model not found in admin interface.")
+        self.assertTrue('Users' in response_body, "User model not found in admin interface.")
 
     def test_post_display(self):
         response = self.client.get('/admin/feed/post/')
@@ -333,13 +331,13 @@ class AdminTests(TestCase):
         response = self.client.get('/admin/feed/userprofile/')
         response_body = response.content.decode()
 
-        self.assertTrue('<div class="text"><a href="?o=1">User</a></div>' in response_body, f"The 'User' column could not be found in the admin interface for the Userprofile model.")
-        self.assertTrue('<div class="text"><span>Email</span></div>' in response_body, f"The 'Email' column could not be found in the admin interface for the Userprofile model.")
+        self.assertTrue('<div class="text"><a href="?o=1">Username</a></div>' in response_body, f"The 'Username' column could not be found in the admin interface for the Userprofile model.")
+        self.assertTrue('<div class="text"><a href="?o=2">Email address</a></div>' in response_body, f"The 'Email' column could not be found in the admin interface for the Userprofile model.")
         self.assertTrue('<div class="text"><span>Posts</span></div>' in response_body, f"The 'Posts' column could not be found in the admin interface for the Userprofile model.")
         self.assertTrue('<div class="text"><span>Follows</span></div>' in response_body, f"The 'Follows' column could not be found in the admin interface for the Userprofile model.")
         self.assertTrue('<div class="text"><span>Followers</span></div>' in response_body, f"The 'Followers' column could not be found in the admin interface for the Userprofile model.")
 
-        self.assertTrue('<th class="field-user nowrap"><a href="/admin/feed/userprofile/1/change/">bobs</a></th>' in response_body, "Cound not find use bobs in admin interface.")
+        self.assertTrue('bobs' in response_body, "Cound not find user bobs in admin interface.")
         self.assertTrue('<td class="field-followers">1</td>' in response_body, "Could not find bobs's number of followers (expected 1).")
     def test_category_display(self):
         response = self.client.get('/admin/feed/category/')
@@ -378,44 +376,47 @@ class Helper:
         food = Category.objects.create(name = "food")
         food.save()
 
-        user1 = User.objects.create(username = "bobs", email = "bob@gmail.com", password = "abc1234", first_name = "bob", last_name = "smith")
-        user1.save()
-        user1p = UserProfile.objects.create(user = user1, bio = "a bio")
-        user1p.profile_picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
-        user2 = User.objects.create(username = "alicej", email = "alice@gmail.com", password = "testpassword", first_name = "alice", last_name = "jones")
-        user2.save()
-        user2p = UserProfile.objects.create(user = user2, bio = "a bio")
-        user2p.profile_picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
+        
+        user1 = UserProfile.objects.create_user(username = "bobs", email = "bob@gmail.com", password = "abc1234")
+        user1.first_name = "bob"
+        user1.last_name = "smith"
+        user1.bio = "a bio"
+        user1.profile_picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
+        user2 = UserProfile.objects.create_user(username = "alicej", email = "alice@gmail.com", password = "testpassword")
+        user2.first_name = "alice"
+        user2.last_name = "jones"
+        user2.bio = "a bio"
+        user2.profile_picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
         
 
-        post = Post.objects.create(id = 1, creator = user1p, title = "test", likes = 0)
+        post = Post.objects.create(id = 1, creator = user1, title = "test", likes = 0)
         post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
 
-        attempt_post = Post.objects.create(id = 2, creator = user2p, title = "test attempt", likes =0)
+        attempt_post = Post.objects.create(id = 2, creator = user2, title = "test attempt", likes =0)
         attempt_post.picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
-        #attempt_post.original = 1
+        attempt_post.original = 1
         attempt_post.save()
         
 
-        comment1 = Comment.objects.create(post_id = 1, user_id =1, comment = "test comment", likes = 0)
+        comment1 = Comment.objects.create(post = post, user =user1, comment = "test comment", likes = 0)
         comment1.save()
-        comment2 = Comment.objects.create(post_id = 1, user_id = 2, comment = "another test comment", likes = 0)
+        comment2 = Comment.objects.create(post = post, user = user2, comment = "another test comment", likes = 0)
         comment2.save()
 
-        Likes.objects.create(liker = user1p, liked_post = post).save()
-        Likes.objects.create(liker = user2p, liked_post = post).save()
-        Likes.objects.create(liker = user1p, liked_post = attempt_post).save()
+        Likes.objects.create(liker = user1, liked_post = post).save()
+        Likes.objects.create(liker = user2, liked_post = post).save()
+        Likes.objects.create(liker = user1, liked_post = attempt_post).save()
 
-        FollowsCategory.objects.create(follower = user1p, following = diy).save()
-        FollowsCategory.objects.create(follower = user1p, following = food).save()
-        FollowsCategory.objects.create(follower = user2p, following = diy).save()
+        FollowsCategory.objects.create(follower = user1, following = diy).save()
+        FollowsCategory.objects.create(follower = user1, following = food).save()
+        FollowsCategory.objects.create(follower = user2, following = diy).save()
 
         Categorises.objects.create(post = post, category = diy).save()
         Categorises.objects.create(post = attempt_post, category = diy).save()
 
-        FollowsUser.objects.create(follower = user2p, following = user1p).save()
+        FollowsUser.objects.create(follower = user2, following = user1).save()
 
-        folder = Folder.objects.create(id = 1, name = "test folder", user = user1p)
+        folder = Folder.objects.create(id = 1, name = "test folder", user = user1)
         folder.save()
         In_folder.objects.create(folder = folder, post = post).save()
 
