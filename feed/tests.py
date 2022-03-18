@@ -1,4 +1,5 @@
 import os
+import warnings
 import importlib
 from django.urls import reverse
 from django.test import TestCase
@@ -73,21 +74,8 @@ class DatabaseConfigurationTests(TestCase):
 
 
 class ModelTests(TestCase):
-    def setup(self):
-        for name in ["diy", "food"]:
-            c = Category.objects.get_or_create(name=name)
-            c.save()
-
-        user = UserProfile.objects.create_user("alicej", "alice@gmail.com", "password")
-        user.first_name = "alice"
-        user.last_name = "jones"
-        user.save()
-
-        post = Post.objects.create(id = 1, creator = user, title = "test", likes = 3)
-        post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
-
-        comment = Comment.objects.create(post_id = 1, user_id =1, comment = "test comment", likes = 0)
-        comment.save()
+    def setUp(self):
+        Helper.create_model_setup()
 
     def test_category_model(self):
         c_diy = Category.objects.get(name = "diy")
@@ -120,7 +108,7 @@ class ModelTests(TestCase):
         self.assertTrue((p.likes >= 0), f"Post likes should not be negative.")
     
 class UniqueConstraintTests(TestCase):
-    def setup(self):
+    def setUp(self):
         pass
     def test_comment_unique(self):
         pass
@@ -136,48 +124,8 @@ class UniqueConstraintTests(TestCase):
         pass
 
 class QueryTests(TestCase):
-    def setup(self):
-        for name in ["diy", "food"]:
-            c = Category.objects.get_or_create(name=name)
-            c.save()
-
-        user1 = UserProfile.objects.create_user("bobs", "bob@gmail.com", "abc123")
-        user1.first_name = "bob"
-        user1.last_name = "smith"
-        user1.save()
-        user2 = UserProfile.objects.create_user("alicej", "alice@gmail.com", "password")
-        user2.first_name = "alice"
-        user2.last_name = "jones"
-        user2.save()
-
-        post = Post.objects.create(id = 1, creator = user1, title = "test", likes = 0)
-        post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
-
-        attempt_post = Post.objects.create(id = 2, creator = user2, title = "test attempt", likes =0)
-        attempt_post.picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
-        Functions.set_original(1,2)
-
-        comment1 = Comment.objects.create(post_id = 1, user_id =1, comment = "test comment", likes = 0)
-        comment1.save()
-        comment2 = Comment.objects.create(post_id = 1, user_id = 2, comment = "another test comment", likes = 0)
-        comment2.save()
-
-        Functions.connect_user_likes_post(1,1)
-        Functions.connect_user_likes_post(2,1)
-        Functions.connect_user_likes_post(1,2)
-
-        Functions.connect_user_follows_category(1,1)
-        Functions.connect_user_follows_category(1,2)
-        Functions.connect_user_follows_category(2,1)
-
-        Functions.connect_post_to_category(1,1)
-        Functions.connect_post_to_category(2,1)
-
-        Functions.connect_user_follows_user(2,1)
-
-        folder = Folder.create(id = 1, name = "test folder", user = 1)
-        folder.save()
-        Functions.connect_post_in_folder(1,1)
+    def setUp(self):
+        Helper.create_model_setup()
 
     def test_get_comment_on_post(self):
         comments = Queries.get_comment_on_post(1)
@@ -249,7 +197,7 @@ class QueryTests(TestCase):
 
 # tests for the population script, done except one
 class PopulationScriptTests(TestCase):
-    def setup(self):
+    def setUp(self):
         try:
             import populate_feed
         except ImportError:
@@ -345,31 +293,136 @@ class PopulationScriptTests(TestCase):
     
 
 # admin interface tests
-# chap 5 has some
 class AdminTests(TestCase):
-    pass
+
+    def setUp(self):
+        User.objects.create_superuser('testAdmin', 'email@email.com', 'adminPassword123')
+        self.client.login(username='testAdmin', password='adminPassword123')
+        
+        Helper.create_model_setup()
+
+    def test_admin_interface_accessible(self):
+        response = self.client.get('/admin/')
+        self.assertEqual(response.status_code, 200, f"The admin interface is not accessible. Check that you didn't delete the 'admin/' URL pattern in your project's urls.py module.")
+
+    def test_models_present(self):
+        response = self.client.get('/admin/')
+        response_body = response.content.decode()
+
+        self.assertTrue('Models in the Feed application' in response_body, f"The Feed app wasn't listed on the admin interface's homepage.")
+        self.assertTrue('Categories' in response_body, "Category model not found in admin interface.")
+        self.assertTrue('Posts' in response_body, "Post model not found in admin interface.")
+        self.assertTrue('Comments' in response_body, "Comment model not found in admin interface.")
+        self.assertTrue('Folders' in response_body, "Folder model not found in admin interface.")
+        self.assertTrue('User profiles' in response_body, "UserProfile model not found in admin interface.")
+
+    def test_post_display(self):
+        response = self.client.get('/admin/feed/post/')
+        response_body = response.content.decode()
+
+        self.assertTrue('<div class="text"><a href="?o=1">Creator</a></div>' in response_body, f"The 'Creator' column could not be found in the admin interface for the Post model.")
+        self.assertTrue('<div class="text"><a href="?o=2">Title</a></div>' in response_body, f"The 'Title' column could not be found in the admin interface for the Post model.")
+        self.assertTrue('<div class="text"><a href="?o=3">Likes</a></div>' in response_body, f"The 'Likes' column could not be found in the admin interface for the Post model.")
+        self.assertTrue('<div class="text"><span>Comments</span></div>' in response_body, f"The 'Comments' column could not be found in the admin interface for the Post model.")
+
+        self.assertTrue('<td class="field-title">test attempt</td>' in response_body, "Could not find post 'test attempt' in admin interface.")    
+
+    def test_userprofile_display(self):
+        response = self.client.get('/admin/feed/userprofile/')
+        response_body = response.content.decode()
+
+        self.assertTrue('<div class="text"><a href="?o=1">User</a></div>' in response_body, f"The 'User' column could not be found in the admin interface for the Userprofile model.")
+        self.assertTrue('<div class="text"><span>Email</span></div>' in response_body, f"The 'Email' column could not be found in the admin interface for the Userprofile model.")
+        self.assertTrue('<div class="text"><span>Posts</span></div>' in response_body, f"The 'Posts' column could not be found in the admin interface for the Userprofile model.")
+        self.assertTrue('<div class="text"><span>Follows</span></div>' in response_body, f"The 'Follows' column could not be found in the admin interface for the Userprofile model.")
+        self.assertTrue('<div class="text"><span>Followers</span></div>' in response_body, f"The 'Followers' column could not be found in the admin interface for the Userprofile model.")
+
+        self.assertTrue('<th class="field-user nowrap"><a href="/admin/feed/userprofile/1/change/">bobs</a></th>' in response_body, "Cound not find use bobs in admin interface.")
+        self.assertTrue('<td class="field-followers">1</td>' in response_body, "Could not find bobs's number of followers (expected 1).")
+    def test_category_display(self):
+        response = self.client.get('/admin/feed/category/')
+        response_body = response.content.decode()
+
+        self.assertTrue('<div class="text"><span>Category</span></div>' in response_body, f"The 'Category' column could not be found in the admin interface for the Category model.")
+
+    def test_comment_display(self):
+        response = self.client.get('/admin/feed/comment/')
+        response_body = response.content.decode()
+
+        self.assertTrue('<div class="text"><a href="?o=1">Comment</a></div>' in response_body, f"The 'Comment' column could not be found in the admin interface for the Comment model.")
+        self.assertTrue('<div class="text"><a href="?o=2">User</a></div>' in response_body, f"The 'User' column could not be found in the admin interface for the Comment model.")
+        self.assertTrue('<div class="text"><a href="?o=3">Post</a></div>' in response_body, f"The 'Post' column could not be found in the admin interface for the Comment model.")
+        self.assertTrue('<div class="text"><a href="?o=4">Likes</a></div>' in response_body, f"The 'Likes' column could not be found in the admin interface for the Comment model.")
+
+        self.assertTrue('<th class="field-comment"><a href="/admin/feed/comment/1/change/">test comment</a></th>' in response_body, "Could not find 'test comment' in admin interface.")
+
+    def test_folder_display(self):
+        response = self.client.get('/admin/feed/folder/')
+        response_body = response.content.decode()
+
+        self.assertTrue('<div class="text"><a href="?o=1">Name</a></div>' in response_body, f"The 'Name' column could not be found in the admin interface for the Folder model.")
+        self.assertTrue('<div class="text"><a href="?o=2">User</a></div>' in response_body, f"The 'User' column could not be found in the admin interface for the Folder model.")
+        self.assertTrue('<div class="text"><span>Posts</span></div>' in response_body, f"The 'Posts' column could not be found in the admin interface for the Folder model.")
+        self.assertTrue('<div class="text"><a href="?o=4">Private</a></div>' in response_body, f"The 'Private' column could not be found in the admin interface for the Folder model.")
+
+        self.assertTrue('<th class="field-name"><a href="/admin/feed/folder/1/change/">test folder</a></th>' in response_body, "Could not find 'test folder' in admin interface for the Folder model.")
+
 
 # helper functions, for helping
 class Helper:
-    def create_user_object():
-        user = User.objects.get_or_create(username='bobs',
-                                      first_name='bob',
-                                      last_name='smith',
-                                      email='test@test.com')[0]
-        user.set_password('testabc123')
-        user.save()
+    def create_model_setup():
+        diy = Category.objects.create(name="diy")
+        diy.save()
+        food = Category.objects.create(name = "food")
+        food.save()
 
-        return user
+        user1 = User.objects.create(username = "bobs", email = "bob@gmail.com", password = "abc1234", first_name = "bob", last_name = "smith")
+        user1.save()
+        user1p = UserProfile.objects.create(user = user1, bio = "a bio")
+        user1p.profile_picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
+        user2 = User.objects.create(username = "alicej", email = "alice@gmail.com", password = "testpassword", first_name = "alice", last_name = "jones")
+        user2.save()
+        user2p = UserProfile.objects.create(user = user2, bio = "a bio")
+        user2p.profile_picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
+        
 
-def create_super_user_object():
-    return User.objects.create_superuser('admin', 'admin@test.com', 'testpassword')
+        post = Post.objects.create(id = 1, creator = user1p, title = "test", likes = 0)
+        post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
 
-def get_template(path_to_template):
-    f = open(path_to_template, 'r')
-    template_str = ""
+        attempt_post = Post.objects.create(id = 2, creator = user2p, title = "test attempt", likes =0)
+        attempt_post.picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
+        attempt_post.original = 1
+        attempt_post.save()
+        
 
-    for line in f:
-        template_str = f"{template_str}{line}"
+        comment1 = Comment.objects.create(post_id = 1, user_id =1, comment = "test comment", likes = 0)
+        comment1.save()
+        comment2 = Comment.objects.create(post_id = 1, user_id = 2, comment = "another test comment", likes = 0)
+        comment2.save()
 
-    f.close()
-    return template_str
+        Likes.objects.create(liker = user1p, liked_post = post)
+        Likes.objects.create(liker = user2p, liked_post = post)
+        Likes.objects.create(liker = user1p, liked_post = attempt_post)
+
+        FollowsCategory.objects.create(follower = user1p, following = diy)
+        FollowsCategory.objects.create(follower = user1p, following = food)
+        FollowsCategory.objects.create(follower = user2p, following = diy)
+
+        Categorises.objects.create(post = post, category = diy)
+        Categorises.objects.create(post = attempt_post, category = diy)
+
+        FollowsUser.objects.create(follower = user2p, following = user1p)
+
+        folder = Folder.objects.create(id = 1, name = "test folder", user = user1p)
+        folder.save()
+        In_folder.objects.create(folder = folder, post = post)
+
+    def get_template(path_to_template):
+        f = open(path_to_template, 'r')
+        template_str = ""
+
+        for line in f:
+            template_str = f"{template_str}{line}"
+
+        f.close()
+        return template_str
