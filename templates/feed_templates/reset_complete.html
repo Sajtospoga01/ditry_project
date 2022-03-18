@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% extends base.html %}
+{% load staticfiles %}
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        {% block title_block %}
+            Password Reset Complete
+        {% endblock %}
+        <link rel="stylesheet" href="/static/css/login.css" type="text/css">
+        <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+    </head>
+    <body>
+        {% block body_block %}
+        <h3>Password reset complete!</h3>
+        <a href="{% url 'feed_template:login' %}">Return to the login page!</a>
+        {% endblock %}
+        
+        <div class="rowLine"></div>
+        <div id="bottom">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+            <a href="{% url 'feed_templates:about' %}" class="helpInfo">About</a>
+            <a href="{% url 'feed_templates:help' %}" class="helpInfo">Help</a>
+            <a href="{% url 'feed_templates:contact_us' %}" class="helpInfo">Contact us</a>
+        </div>
+        <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
+    </body>
+</html>
