@@ -60,3 +60,11 @@ class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
         fields = {'name'}
+
+class ResetForm(forms.ModelForm):
+    email = forms.EmailField()
+    new_password = forms.PasswordInput()
+
+    class Meta:
+        model = User
+        fields = {'email','password'}
