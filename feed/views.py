@@ -5,13 +5,14 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.contrib.auth.views import password_reset
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
 from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm
 from datetime import datetime
-# FolderForm does not exist yet
+
 
 
 def home(request):
@@ -118,11 +119,11 @@ def show_post(request, post_id):
 
 
 @login_required
-def show_folder(request, folder_name_slug):
+def show_folder(request, folder_id):
     # maybe also need user_name to get folder
     context_dict = {}
     try:
-        folder = Folder.objects.get(slug=folder_name_slug)
+        folder = Folder.objects.get(slug=folder_id)
         posts = Post.objects.filter(folder=folder)
         context_dict['folder']=folder
         context_dict['posts'] = posts
@@ -188,13 +189,13 @@ def helper_delete_post(request,post):
 
 
 @login_required
-def delete_saved_post(request, post_id, folder_name_slug):
+def delete_saved_post(request, post_id, folder_id):
     # needs to check if post in specific folder and if folder by request.user
     post = get_object_or_404(Post, id=post_id)
     helper_delete_post(request,post)
     return redirect(reverse('feed:show_folder',
-                                        kwargs={'folder_name_slug':
-                                                folder_name_slug, 'username':request.user.username}))
+                                        kwargs={'folder_id':
+                                                folder_id, 'username':request.user.username}))
 
 
 @login_required
@@ -267,9 +268,9 @@ def like_post(request,post_id):
 
 
 @login_required
-def save_post(request, folder_name_slug ,post_id):
+def save_post(request, folder_id ,post_id):
     try:
-        folder = Folder.objects.get(slug=folder_name_slug)
+        folder = Folder.objects.get(slug=folder_id)
     except Folder.DoesNotExist:
         folder = None
 
@@ -293,7 +294,7 @@ def save_post(request, folder_name_slug ,post_id):
                 saved_post.save()
 
                 return redirect(reverse('feed:show_user',
-                                        kwargs={'username':request.user.username,'folder_name_slug':folder_name_slug}))
+                                        kwargs={'username':request.user.username,'folder_id':folder_id}))
         else:
             print(form.errors)
 
@@ -392,7 +393,14 @@ def search_user(request):
     return render(request,'feed_templates/searchUser.html',
                   context={'matching_users':matching_users})
 
-
+@login_required
+def reset_password(request):
+    # reference:
+    # https://stackoverflow.com/questions/11501837/resetting-password-in-django
+    if request.method == "POST":
+        return password_reset(request, from_email=request.POST.get('email'))
+    else:
+        render(request, reset_password.html)
 
 @login_required
 def update_profile(request):
