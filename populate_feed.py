@@ -80,7 +80,6 @@ def populate():
             "liker":"bob",
             "liked_post":1
         }
-
     ]
     attempts = [
         {
