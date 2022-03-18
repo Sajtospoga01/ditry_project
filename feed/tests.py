@@ -33,7 +33,7 @@ class HomePageTest(TestCase):
 
     def test_view_exists(self):
         name_exists = 'home' in self.views_module_listing
-        is_callable = callable(self.views_module.index)
+        is_callable = callable(self.views_module.home)
 
         self.assertTrue(name_exists, f"The home() view does not exist.")
         self.assertTrue(is_callable, f"home() view is not a function")
@@ -72,7 +72,6 @@ class DatabaseConfigurationTests(TestCase):
         self.assertTrue(settings.DATABASES, f"Settings module doesn't have a DATABASE variable.")
         self.assertTrue('default' in settings.DATABASES, f"No default database configuration.")
 
-
 class ModelTests(TestCase):
     def setUp(self):
         Helper.create_model_setup()
@@ -84,12 +83,34 @@ class ModelTests(TestCase):
         self.assertTrue(c_food.id > c_diy.id, f"Category id doesn't increment.")
 
     def test_category_slug(self):
-        pass
+        category = Category.objects.get_or_create(name='diy')[0]
+        category.name = "Unscrupulous Nonsense"
+        category.save()
+
+        self.assertEquals('unscrupulous-nonsense', category.slug, f"When changing the name of a category, the slug attribute was not updated (correctly) to reflect this change.")
 
     def test_post_model(self):
         post = Post.objects.get(id = 1)
         self.assertEqual(post.title, "test", f"Expected title test, got {post.title}.")
-        self.assertEqual(post.creator, UserProfile.objects.get(user = User.objects.get(username = "bobs")), f"Unexpected creator.")
+        self.assertEqual(post.creator, UserProfile.objects.get(username = "bobs"), f"Unexpected creator.")
+
+    def test_userprofile_model(self):
+        user = UserProfile.objects.get(username = "alicej")
+        self.assertEqual(user.first_name, "alice", f"Expected first name alice, got {user.first_name}.")
+
+    def test_comment_model(self):
+        comment = Comment.objects.get(id = 1)
+        self.assertEqual(comment.comment, "test comment", f"Expected comment 'test comment', got {comment.comment}")
+        self.assertEqual(comment.user, UserProfile.objects.get(username = "bobs"), f"Expected user bobs, got {comment.user.username}.")
+
+    def test_likes_model(self):
+        likes = Likes.objects.filter(liker = UserProfile.objects.get(username = "bobs"))
+        self.assertEqual(len(likes), 2, f"Expected bobs to like 2 posts, has liked {len(likes)}.")
+
+    def test_folder_model(self):
+        folder = Folder.objects.get(id = 1)
+        self.assertEqual(folder.name, "test folder", f"Expected folder name 'test folder', got {folder.name}")
+        self.assertEqual(folder.user, UserProfile.objects.get(username = "bobs"), f"Expected user bobs, got {folder.user.username}.")
 
     def test_str_methods(self):
         category_diy = Category.objects.get(name='diy')
@@ -101,27 +122,6 @@ class ModelTests(TestCase):
         self.assertEqual(str(user_alice), "alicej", f"UserProfile string method doesn't work. Expected 'alicej' and got '{str(user_alice)}'.")
         self.assertEqual(str(test_post), "test", f"Post string method doesn't work. Expected 'test' and got '{str(test_post)}'.")
         self.assertEqual(str(test_comment), "test comment", f"Comment string method doesn't work. Expected 'test comment' and got '{str(test_comment)}'.")
-
-    def test_likes_are_positive(self):
-        p = Post.objects.create(creator = UserProfile.objects.get(user = User.objects.get(username = "alicej")),title = "likes_test",likes = -1)
-        p.picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg","rb")))
-        self.assertTrue((p.likes >= 0), f"Post likes should not be negative - post likes: {p.likes}.")
-    
-class UniqueConstraintTests(TestCase):
-    def setUp(self):
-        pass
-    def test_comment_unique(self):
-        pass
-    def test_followsuser_unique(self):
-        pass
-    def test_followscategory_unique(self):
-        pass
-    def test_like_unique(self):
-        pass
-    def test_categorises_unique(self):
-        pass
-    def test_folder_unique(self):
-        pass
 
 class QueryTests(TestCase):
     def setUp(self):
@@ -169,7 +169,7 @@ class QueryTests(TestCase):
     def test_get_category_of_post(self):
         category = Queries.get_category_of_post(1)
         self.assertEqual(category[0], Category.objects.get(id=1), f"Expected query to return category 1.")
-    
+
     def test_get_user_posts(self):
         posts = Queries.get_user_posts(1)
         self.assertEqual(posts[0], Post.objects.get(id =1), f"Expected query to return post 1.")
@@ -183,12 +183,12 @@ class QueryTests(TestCase):
         self.assertEqual(followers[0], UserProfile.objects.get(username = "alicej"), f"Expected query to return user alicej.")
         followers = Queries.get_user_follows(2)
         self.assertEqual(len(followers), 0, f"Expected query to return empty list.")
-    
+
     def test_get_posts_in_folder(self):
         posts = Queries.get_posts_in_folder(1)
         self.assertEqual(len(posts), 1, f"Expected query to return only 1 post.")
         self.assertTrue(posts.get(id = 1) != None, f"Expected query to return post 1.")
-    
+
     def test_get_user_folders(self):
         folders = Queries.get_user_folders(1)
         self.assertEqual(len(folders), 1, f"Expected query to return only 1 folder.")
@@ -196,7 +196,7 @@ class QueryTests(TestCase):
 
 
 # tests for the population script, done except one
-# # class PopulationScriptTests(TestCase):
+# class PopulationScriptTests(TestCase):
 #     def setUp(self):
 #         try:
 #             import populate_feed
@@ -219,9 +219,9 @@ class QueryTests(TestCase):
 #         self.assertTrue('Cook' in categories_strs, f"The category 'Cook' was expected but not created by populate_feed.")
 
 #     def test_posts(self):
-#         exp_posts = {'title1': {'id':1,'picture':'sample_1.jpg','creator':1,'likes':0},
-#                     'title2': {'id':2,'picture':'sample_2.jpg','creator':1,'likes':0},
-#                     'title3': {'id':3,'picture':'sample_3.jpg','creator':1,'likes':0}}
+#         exp_posts = {'title1': {'id':1, 'creator':1},
+#                     'title2': {'id':2, 'creator':2},
+#                     'title3': {'id':3, 'creator':1}}
 #         posts = Post.objects.filter()
 #         self.assertEqual(len(posts), len(exp_posts), f" Expected {len(exp_posts)} but got {len(posts)}.")
 
@@ -231,23 +231,13 @@ class QueryTests(TestCase):
 #             except Post.DoesNotExist:
 #                 raise ValueError(f"The post {post} was not found in the database produced by populate_feed. ")
 #             self.assertEqual(post, p.title, f"The post {p.title} does not have the expected title: {post}.")
-#             self.assertEqual(exp_posts[post]["picture"], p.picture, f"The post {p.title} does not have the expected image.")
-#             self.assertEqual(exp_posts[post]["creator"], p.creator, f"The post {p.title} does not have the expected creator.")
+#             self.assertEqual(exp_posts[post]["creator"], p.creator.id, f"The post {p.title} does not have the expected creator.")
 
 #     def test_post_objects_have_likes(self):
 #         posts = Post.objects.filter()
 #         for post in posts:
 #             self.assertTrue(post.likes>0, f"The post '{post.title}' has negative/zero likes.")
-
-#     def test_post_category(self):
-#         post1 = Categorises.objects.filter(post = 1)
-#         post2 = Categorises.objects.filter(post = 2)
-#         post3 = Categorises.objects.filter(post = 3)
-#         self.assertEqual(post1.category, "Craft",f"Post 1 has category '{post1.category}', expected 'Craft'.")
-#         self.assertEqual(post2.category, "Diy",f"Post 2 has category '{post2.category}', expected 'Diy'.")
-#         self.assertEqual(post3.category, "Cook",f"Post 3 has category '{post3.category}', expected 'Cook'.")
-
-
+    
 #     def test_users(self):
 #         users = [UserProfile.objects.get(username = un) for un in ["bob", "dummy2"]]
 #         exp_users =[{"username":"bob", "email":"example@example.com", "first_name":"bob", "last_name":"the builder", "password":"password"}, 
@@ -256,41 +246,49 @@ class QueryTests(TestCase):
 #             self.assertEqual(users[i].email, exp_users[i]["email"], f"{users[i].username}'s email is incorrect.")
 #             self.assertEqual(users[i].first_name, exp_users[i]["first_name"], f"{users[i].username}'s first name is incorrect.")
 #             self.assertEqual(users[i].last_name, exp_users[i]["last_name"], f"{users[i].username}'s last name is incorrect.")
-#             self.assertEqual(users[i].password, exp_users[i]["password"], f"{users[i].username}'s password is incorrect.")
+#     def test_post_category(self):
+#         post1 = Categorises.objects.filter(post = 1)[0]
+#         post2 = Categorises.objects.filter(post = 2)[0]
+#         post3 = Categorises.objects.filter(post = 3)[0]
+#         self.assertEqual(post1.category.name, "Craft",f"Post 1 has category '{post1.category}', expected 'Craft'.")
+#         self.assertEqual(post2.category.name, "Diy",f"Post 2 has category '{post2.category}', expected 'Diy'.")
+#         self.assertEqual(post3.category.name, "Cook",f"Post 3 has category '{post3.category}', expected 'Cook'.")
 
 #     def test_user_follows(self):
-#         follow = FollowsUser.objects.get(follower = "bob")
-#         self.assertEqual(follow.following, "dummy2", f"Bob not following dummy2.")
+#         follow = FollowsUser.objects.get(follower = UserProfile.objects.get(username = "bob"))
+#         self.assertEqual(follow.following.username, "dummy2", f"Bob not following dummy2.")
 
 #     def test_user_likes(self):
-#         like = Likes.objects.filter(liker = "bob")
+#         like = Likes.objects.filter(liker = UserProfile.objects.get(username = "bob"))
 #         self.assertEqual(1, len(like), f"Bob has liked {len(like)} posts - expected 1.")
-#         self.assertEqual(like[0].liked_post, 1, f"Expected liked post to have id 1, was {like[0].liked_post.id}")
+#         self.assertEqual(like[0].liked_post.id, 1, f"Expected liked post to have id 1, was {like[0].liked_post.id}")
 
 #     def test_attempts(self):
-#         pass
+#         original = Post.objects.get(id = 2).original
+#         self.assertEqual(original , 1, f"Expected the original of post 2 to have id 1, has id {original}.")
+#         original = Post.objects.get(id=1).original
+#         self.assertEqual(original, -1, f"Expected post 1 to be original and so have original -1 - got {original}.")
 
 #     def test_user_follows_category(self):
-#         follow = FollowsCategory.objects.get(follower = "bob")
-#         self.assertEqual(follow.following, "Diy", f"Bob not following diy.")
+#         follow = FollowsCategory.objects.get(follower = UserProfile.objects.get(username = "bob"))
+#         self.assertEqual(follow.following.name, "Diy", f"Bob not following diy.")
 
 #     def test_comments(self):
 #         comment = Comment.objects.get(id = 1)
-#         self.assertEqual(comment.post, 1, f"Expected commented post to have id 1, has {comment.post}.")
-#         self.assertEqual(comment.user, 1, f"Expected commenting user to have id 1, has id {comment.user}.")
+#         self.assertEqual(comment.post.id, 1, f"Expected commented post to have id 1, has {comment.post}.")
+#         self.assertEqual(comment.user.id, 1, f"Expected commenting user to have id 1, has id {comment.user}.")
 #         self.assertEqual(comment.comment, "That is dope!", f"Expected comment to be 'That is dope!', was {comment.comment}.")
 
 #     def test_folders(self):
 #         folder = Folder.objects.get(id = 1)
-#         self.assertEqual(folder.name, "Folder Name", f"Expected folder to have name 'Folder Name', has name {folder.name}.")
-#         self.assertEqual(folder.user, 1, f"Expected folder to have creator 1, has creator {folder.user}.")
+#         self.assertEqual(folder.name, "Folder name", f"Expected folder to have name 'Folder Name', has name {folder.name}.")
+#         self.assertEqual(folder.user.id, 1, f"Expected folder to have creator 1, has creator {folder.user}.")
 #         self.assertFalse(folder.private, f"Expected folder to be public.")
 
 #     def test_folders_post(self):
 #         folder_content = In_folder.objects.filter(folder = 1)
 #         self.assertEqual(len(folder_content), 1, f"Expected folder to contain 1 post, conttains {len(folder_content)}.")
-#         self.assertEqual(folder_content[0].post, 1, f"Expected folder to contain post 1, contains post {folder_content[0].post}.")
-    
+#         self.assertEqual(folder_content[0].post.id, 1, f"Expected folder to contain post 1, contains post {folder_content[0].post}.")
 
 # admin interface tests
 class AdminTests(TestCase):
@@ -367,7 +365,33 @@ class AdminTests(TestCase):
 
         self.assertTrue('<th class="field-name"><a href="/admin/feed/folder/1/change/">test folder</a></th>' in response_body, "Could not find 'test folder' in admin interface for the Folder model.")
 
+# forms tests
+class FormTests(TestCase):
+    def setUp(self):
+        pass
+    def test_module_exists(self):
+        project_path = os.getcwd()
+        feed_app_path = os.path.join(project_path, 'feed')
+        forms_module_path = os.path.join(feed_app_path, 'forms.py')
 
+        self.assertTrue(os.path.exists(forms_module_path), "Couldn't find forms.py module.")
+
+    def test_user_form_functionality(self):
+        self.client.post(reverse('feed:register'),
+            {'username': 'charlied', 'first_name': 'charlie', 'last_name': 'doe', 'email': 'charlie@gmail.com', 'password1': 'testpassword', 'password2': 'testpassword'})
+        users = User.objects.filter(username = 'charlied')
+        self.assertEqual(len(users), 1, "Adding a user doesn't add it to the users.")
+    
+    def test_userprofile_form(self):
+        pass
+    def test_login_form(self):
+        pass
+    def test_post_form(self): # probably should be picture not image
+        self.client.post(reverse('feed:add_post'), 
+            {'title': 'test post', 'picture': 'sample/sample_1.jpg'})
+        posts = Post.objects.filter(title = 'test post')
+        self.assertEqual(len(posts), 1, "The post form doesn't work.")
+    # could test mappings (see chap7)
 # helper functions, for helping
 class Helper:
     def create_model_setup():
@@ -398,9 +422,9 @@ class Helper:
         attempt_post.save()
         
 
-        comment1 = Comment.objects.create(post = post, user =user1, comment = "test comment", likes = 0)
+        comment1 = Comment.objects.create(post = post, user =user1, comment = "test comment")
         comment1.save()
-        comment2 = Comment.objects.create(post = post, user = user2, comment = "another test comment", likes = 0)
+        comment2 = Comment.objects.create(post = post, user = user2, comment = "another test comment")
         comment2.save()
 
         Likes.objects.create(liker = user1, liked_post = post).save()

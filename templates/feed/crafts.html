@@ -1,9 +1,9 @@
-{% extends 'feed_templates/base.html' %}
+{% extends 'feed/base.html' %}
 {% load staticfiles %}
 
 
 {% block title_block %}
-    Diys
+    Home
 {% endblock %}
 
 
@@ -11,17 +11,17 @@
 <link rel="stylesheet" href="/static/css/home.css" type="text/css">
 <div class="rowLine"></div>
 <div id="cat">
-    <a href="{% url 'feed_templates:home' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">Home</a>
+    <a href="{% url 'feed:home' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Home</a>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-    <a href="{% url 'feed_templates:crafts' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>
     <a href="" id="homeButton">
-        DIY
+        Craft
         <div id="buttonUnderline"></div>
     </a>
-    <a href="{% url 'feed_templates:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
-    <a href="{% url 'feed_templates:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
+    <a href="{% url 'feed:diys' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">DIY</a>
+    <a href="{% url 'feed:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
+    <a href="{% url 'feed:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
 </div>
 <div id="choose">
     <select id="chooseButton">
@@ -41,7 +41,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
@@ -59,7 +59,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
@@ -77,7 +77,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
@@ -97,7 +97,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
@@ -115,7 +115,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
@@ -133,7 +133,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
@@ -153,7 +153,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
@@ -171,7 +171,7 @@
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
+                <a href="" class="authorName">name</a>
                 <a href=""><img width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
                 <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>

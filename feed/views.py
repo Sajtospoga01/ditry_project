@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.contrib.auth.views import password_reset
+#from django.contrib.auth.views import password_reset
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Likes, Category
@@ -20,26 +20,26 @@ def home(request):
     posts = Post.objects.all()
     visitor_cookie_handler(request)
     context_dict = {'posts': posts}
-    return render(request, 'feed_templates/home.html', context=context_dict)
+    return render(request, 'feed/home.html', context=context_dict)
 
 
 def about(request):
-    return render(request,'feed_templates/about.html' )
+    return render(request,'feed/about.html' )
 
 
 def help(request):
-    return render(request,'feed_templates/help.html')
+    return render(request,'feed/help.html')
 
 
 def contact_us(request):
-    return render(request,'feed_templates/contact_us.html')
+    return render(request,'feed/contact_us.html')
 
 
 @login_required
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed_templates/trending.html', context={'posts':posts})
+    return render(request, 'feed/trending.html', context={'posts':posts})
 
 
 @login_required
@@ -115,7 +115,7 @@ def show_post(request, post_id):
         context_dict['likes'] = None
         context_dict['comments'] = None
 
-    return render(request, 'feed_templates/picDetail.html', context = context_dict)
+    return render(request, 'feed/picDetail.html', context = context_dict)
 
 
 @login_required
@@ -133,7 +133,7 @@ def show_folder(request, folder_id):
         context_dict['posts'] = None
 
     # template show_folder.html does not exist yet, might have to change name
-    return render(request, 'feed_templates/show_folder.html',context=context_dict)
+    return render(request, 'feed/show_folder.html',context=context_dict)
 
 
 @login_required
@@ -150,7 +150,7 @@ def show_user(request, user_name):
     followed_categories = Queries.get_category_following(request.user.id)
 
     context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories}
-    return render(request,'feed_templates/personalPage.html', context=context_dict)
+    return render(request,'feed/personalPage.html', context=context_dict)
 
 
 
@@ -169,18 +169,18 @@ def show_category_helper( category_id):
 @login_required
 def crafts(request, category_id):
     category, posts = show_category_helper(category_id)
-    return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
+    return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
 
 @login_required
 def diys(request, category_id):
     category, posts = show_category_helper(category_id)
-    return render(request, 'feed_templates/diys.html', context={'posts':posts, 'category':category})
+    return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
 
 
 @login_required
 def food(request, category_id):
     category, posts = show_category_helper(category_id)
-    return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
+    return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
 
 
 def helper_delete_post(request,post):
@@ -243,7 +243,7 @@ def add_folder(request):
         else:
             print(form.errors)
 
-    return render(request, 'feed_templates/add_folder.html', context={'form': form})
+    return render(request, 'feed/add_folder.html', context={'form': form})
 
 
 @login_required
@@ -299,7 +299,7 @@ def save_post(request, folder_id ,post_id):
             print(form.errors)
 
     context_dict = {'form': form, 'folder': folder}
-    return render(request, 'feed_templates/addPost.html', context=context_dict)
+    return render(request, 'feed/addPost.html', context=context_dict)
 
 # might not need this view, if not needed also delete url for it
 @login_required
@@ -371,7 +371,7 @@ def search_title(request):
                     if p not in matching_posts:
                         matching_posts.append(p)
 
-    return render(request,'feed_templates/searchTitle.html',
+    return render(request,'feed/searchTitle.html',
                   context={'matching_posts': matching_posts})
 
 
@@ -390,7 +390,7 @@ def search_user(request):
                     if u not in matching_users:
                         matching_users.append(u)
 
-    return render(request,'feed_templates/searchUser.html',
+    return render(request,'feed/searchUser.html',
                   context={'matching_users':matching_users})
 
 @login_required
@@ -424,10 +424,10 @@ def register(request):
             form.save()
             user = form.cleaned_data.get('username')
             messages.success(request, 'Accouont was created for ' + user)
-            return redirect('feed_templates:login')
+            return redirect('feed:login')
     context = {'form':form}
 
-    return render(request,'feed_templates/register.html',context)
+    return render(request,'feed/register.html',context)
 
 def user_login(request):
     if request.method == 'POST':
@@ -443,7 +443,7 @@ def user_login(request):
             # invalid login details
             messages.info(request,'Username or Password is incorrect')
     context = {}
-    return render(request, 'feed_templates/login.html',context)
+    return render(request, 'feed/login.html',context)
 
 
 @login_required
