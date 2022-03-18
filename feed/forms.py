@@ -8,19 +8,19 @@ class UserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username',
+        fields = {'username',
                   'first_name','last_name',
                   'email',
                   'password1',
-                  'password2')
+                  'password2'}
 
 
 class UserProfileForm(forms.Form):
     class meta:
         model = UserProfile
-        fields = ('website',
+        fields = {'website',
                   'bio',
-                  'picture')
+                  'picture'}
 
 class UserLoginForm(forms.ModelForm):
     username = forms.CharField()
@@ -28,7 +28,7 @@ class UserLoginForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username' , 'password')
+        fields = {'username' , 'password'}
 
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
@@ -36,7 +36,7 @@ class UserPostsForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title','image')
+        fields = {'title','image'}
 
 class EditProfileForm(forms.ModelForm):
     username = forms.CharField(max_length=36)
@@ -60,3 +60,11 @@ class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
         fields = {'name'}
+
+class ResetForm(forms.ModelForm):
+    email = forms.EmailField()
+    new_password = forms.PasswordInput()
+
+    class Meta:
+        model = User
+        fields = {'email','password'}
