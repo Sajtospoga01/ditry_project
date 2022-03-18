@@ -168,7 +168,6 @@ def show_category_helper( category_name):
     return category, posts
 
 @login_required
-<<<<<<< HEAD
 def crafts(request, category_id):
     category, posts = show_category_helper(category_id)
     return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
@@ -183,7 +182,6 @@ def diys(request, category_id):
 def food(request, category_id):
     category, posts = show_category_helper(category_id)
     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
-=======
 def crafts(request):
     category, posts = show_category_helper("Craft")
     return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
@@ -198,7 +196,6 @@ def diys(request):
 def food(request):
     category, posts = show_category_helper("Cook")
     return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
->>>>>>> d030484a553df3c2fe8bbc2b6bb0d3318831aaad
 
 
 def helper_delete_post(request,post):
@@ -448,18 +445,12 @@ def register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-<<<<<<< HEAD
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Accouont was created for ' + user)
-=======
             user = form.save()
             username = form.cleaned_data.get('username')
             user.set_password(user.password)
             user.save()
             messages.success(request, 'Account was created for ' + username)
             login(request, user)
->>>>>>> d030484a553df3c2fe8bbc2b6bb0d3318831aaad
             return redirect('feed:login')
     context = {'form':form}
 
