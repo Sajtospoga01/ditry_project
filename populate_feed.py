@@ -39,11 +39,12 @@ def populate():
         }        
     ]
     test_profile = [
-        {"username":"bob",
-         "email":"example@example.com",
-         "first_name":"bob",
-         "last_name":"the builder",
-         "password":"password"
+        {
+            "username":"bob",
+            "email":"example@example.com",
+            "first_name":"bob",
+            "last_name":"the builder",
+            "password":"password"
         },
         {
             "username":"dummy2",
