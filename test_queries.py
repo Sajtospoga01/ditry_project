@@ -20,17 +20,18 @@ def test_category_in_post():
 
 def test_user_posts():
     print("\nUser posts test...\n")
-    users = User.objects.all()
+    users = UserProfile.objects.all()
     for user in users:
         print(user.username+" created posts")
         posts = Queries.get_user_posts(user.id)
-        for post in posts:
-            print(post)
+        if posts != None:
+            for post in posts:
+                print(post)
 
 def test_following_user():
     print("\nUser following test...\n")
 
-    users = User.objects.all()
+    users = UserProfile.objects.all()
     for user in users:
         print(str(user)+" follows:")
         follows = Queries.get_user_following(user.id)
@@ -41,7 +42,7 @@ def test_following_user():
 
 def test_user_follows():
     print("\nUser follows test...\n")
-    users = User.objects.all()
+    users = UserProfile.objects.all()
     for user in users:
         print(str(user)+" followed by:")
         follows = Queries.get_user_follows(user.id)

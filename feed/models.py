@@ -1,3 +1,4 @@
+from unittest import result
 from django.db.models import CASCADE
 from django.db import models
 from django.forms import ModelForm
@@ -20,15 +21,15 @@ class Validators:
                 "Cannot find \"original\" post with id "+str(value))
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User,on_delete=CASCADE, default="bio")
+class UserProfile(User):
+    
     website = models.URLField(blank=True)
     bio = models.CharField(max_length=256,blank=True,)
     profile_picture = models.ImageField( upload_to='profile_images',
         blank=True, validators=[validate_image_file_extension])
 
     def __str__(self):
-        return self.user.username
+        return self.username
         # return self.username + ' ' + str(self.id)
 
 
@@ -166,6 +167,16 @@ class In_folder(models.Model):
 
     def __str__(self):
         return self.post.title+' is in: ' + str(self.folder.name)
+class Comment_likes(models.Model):
+    user = models.ForeignKey(UserProfile,on_delete=CASCADE)
+    comment = models.ForeignKey(Comment,on_delete=CASCADE)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['user', 'comment'], name='user_likes_comment')
+        ]
+    def __str__(self):
+        return self.user.username+' liked ' + str(self.comment.id)
 
 
 class Functions:
@@ -392,5 +403,14 @@ class Queries:
             result = Folder.objects.filter(user=user_object)
             # return query of folders
             return result
+        except:
+            return None
+
+    def get_user_attempts(user):
+        try:
+            user_object = UserProfile.objects.get(id = user)
+            result = Post.objects.filter(creator = user_object).exclude(original = None)
+            return result
+
         except:
             return None
