@@ -11,17 +11,17 @@
 <link rel="stylesheet" href="/static/css/home.css" type="text/css">
 <div class="rowLine"></div>
 <div id="cat">
-    <a href="" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">Home</a>
+    <a href="{% url 'feed_templates:home' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">Home</a>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-    <a href="" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>
+    <a href="{% url 'feed_templates:crafts' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>
     <a href="" id="homeButton">
         DIY
         <div id="buttonUnderline"></div>
     </a>
-    <a href="" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
-    <a href="" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
+    <a href="{% url 'feed_templates:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
+    <a href="{% url 'feed_templates:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
 </div>
 <div id="choose">
     <select id="chooseButton">

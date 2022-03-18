@@ -39,9 +39,9 @@
                     {% if user.is_authenticated %}
                     <a href="" class="lsTest">Hi, {{ user }}}</a>
                     {% else %}
-                    <a href="" class="lsText">Log In</a>
+                    <a href="{% url 'feed_templates:login' %}" class="lsText">Log In</a>
                     <div id="topLine"></div>
-                    <a href="" class="lsText">&nbsp&nbspSign Up</a>
+                    <a href="{% url 'feed_templates:register' %}" class="lsText">&nbsp&nbspSign Up</a>
                     {% endif %}
                 </div>
             </div>

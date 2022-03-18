@@ -15,9 +15,9 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
 
     path('add-post-to-category/', views.add_post_to_category, name='add_post_to_category'),
-    path('food/', views.show_food, name='show_food'),
-    path('diys/', views.show_diys, name='show_diys'),
-    path('crafts/', views.show_crafts, name='show_crafts'),
+    path('food/', views.food, name='food'),
+    path('diys/', views.diys, name='diys'),
+    path('crafts/', views.crafts, name='crafts'),
     
     path('show-post/<int:post_id>/', views.show_post, name='show_post'),
     path('show-post/<int:post_id>/like-post/', views.like_post, name='like_post'),
