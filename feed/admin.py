@@ -19,12 +19,12 @@ class FollowCategoryInline(admin.TabularInline):
     model = FollowsCategory
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'email', 'posts', 'follows', 'followers')
+    list_display = ('username', 'email', 'posts', 'follows', 'followers')
 
     inlines = [PostInline, FollowCategoryInline]
 
     def email(self, obj):
-        return obj.user.email
+        return obj.email
     def posts(self,obj):
         p = Queries.get_user_posts(obj.id)
         if p != None: return len(p)
