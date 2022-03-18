@@ -166,18 +166,18 @@ def show_category_helper( category_id):
     return category, posts
 
 @login_required
-def show_crafts(request, category_id):
+def crafts(request, category_id):
     category, posts = show_category_helper(category_id)
     return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
 
 @login_required
-def show_diys(request, category_id):
+def diys(request, category_id):
     category, posts = show_category_helper(category_id)
     return render(request, 'feed_templates/diys.html', context={'posts':posts, 'category':category})
 
 
 @login_required
-def show_food(request, category_id):
+def food(request, category_id):
     category, posts = show_category_helper(category_id)
     return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
 

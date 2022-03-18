@@ -1,16 +1,15 @@
+body{
+    background-image: url(background.png);
+    background-position: center center;
+    background-attachment:fixed;
+    background-size:cover;
+}
+
 #page {
     justify-content: flex-start;
     align-items: center;
     display: flex;
     flex-direction: column;
-    background-image: url(background.png);
-    background-position: center center;
-    /* 背景图不平铺 */
-    background-attachment: fixed;
-    /* 让背景图基于容器大小伸缩 */
-    background-size: cover;
-    /* 设置背景颜色，背景图加载过程中会显示背景色 */
-    background-color: #ffffff;
 }
 
 #page #topStrip {
