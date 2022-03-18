@@ -234,10 +234,6 @@ def add_comment(id,post_id,user_id,comment):
     c = Comment.objects.get(id = id,post = post,user =user)
     print(c)
 
-
-    
-
-
 if __name__ == '__main__':
     print('Starting feed population script')
     populate()
