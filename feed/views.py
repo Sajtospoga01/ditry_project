@@ -5,12 +5,12 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.contrib.auth.views import password_reset
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
 from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm
+from feed.forms import ResetForm
 from datetime import datetime
 
 
@@ -161,25 +161,26 @@ def all_followed_users(request):
     return
 
 
-def show_category_helper( category_id):
-    category = Category.objects.get(id=category_id)
+def show_category_helper( category_name):
+    category = Category.objects.get(name=category_name)
+    category_id = category.id
     posts = Queries.get_posts_in_category(category_id)
     return category, posts
 
 @login_required
-def crafts(request, category_id):
-    category, posts = show_category_helper(category_id)
+def crafts(request):
+    category, posts = show_category_helper("Craft")
     return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
 
 @login_required
-def diys(request, category_id):
-    category, posts = show_category_helper(category_id)
+def diys(request):
+    category, posts = show_category_helper("Diy")
     return render(request, 'feed_templates/diys.html', context={'posts':posts, 'category':category})
 
 
 @login_required
-def food(request, category_id):
-    category, posts = show_category_helper(category_id)
+def food(request):
+    category, posts = show_category_helper("Cook")
     return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
 
 
@@ -393,14 +394,23 @@ def search_user(request):
     return render(request,'feed_templates/searchUser.html',
                   context={'matching_users':matching_users})
 
-@login_required
+
 def reset_password(request):
-    # reference:
-    # https://stackoverflow.com/questions/11501837/resetting-password-in-django
+    # form where he enters email and new password, reset password if email matches with user email
     if request.method == "POST":
-        return password_reset(request, from_email=request.POST.get('email'))
-    else:
-        render(request, reset_password.html)
+        email_form = ResetForm(request.POST)
+        if email_form.is_valid():
+            email = form.cleaned_data.get('email')
+            new_password = form.cleaned_data.get('password')
+            if email == request.user.email:
+                user.set_password(new_password)
+                user.save()
+                return redirect(reverse('feed:login'))
+            else:
+                messages.error(request, "Email does not match!")
+    return render(request, "resetPassword.html")
+
+
 
 @login_required
 def update_profile(request):
@@ -421,9 +431,12 @@ def register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Accouont was created for ' + user)
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            user.set_password(user.password)
+            user.save()
+            messages.success(request, 'Account was created for ' + username)
+            login(request, user)
             return redirect('feed_templates:login')
     context = {'form':form}
 
