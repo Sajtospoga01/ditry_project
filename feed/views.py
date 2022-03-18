@@ -437,7 +437,7 @@ def register(request):
             user.save()
             messages.success(request, 'Account was created for ' + username)
             login(request, user)
-            return redirect('feed_templates:login')
+            return redirect('feed:login')
     context = {'form':form}
 
     return render(request,'feed_templates/register.html',context)
