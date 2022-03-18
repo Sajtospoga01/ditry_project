@@ -89,7 +89,7 @@ class ModelTests(TestCase):
     def test_post_model(self):
         post = Post.objects.get(id = 1)
         self.assertEqual(post.title, "test", f"Expected title test, got {post.title}.")
-        self.assertEqual(post.creator, User.objects.get(username = "alicej"), f"Unexpected creator.")
+        self.assertEqual(post.creator, UserProfile.objects.get(user = User.objects.get(username = "bobs")), f"Unexpected creator.")
 
     def test_str_methods(self):
         category_diy = Category.objects.get(name='diy')
@@ -98,7 +98,7 @@ class ModelTests(TestCase):
         test_comment = Comment.objects.get(id = 1)
 
         self.assertEqual(str(category_diy), "diy", f"Category string method doesn't work. Expected 'diy' and got '{str(category_diy)}'.")
-        self.assertEqual(str(user_alice), "alicej1", f"UserProfile string method doesn't work. Expected 'alicej1' and got '{str(user_alice)}'.")
+        self.assertEqual(str(user_alice), "alicej", f"UserProfile string method doesn't work. Expected 'alicej' and got '{str(user_alice)}'.")
         self.assertEqual(str(test_post), "test", f"Post string method doesn't work. Expected 'test' and got '{str(test_post)}'.")
         self.assertEqual(str(test_comment), "test comment", f"Comment string method doesn't work. Expected 'test comment' and got '{str(test_comment)}'.")
 
@@ -176,11 +176,13 @@ class QueryTests(TestCase):
 
     def test_get_user_following(self):
         following = Queries.get_user_following(2)
-        self.assertEqual(following[0], User.objects.get(username = "alicej"), f"Query expected to return user alicej.")
+        user = User.objects.get(username = "bobs")
+        self.assertEqual(following[0], UserProfile.objects.get(user = user), f"Query expected to return user bobs.")
 
     def test_get_user_follows(self):
         followers = Queries.get_user_follows(1)
-        self.assertEqual(followers[0], User.objects.get(username = "bobs"), f"Expected query to return user bobs.")
+        user = User.objects.get(username = "alicej")
+        self.assertEqual(followers[0], UserProfile.objects.get(user = user), f"Expected query to return user alicej.")
         followers = Queries.get_user_follows(2)
         self.assertEqual(len(followers), 0, f"Expected query to return empty list.")
     
