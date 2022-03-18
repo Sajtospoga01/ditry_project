@@ -29,7 +29,7 @@ def populate():
          "title":"title2",
          "likes":54,
          "picture": "sample_2.jpg",
-         "creator":1
+         "creator":2
         },
         {"id":3,
          "title":"title3",
@@ -127,7 +127,7 @@ def populate():
     user = get_user(id)
     for post in post_populate:
             
-            p = add_post(post["id"],post["title"],post["likes"],post["picture"],user)
+            p = add_post(post["id"],post["title"],post["likes"],post["picture"],get_user(post["creator"]))
            
 
     for cat in categories_populate:

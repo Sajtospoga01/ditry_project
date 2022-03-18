@@ -409,7 +409,7 @@ class Queries:
     def get_user_attempts(user):
         try:
             user_object = UserProfile.objects.get(id = user)
-            result = Post.objects.filter(creator = user_object).exclude(original = None)
+            result = Post.objects.filter(creator = user_object,original__isnull = False)
             return result
 
         except:
