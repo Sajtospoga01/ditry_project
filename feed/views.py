@@ -1,4 +1,5 @@
 
+from multiprocessing import context
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -457,7 +458,22 @@ def user_login(request):
             messages.info(request,'Username or Password is incorrect')
     context = {}
     return render(request, 'feed_templates/login.html',context)
+# queries exist for this, this is just a bandaid solution
+def userFollowing(request):
+    get_following = FollowsUser.objects.get('following')
+    get_cat_following = FollowsCategory.objects.get('following')
+    
+    context = {}
+    context['followers'] = get_following
+    context['topics'] = get_cat_following
 
+    return render(request,'feed_templates/userFollowing.html',context)
+
+def userFollowers(request):
+    get_followers = FollowsUser.objects.get('follower')
+    context = {}
+    context['followers'] = get_followers
+    return render(request,'feed_templates/userFollower.html',context)
 
 @login_required
 def user_logout(request):

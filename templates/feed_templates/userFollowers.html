@@ -3,7 +3,7 @@
 
 
 {% block title_block %}
-    Search
+    Followers
 {% endblock %}
 
 {% block body_block %}
@@ -12,126 +12,28 @@
     <div id="tipText"><span>Here is your fans.</span></div>
     <div class="rowLine"></div>
     <div id="resultFrame">
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
+        {% if followers %}
+            {% for user in followers %}
+                <div class="spaceFrame">
+                    <div class="picFrame">
+                        <div id="author">
+                            <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+                            <div id="authorDetail">
+                                <a href="" id="name">{{ user.username }}</a>
+                                <div id="following">{{ user.followers }}</div>
+                                <div id="location">
+                                    <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
+                                    <a id="locationText">Location</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="spaceFrame">
-            <div class="picFrame">
-                <div id="author">
-                    <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-                    <div id="authorDetail">
-                        <a href="" id="name">Name</a>
-                        <div id="following">66 followers</div>
-                        <div id="location">
-                            <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                            <a id="locationText">Location</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            You have no followers. Post your content to get noticed!
+        {% endif %}
+        
     </div>
     <br>
     <div id="paging">

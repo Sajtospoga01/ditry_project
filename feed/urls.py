@@ -14,7 +14,9 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('reset-password/', views.reset_password, name='reset_password'),
-
+    path('following/',views.userFollowing,name='following'),
+    path('followers/',views.userFollowers,name='follower'),
+    
     path('add-post-to-category/', views.add_post_to_category, name='add_post_to_category'),
     path('food/', views.food, name='food'),
     path('diys/', views.diys, name='diys'),
