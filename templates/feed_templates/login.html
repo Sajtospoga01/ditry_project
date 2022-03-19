@@ -18,12 +18,12 @@
     <div id="page">
         <header>
             <div id="topStrip">
-                <a href="{% url 'feed_templates:home' %}" id="logo">
+                <a href="{% url 'feed:home' %}" id="logo">
                     <img src="{% static 'images/logowhite.png' %}" alt="logo" />
                 </a>
                 <div id="login_signup">
                     <a href="" class="tipText">New user?</a>
-                    <a href= "{% url 'feed_templates:register' %}" class="lsText">&nbspSign up</a>
+                    <a href= "{% url 'feed:register' %}" class="lsText">&nbspSign up</a>
                 </div>
             </div>
         </header>
@@ -59,9 +59,9 @@
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-            <a href="{% url 'feed_templates:about' %}" class="helpInfo">About</a>
-            <a href="{% url 'feed_templates:help' %}" class="helpInfo">Help</a>
-            <a href="{% url 'feed_templates:contact_us' %}" class="helpInfo">Contact us</a>
+            <a href="{% url 'feed:about' %}" class="helpInfo">About</a>
+            <a href="{% url 'feed:help' %}" class="helpInfo">Help</a>
+            <a href="{% url 'feed:contact_us' %}" class="helpInfo">Contact us</a>
         </div>
         <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
     </div>
