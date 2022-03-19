@@ -480,7 +480,6 @@ def userFollowing(request):
     context = {}
     context['followers'] = get_following
     context['topics'] = get_cat_following
-    return render(request, 'feed/login.html',context)
 
     return render(request,'feed_templates/userFollowing.html',context)
 
