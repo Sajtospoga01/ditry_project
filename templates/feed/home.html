@@ -39,7 +39,6 @@
 	<ul>
 		{% for post in posts %}
 			<li>{{ post.title }}</li>
-			<img class="image" src="{{ post.picture }}" alt="Image of {{ post.title }}"
 			
 		{% endfor %}
 		
@@ -49,8 +48,8 @@
 {% for post in posts %}
     <div class="picLine">
         <div class="pic" style="height: 600px;">
-			<a href=""><img class="image" src="{{ MEDIA_URL }}samplePic1.png"
-                    alt="samplePic1" /></a>
+			<a href=""><img class="image" width="45px"; style="transform: translate(5px,15px);" 
+				src="{{ post.picture.url }}" alt="Image of {{ post.title }}"
             <div class="allPicOpera">
                 <a href=""><img width="45px"; style="transform: translate(5px,15px);"
                         src="{{ MEDIA_URL }}profile.png" alt="profile picture" />
