@@ -14,6 +14,11 @@ $(document).ready(function() {
 		}
 	}
 	
+	function like(button) {
+
+		
+	}
+	
 	$('#sampleHeart1').click(function() {
 		toggleLiked(document.getElementById('sampleHeart1'));
 	});

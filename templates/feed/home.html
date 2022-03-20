@@ -43,24 +43,35 @@
 		{% endfor %}
 		
 	</ul>
+	
 </div>
 
 <div id="postPics">
 {% for post in posts %}
     <div class="picLine">
         <div class="pic" style="height: 600px;">
-			<a href=""><img class="image" width="45px"; style="transform: translate(5px,15px);" 
-				src="{{ post.picture.url }}" alt="Image of {{ post.title }}"
+			<a href=""><img class="image" width="200px";
+				src="{{ post.picture.url }}" alt="Image of {{ post.title }}"</a>
             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile picture" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
+				{% if post.creator.UserProfile.profile_picture %}
+	               <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                        src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
+						<div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
-                </a>
+					</a>			
+				{% else %}
+					<a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                        src="{{ MEDIA_URL }}profile.png" alt="profile picture1" />
+							<div class="followPic"><img src="{% static 'images/followPic.png' %}"
+								alt="followPic" /></div>
+					</a>
+				{% endif %}
                 <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart1" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
+				{% if user.is_authenticated %}
+					<img class="heartButton" id="sampleHeart1" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
+					<a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                         alt="chat-bubble-dots" /></a>
+				{% endif %}
                 <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
                 <a href=""><img src="{% static 'images/download.png' %}"
                         alt="download" /></a>
