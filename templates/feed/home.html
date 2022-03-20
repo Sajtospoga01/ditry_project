@@ -44,6 +44,7 @@
 		
 	</ul>
 </div>
+
 <div id="postPics">
 {% for post in posts %}
     <div class="picLine">
@@ -63,13 +64,11 @@
                 <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
                 <a href=""><img src="{% static 'images/download.png' %}"
                         alt="download" /></a>
-            </div>
-        </div>
-        
         </div>
     </div>
 {% endfor %}
 </div>
+
 <div id="paging">
     <span>Previous</span>
     <a href="">1</a>
