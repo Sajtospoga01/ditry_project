@@ -33,14 +33,27 @@
     </select>
     <div style="border-left: 200px solid #ffffff;"></div>
 </div>
+<! -- Test -- >
+<div>
+	
+	<ul>
+		{% for post in posts %}
+			<li>{{ post.title }}</li>
+			<img class="image" src="{{ post.picture }}" alt="Image of {{ post.title }}"
+			
+		{% endfor %}
+		
+	</ul>
+</div>
 <div id="postPics">
+{% for post in posts %}
     <div class="picLine">
         <div class="pic" style="height: 600px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic1.png"
+			<a href=""><img class="image" src="{{ MEDIA_URL }}samplePic1.png"
                     alt="samplePic1" /></a>
             <div class="allPicOpera">
                 <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
+                        src="{{ MEDIA_URL }}profile.png" alt="profile picture" />
                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                             alt="followPic" /></div>
                 </a>
@@ -53,137 +66,10 @@
                         alt="download" /></a>
             </div>
         </div>
-        <div class="pic" style="height: 450px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic2.png"
-                    alt="samplePic2" /></a>
-             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                            alt="followPic" /></div>
-                </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart2" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                        alt="chat-bubble-dots" /></a>
-                <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
-                <a href=""><img src="{% static 'images/download.png' %}"
-                        alt="download" /></a>
-            </div>
-        </div>
-        <div class="pic" style="height: 300px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic3.png"
-                    alt="samplePic3" /></a>
-             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                            alt="followPic" /></div>
-                </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart3" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                        alt="chat-bubble-dots" /></a>
-                <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
-                <a href=""><img src="{% static 'images/download.png' %}"
-                        alt="download" /></a>
-            </div>
+        
         </div>
     </div>
-    <div class="picLine">
-        <div class="pic" style="height: 200px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic4.png"
-                    alt="samplePic4" /></a>
-             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                            alt="followPic" /></div>
-                </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart4" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                        alt="chat-bubble-dots" /></a>
-                <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
-                <a href=""><img src="{% static 'images/download.png' %}"
-                        alt="download" /></a>
-            </div>
-        </div>
-        <div class="pic" style="height: 700px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic5.png"
-                    alt="samplePic5" /></a>
-             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                            alt="followPic" /></div>
-                </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart5" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                        alt="chat-bubble-dots" /></a>
-                <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
-                <a href=""><img src="{% static 'images/download.png' %}"
-                        alt="download" /></a>
-            </div>
-        </div>
-        <div class="pic" style="height: 450px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic6.png"
-                    alt="samplePic6" /></a>
-             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                            alt="followPic" /></div>
-                </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart6" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                        alt="chat-bubble-dots" /></a>
-                <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
-                <a href=""><img src="{% static 'images/download.png' %}"
-                        alt="download" /></a>
-            </div>
-        </div>
-    </div>
-    <div class="picLine">
-        <div class="pic" style="height: 620px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic7.png"
-                    alt="samplePic7" /></a>
-             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                            alt="followPic" /></div>
-                </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart7" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                        alt="chat-bubble-dots" /></a>
-                <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
-                <a href=""><img src="{% static 'images/download.png' %}"
-                        alt="download" /></a>
-            </div>
-        </div>
-        <div class="pic" style="height: 760px;">
-            <a href=""><img class="image" src="{{ MEDIA_URL }}samplePic8.png"
-                    alt="samplePic8" /></a>
-             <div class="allPicOpera">
-                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                        src="{{ MEDIA_URL }}profile.png" alt="profile" />
-                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                            alt="followPic" /></div>
-                </a>
-                <a href="" class="authorName">{{ post.creator.username }}</a>
-                <img class="heartButton" id="sampleHeart8" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart2" /></a>
-                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                        alt="chat-bubble-dots" /></a>
-                <a href=""><img width="25px"; src="{% static 'images/share2.png' %}" alt="share2" /></a>
-                <a href=""><img src="{% static 'images/download.png' %}"
-                        alt="download" /></a>
-            </div>
-        </div>
-    </div>
+{% endfor %}
 </div>
 <div id="paging">
     <span>Previous</span>
