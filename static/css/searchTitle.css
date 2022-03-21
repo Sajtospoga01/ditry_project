@@ -114,6 +114,56 @@
     text-decoration: underline #949494;
 }
 
+#page #resultFrame .picLine .pic {
+    width: 365px;
+    height: 200px;
+    background-color: #d8d8d8;
+    border-bottom: 30px solid #ffffff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+}
+
+#page #resultFrame .picLine .pic .image {
+    align-self: center;
+    position: absolute;
+    top: -50px;
+}
+
+
+#page #resultFrame .picLine .pic .allPicOpera {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 365px;
+    position: relative;
+    color: #ffffff;
+}
+
+#page #resultFrame .picLine .pic .allPicOpera:hover {
+    background-color: rgba(134, 134, 134, 0.4);
+}
+
+#page #resultFrame .picLine .pic .allPicOpera .followPic {
+    width: 30px;
+    transform: translate(16px, -10px);
+}
+
+#page #resultFrame .picLine .pic .allPicOpera .authorName {
+    width: 150px;
+    word-wrap: break-word;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+#page #resultFrame .picLine .pic .allPicOpera .authorName:hover {
+    text-decoration: underline;
+}
+
 #page #paging {
     display: flex;
     align-self: center;
