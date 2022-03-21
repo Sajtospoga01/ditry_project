@@ -47,23 +47,26 @@ class HomePageTest(TestCase):
                     home_mapping_exists = True
 
         self.assertTrue(home_mapping_exists, f"The home url mapping could not be found.")
-        self.assertEqual(reverse('feed:home'), '/home/', f"home url lookup failed.")
+        self.assertEqual(reverse('feed:home'), '/feed/', f"home url lookup failed.")
 
     def test_home_view_with_no_posts(self):
         response = self.client.get(reverse('feed:home'))
 
         self.assertEqual(response.status_code, 200, f"Home page not returned with status code 200.")
-        self.assertContains(response, 'Feed empty.', f"'Feed empty.' message not displayed.") ## not implemented
-        self.assertQuerysetEqual(response.context['posts'], [], f" Non-empty posts context.") ## also not checked
+        self.assertTrue('Feed empty.' in response.content.decode(), f"'Feed empty.' message not displayed.")
+        self.assertEqual(len(response.context['posts']),0, f" Non-empty posts context.")
+
+class PopulatedViewTests(TestCase):
+    def setUp(self):
+        Helper.create_model_setup()
 
     def test_home_view_with_posts(self):
-        # add post
-        #and again and again
         response = self.client.get(reverse('feed:home'))
         self.assertEqual(response.status_code, 200,f"Home page not returned with status code 200.")
-        self.assertContains() # a couple these
+        self.assertContains(response, "")
         num_posts = len(response.context['posts'])
-        self.assertEqual(num_posts, 3, f"Wrong number of posts passed in response.")
+        self.assertEqual(num_posts, 2, f"Wrong number of posts passed in response.")
+
 
 # all database related tests, getting there
 
@@ -368,7 +371,8 @@ class AdminTests(TestCase):
 # forms tests
 class FormTests(TestCase):
     def setUp(self):
-        pass
+        Helper.create_model_setup()
+
     def test_module_exists(self):
         project_path = os.getcwd()
         feed_app_path = os.path.join(project_path, 'feed')
@@ -386,14 +390,23 @@ class FormTests(TestCase):
         pass
     def test_login_form(self):
         pass
-    def test_post_form(self): # probably should be picture not image
+    def test_post_form_functionality(self): # probably should be picture not image
         self.client.post(reverse('feed:add_post'), 
-            {'title': 'test post', 'picture': 'sample/sample_1.jpg'})
+            {'title': 'test post', 'picture': 'sample/sample_3.jpg'})
         posts = Post.objects.filter(title = 'test post')
         self.assertEqual(len(posts), 1, "The post form doesn't work.")
-    # could test mappings (see chap7)
+
+    def test_comment_form_functionality(self):
+        self.client.post(reverse('feed:comment_on_post', kwargs={'post_id':1}), 
+            {'username':'alicej', 'content':'whoop another test'})
+        comments = Comment.objects.filter(comment = 'whoop another test')
+        self.assertEqual(len(comments), 1, "The comment form doesn't work.")
+
+    def test_folder_form_functionality(self):
+        pass
 # helper functions, for helping
 class Helper:
+    # yes I know there's a population script, but it hadn't been written yet
     def create_model_setup():
         diy = Category.objects.create(name="diy")
         diy.save()

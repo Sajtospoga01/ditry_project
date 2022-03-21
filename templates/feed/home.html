@@ -26,22 +26,19 @@
     <a href="{% url 'feed:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
     <a href="{% url 'feed:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
 </div>
-<div id="choose">
-    <select id="chooseButton">
-        <option value="Popular">Popular</option>
-        <option value="New">New</option>
-    </select>
-    <div style="border-left: 200px solid #ffffff;"></div>
-</div>
 
 
 <! -- Tests -- >
 <div>
 	<a>
-		{% for post in posts %}
-			{{ post.id }}
-			{{ post.creator.username }}
-		{% endfor %}
+        {% if posts %}
+		    {% for post in posts %}
+			    {{ post.id }}
+		    	{{ post.creator.username }}
+		    {% endfor %}
+        {% else %}
+            <p>Feed empty.</p>
+        {% endif %}
 	</a>
 </div>
 <div id="postPics">
