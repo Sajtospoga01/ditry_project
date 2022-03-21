@@ -445,27 +445,19 @@ def update_profile(request):
 
 def register(request):
     user_form = UserForm()
-    profile_form = UserProfileForm()
     if request.method == 'POST':
         user_form = UserForm(request.POST)
-        profile_form = UserProfileForm(request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
+        if user_form.is_valid():
             user = user_form.save()
             username = form.cleaned_data.get('username')
             user.set_password(user.password)
             user.save()
 
-            profile = profile_form.save(commit=False)
-            profile.user = user
-
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-            profile.save()
 
             messages.success(request, 'Account was created for ' + username)
             login(request, user)
             return redirect('feed:login')
-    context = {'user_form':user_form, 'profile_form':profile_form}
+    context = {'user_form':user_form}
 
     return render(request,'feed/register.html',context)
 
