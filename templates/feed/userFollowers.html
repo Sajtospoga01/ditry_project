@@ -1,0 +1,40 @@
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
+
+
+{% block title_block %}
+    Followers
+{% endblock %}
+
+{% block body_block %}
+<link rel="stylesheet" href="/static/css/userFllowers.css" type="text/css">
+<div id="frame">
+    <div id="tipText"><span>Here is your fans.</span></div>
+    <div class="rowLine"></div>
+    <div id="resultFrame">
+        {% if followers %}
+            {% for user in followers %}
+                <div class="spaceFrame">
+                    <div class="picFrame">
+                        <div id="author">
+                            <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+                            <div id="authorDetail">
+                                <a href="" id="name">{{ user.username }}</a>
+                                <div id="following">{{ user.followers }}</div>
+                                <div id="location">
+                                    <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
+                                    <a id="locationText">Location</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            You have no followers. Post your content to get noticed!
+        {% endif %}
+        
+    </div>
+    <br>
+</div>
+{% endblock %}

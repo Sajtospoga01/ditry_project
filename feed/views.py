@@ -1,4 +1,5 @@
 
+from multiprocessing import context
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -20,26 +21,31 @@ def home(request):
     posts = Post.objects.all()
     visitor_cookie_handler(request)
     context_dict = {'posts': posts}
-    return render(request, 'feed_templates/home.html', context=context_dict)
+
+    ## should two types for posts: sorted by date and sorted by popularity not just posts unordered
+    popular_posts = posts = Post.objects.order_by('-likes')
+
+
+    return render(request, 'feed/home.html', context=context_dict)
 
 
 def about(request):
-    return render(request,'feed_templates/about.html' )
+    return render(request,'feed/about.html' )
 
 
 def help(request):
-    return render(request,'feed_templates/help.html')
+    return render(request,'feed/help.html')
 
 
 def contact_us(request):
-    return render(request,'feed_templates/contact_us.html')
+    return render(request,'feed/contact_us.html')
 
 
 @login_required
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed_templates/trending.html', context={'posts':posts})
+    return render(request, 'feed/trending.html', context={'posts':posts})
 
 
 @login_required
@@ -115,7 +121,7 @@ def show_post(request, post_id):
         context_dict['likes'] = None
         context_dict['comments'] = None
 
-    return render(request, 'feed_templates/picDetail.html', context = context_dict)
+    return render(request, 'feed/picDetail.html', context = context_dict)
 
 
 @login_required
@@ -133,14 +139,17 @@ def show_folder(request, folder_id):
         context_dict['posts'] = None
 
     # template show_folder.html does not exist yet, might have to change name
-    return render(request, 'feed_templates/show_folder.html',context=context_dict)
+    return render(request, 'feed/show_folder.html',context=context_dict)
 
 
 @login_required
-def all_folders(request, user_name):
-    # returns all folders that a user account has
-    # maybe use query for this
-    return
+def all_folders(request, user_folder):
+    if request.user == user_folder:
+        folders=Folder.objects.get(user=user_folder)
+    else:
+        folders=Folder.objects.get(user=user_folder, private=False)
+
+    return folders
 
 
 @login_required
@@ -148,9 +157,9 @@ def show_user(request, user_name):
     user = UserProfile.objects.get(username=user_name)
     posts = Queries.get_user_posts(user_name)
     followed_categories = Queries.get_category_following(request.user.id)
-
-    context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories}
-    return render(request,'feed_templates/personalPage.html', context=context_dict)
+    folders = all_folders(request, user)
+    context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+    return render(request,'feed/personalPage.html', context=context_dict)
 
 
 
@@ -168,6 +177,20 @@ def show_category_helper( category_name):
     return category, posts
 
 @login_required
+def crafts(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
+
+@login_required
+def diys(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
+
+
+@login_required
+def food(request, category_id):
+    category, posts = show_category_helper(category_id)
+    return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
 def crafts(request):
     category, posts = show_category_helper("Craft")
     return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
@@ -244,7 +267,7 @@ def add_folder(request):
         else:
             print(form.errors)
 
-    return render(request, 'feed_templates/add_folder.html', context={'form': form})
+    return render(request, 'feed/add_folder.html', context={'form': form})
 
 
 @login_required
@@ -300,7 +323,7 @@ def save_post(request, folder_id ,post_id):
             print(form.errors)
 
     context_dict = {'form': form, 'folder': folder}
-    return render(request, 'feed_templates/addPost.html', context=context_dict)
+    return render(request, 'feed/addPost.html', context=context_dict)
 
 # might not need this view, if not needed also delete url for it
 @login_required
@@ -372,7 +395,7 @@ def search_title(request):
                     if p not in matching_posts:
                         matching_posts.append(p)
 
-    return render(request,'feed_templates/searchTitle.html',
+    return render(request,'feed/searchTitle.html',
                   context={'matching_posts': matching_posts})
 
 
@@ -391,7 +414,7 @@ def search_user(request):
                     if u not in matching_users:
                         matching_users.append(u)
 
-    return render(request,'feed_templates/searchUser.html',
+    return render(request,'feed/searchUser.html',
                   context={'matching_users':matching_users})
 
 
@@ -440,7 +463,7 @@ def register(request):
             return redirect('feed:login')
     context = {'form':form}
 
-    return render(request,'feed_templates/register.html',context)
+    return render(request,'feed/register.html',context)
 
 def user_login(request):
     if request.method == 'POST':
@@ -457,7 +480,22 @@ def user_login(request):
             messages.info(request,'Username or Password is incorrect')
     context = {}
     return render(request, 'feed_templates/login.html',context)
+# queries exist for this, this is just a bandaid solution
+def userFollowing(request):
+    get_following = FollowsUser.objects.get('following')
+    get_cat_following = FollowsCategory.objects.get('following')
+    
+    context = {}
+    context['followers'] = get_following
+    context['topics'] = get_cat_following
 
+    return render(request,'feed_templates/userFollowing.html',context)
+
+def userFollowers(request):
+    get_followers = FollowsUser.objects.get('follower')
+    context = {}
+    context['followers'] = get_followers
+    return render(request,'feed_templates/userFollower.html',context)
 
 @login_required
 def user_logout(request):

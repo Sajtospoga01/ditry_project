@@ -1,0 +1,41 @@
+{% extends 'feed_templates/base.html' %}
+{% load staticfiles %}
+
+
+{% block title_block %}
+    Following
+{% endblock %}
+
+{% block body_block %}
+<link rel="stylesheet" href="/static/css/userFollowing.css" type="text/css">
+<div id="frame">
+    <div id="tipText"><span>You follow...</span></div>
+    <div class="rowLine"></div>
+    <div id="resultFrame">
+        {% if following %}
+            {% for users in following %}
+            <div class="spaceFrame">
+                <div class="picFrame">
+                    <div id="author">
+                        <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+                        <div id="authorDetail">
+                            <a href="" id="name">{{ users.username }}</a>
+                            <div id="following">{{ users.follower }}</div>
+                            <div id="location">
+                                <!-- What tf is location, can someone look over this and explain? @Miguel -->
+                                <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
+                                <a id="locationText">Location</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            You aren't following anyone! Start following a creator today!
+        {% end if %}
+    </div>
+    <!-- Need to add something here to show followed categories ASAP, follow design above @Miguel -->
+    <br>
+</div>
+{% endblock %}
