@@ -33,22 +33,13 @@
     </select>
     <div style="border-left: 200px solid #ffffff;"></div>
 </div>
-
-<! -- Tests -- >
-<div>
-	<a>
-		{% for post in posts %}
-			{{ post.id }}
-			{{ post.creator.username }}
-		{% endfor %}
-	</a>
-</div>
 <div id="postPics">
 <table>
 
-{% for post_row in posts %}
+{% if posts %}
+    {% for post_row in posts %}
     <tr>
-        {% for post in post_row%}
+        {% for post in post_row %}
             <td>
             <div class="picLine">
                 <div class="pic" style="height: 600px;">
@@ -85,17 +76,10 @@
             {%endfor%}
         </tr>
     {% endfor %}
+{% else %}
+    <p>Feed empty.</p>
+{% endif %}
 </table>
-</div>
-
-<div id="paging">
-    <span>Previous</span>
-    <a href="">1</a>
-    <a href="">2</a>
-    <a href="">3</a>
-    <a href="">4</a>
-    <a href="">5</a>
-    <span>Next</span>
 </div>
 <br><br>
 {% endblock %}
