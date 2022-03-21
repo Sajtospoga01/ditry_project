@@ -1,4 +1,5 @@
 {% extends 'feed/base.html' %}
+{% load staticfiles %}
 
 {% block title_block %}
     <link rel="stylesheet" href="/static/css/home.css" type="text/css">
@@ -9,7 +10,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
         <a href="" id="homeButton">
-            Craft
+            Categories
             <div id="buttonUnderline"></div>
         </a>
         <a href="{% url 'feed:diys' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">DIY</a>
@@ -19,5 +20,44 @@
 {% endblock %}
 
 {% block body_block %}
-    
+    {% if posts %}
+        {% for post in posts %}
+            <tr>
+                <td>
+                    <div class = "picLine">
+                        <div class="pic" style="height: 600px">
+                            <a href><img class="image" width="200px" src="{{ post.picture.url }}"
+                                alt="Image of {{ post.picture.title }}"></a>
+                            <div class="allPicOpera">
+                                {% if post.creator.UserProfile.profile_picture %}
+                                    <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                                            src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
+                                            <div class="followPic"><img src="{% static 'images/followPic.png' %}"
+                                                alt="followPic" /></div>
+                                    </a>			
+                                {% else %}
+                                    <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                                        src="{{ MEDIA_URL }}profile.png" alt="profile picture1" />
+                                            <div class="followPic"><img src="{% static 'images/followPic.png' %}"
+                                                alt="followPic" /></div>
+                                    </a>
+                                {% endif %}
+                                <a href="" class="authorName">{{ post.creator.username }}</a>
+                                {% if user.is_authenticated %}
+                                            
+                                            
+                                    <img class="heartButton" id="{{ post.id }}" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart" /></a>
+                                    <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
+                                        alt="chat-bubble-dots" /></a>
+                                        
+                                        
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    {% %}
 {% endblock %}
