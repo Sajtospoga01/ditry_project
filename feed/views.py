@@ -176,44 +176,49 @@ def all_followed_users(request):
     ## also needs sepaparate url if not helper function to display on personal page
     return
 
-
-def show_category_helper( category_name):
-    category = Category.objects.get(name=category_name)
-    category_id = category.id
-    posts = Queries.get_posts_in_category(category_id)
-    return category, posts
-
 @login_required
-def crafts(request, category_id):
-    category, posts = show_category_helper(category_id)
-    return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
+def show_category(request, name_category):
+    posts = Queries.get_posts_in_category(name_category)
 
-@login_required
-def diys(request, category_id):
-    category, posts = show_category_helper(category_id)
-    return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
+    return render(request, 'categories.html', context={'posts':posts})
 
-
-@login_required
-def food(request, category_id):
-    category, posts = show_category_helper(category_id)
-    return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
-
-@login_required
-def crafts(request):
-    category, posts = show_category_helper("Craft")
-    return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
-
-@login_required
-def diys(request):
-    category, posts = show_category_helper("Diy")
-    return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
-
-
-@login_required
-def food(request):
-    category, posts = show_category_helper("Cook")
-    return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
+# def show_category_helper( category_name):
+#     category = Category.objects.get(name=category_name)
+#     category_id = category.id
+#     posts = Queries.get_posts_in_category(category_id)
+#     return category, posts
+#
+# @login_required
+# def crafts(request, category_id):
+#     category, posts = show_category_helper(category_id)
+#     return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
+#
+# @login_required
+# def diys(request, category_id):
+#     category, posts = show_category_helper(category_id)
+#     return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
+#
+#
+# @login_required
+# def food(request, category_id):
+#     category, posts = show_category_helper(category_id)
+#     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
+#
+# @login_required
+# def crafts(request):
+#     category, posts = show_category_helper("Craft")
+#     return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
+#
+# @login_required
+# def diys(request):
+#     category, posts = show_category_helper("Diy")
+#     return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
+#
+#
+# @login_required
+# def food(request):
+#     category, posts = show_category_helper("Cook")
+#     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
 
 
 def helper_delete_post(request,post):

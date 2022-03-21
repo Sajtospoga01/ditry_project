@@ -18,9 +18,10 @@ urlpatterns = [
     path('followers/',views.userFollowers,name='follower'),
     
     path('add-post-to-category/', views.add_post_to_category, name='add_post_to_category'),
-    path('food/', views.food, name='food'),
-    path('diys/', views.diys, name='diys'),
-    path('crafts/', views.crafts, name='crafts'),
+    path('show-category/<str:name_category>/', views.show_category, name='show_category'),
+    #path('food/', views.food, name='food'),
+    #path('diys/', views.diys, name='diys'),
+    #path('crafts/', views.crafts, name='crafts'),
     
     path('show-post/<int:post_id>/', views.show_post, name='show_post'),
     path('show-post/<int:post_id>/like-post/', views.like_post, name='like_post'),
