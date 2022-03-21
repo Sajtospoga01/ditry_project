@@ -2,8 +2,7 @@ $(document).ready(function() {
 	
 	// toggles whether heart button is liked/hearted
 	
-	
-	function toggleLikedColour() {
+	$('.heartButton').click(function() {
 		var id = event.target.id;
 		var post = document.getElementById(id);
 		var src = post.getAttribute('src');
@@ -18,20 +17,7 @@ $(document).ready(function() {
 			post.setAttribute('src', unliked);
 			alert("unliked");
 		}		
-	}
-	
-	function like(button) {
-
-		
-	}
-	
-
-	
-	$('.heartButton').click(function() {
-		toggleLikedColour();
 	});
-
-	
 	
 	
 })
