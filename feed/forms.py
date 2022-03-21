@@ -4,10 +4,11 @@ from django.contrib.auth.forms import UserCreationForm
 from feed.models import Post, Folder, Comment, UserProfile
 
 class UserForm(UserCreationForm):
+    ## this is for register
     email = forms.EmailField(required=True,help_text="Required, Add a valid email address")
 
     class Meta:
-        model = User
+        model = UserProfile
         fields = {'username',
                   'first_name','last_name',
                   'email',
@@ -16,6 +17,7 @@ class UserForm(UserCreationForm):
 
 
 class UserProfileForm(forms.Form):
+    ## this is for editprofile
     class meta:
         model = UserProfile
         fields = {'website',
@@ -23,6 +25,7 @@ class UserProfileForm(forms.Form):
                   'picture'}
 
 class UserLoginForm(forms.ModelForm):
+    ## this is for logins
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
 
