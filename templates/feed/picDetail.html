@@ -27,8 +27,8 @@
                     {{post.likes}}
                 </div>  
             </div>
-            <div id="creator">
-                <a href=""><img id="creatorProfile" src="{{creator.profile_picture}}" alt="authorProfile" /></a>
+            <div id="author">
+                <a href=""><img id="authorProfile" src="{{creator.profile_picture}}" alt="authorProfile" /></a>
                 <div id="authorDetail">
                     <a href="" id="name">{{creator.name}}</a>
                     <div id="authorOpera">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <div id="title">{{post.title}}</div>
+            <div id="description">{{post.title}}</div>
             <div id="comments">
 				{% for comment in comments %}
 					<div class="comment">
