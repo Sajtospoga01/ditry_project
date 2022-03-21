@@ -124,11 +124,12 @@ def show_post(request, post_id):
 
 
 @login_required
-def show_folder(request, folder_id):
+def show_folder(request, folder_id, username):
     # maybe also need user_name to get folder
     context_dict = {}
     try:
-        folder = Folder.objects.get(slug=folder_id)
+        user = UserProfile.Objects.get(username=username)
+        folder = Folder.objects.get(slug=folder_id, user=user)
         posts = Post.objects.filter(folder=folder)
         context_dict['folder']=folder
         context_dict['posts'] = posts
@@ -145,17 +146,17 @@ def show_folder(request, folder_id):
 def all_folders(request, user_folder):
     # helper function
     if request.user == user_folder:
-        folders=Folder.objects.get(user=user_folder)
+        folders=Folder.objects.filter(user=user_folder)
     else:
-        folders=Folder.objects.get(user=user_folder, private=False)
+        folders=Folder.objects.filter(user=user_folder, private=False)
 
     return folders
 
 
 @login_required
-def show_user(request, user_name):
-    user = UserProfile.objects.get(username=user_name)
-    posts = Queries.get_user_posts(user_name)
+def show_user(request, username):
+    user = UserProfile.objects.get(username=username)
+    posts = Queries.get_user_posts(username)
     followed_categories = Queries.get_category_following(request.user.id)
 
     folders = all_folders(request, user)

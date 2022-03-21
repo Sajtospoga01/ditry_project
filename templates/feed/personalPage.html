@@ -19,7 +19,7 @@
                     <div class="follow"><a href>{{ follower_count }}</a></div>
                 </div>
                 <div id="authorOpera">
-                    <a class="button" href="{% url {{ user }}'feed:update_profile'%}">Edit profile</a>
+                    <a class="button" href="{% url 'feed:update_profile' user.username %}">Edit profile</a>
                 </div>
             </div>
         </div>

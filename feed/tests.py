@@ -24,14 +24,15 @@ class ProjectStructureTests(TestCase):
 
 # all views tests, incredibly incomplete
 
-class HomePageTest(TestCase):
+class BlankViewTests(TestCase):
+    # general tests
     def setUp(self):
         self.views_module = importlib.import_module('feed.views')
         self.views_module_listing = dir(self.views_module)
 
         self.project_urls_module = importlib.import_module('ditry_project.urls')
 
-    def test_view_exists(self):
+    def test_home_view_exists(self):
         name_exists = 'home' in self.views_module_listing
         is_callable = callable(self.views_module.home)
 
@@ -49,12 +50,34 @@ class HomePageTest(TestCase):
         self.assertTrue(home_mapping_exists, f"The home url mapping could not be found.")
         self.assertEqual(reverse('feed:home'), '/feed/', f"home url lookup failed.")
 
-    def test_home_view_with_no_posts(self):
+    # test views without posts etc.
+    def test_home_view(self):
         response = self.client.get(reverse('feed:home'))
 
         self.assertEqual(response.status_code, 200, f"Home page not returned with status code 200.")
         self.assertTrue('Feed empty.' in response.content.decode(), f"'Feed empty.' message not displayed.")
-        self.assertEqual(len(response.context['posts']),0, f" Non-empty posts context.")
+        self.assertEqual(len(response.context['posts']),0, f"Non-empty posts context.")
+    
+    def test_category_view(self):
+        self.client.login(username='alicej', password='testpassword')
+        response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'diy'}))
+        print("RESPONSE: ", response)
+        self.assertEqual(response.status_code, 200, "Craft category page not returned with status code 200.")
+        self.assertTrue('No posts in this category.' in response.content.decode(), "'No posts in this category.' message not displayed.")
+        self.assertEqual(len(response.context['posts']), 0, "Non-empty posts context.")
+    
+    def test_trending_view(self):
+        response = self.client.get(reverse('feed:trending'))
+
+        self.assertEqual(response.status_code, 302, "Trending category page not returned with status code 302.")
+
+    def test_trending_view_signed_in(self):
+        self.client.login(username='alicej', password='testpassword')
+        response = self.client.get(reverse('feed:trending'))
+
+        self.assertEqual(response.status_code, 200, "Trending category page not returned with status code 200.")
+        self.assertTrue('No posts in this category.' in response.content.decode(), "'No posts in this category.' message not displayed.")
+        self.assertEqual(len(response.context['posts']), 0, "Non-empty posts context.")
 
 class PopulatedViewTests(TestCase):
     def setUp(self):
@@ -62,11 +85,21 @@ class PopulatedViewTests(TestCase):
 
     def test_home_view_with_posts(self):
         response = self.client.get(reverse('feed:home'))
-        self.assertEqual(response.status_code, 200,f"Home page not returned with status code 200.")
-        self.assertContains(response, "")
-        num_posts = len(response.context['posts'])
-        self.assertEqual(num_posts, 2, f"Wrong number of posts passed in response.")
+        self.assertTrue("" in response.content.decode())
+        self.assertEqual(len(response.context['posts']), 2, f"Wrong number of posts passed in response.")
 
+    def test_category_view_with_posts(self):
+        post = Post.objects.create(id = 3, creator = UserProfile.objects.get(username = "alicej"), title = "food test", likes = 0)
+        post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
+        Categorises.objects.create(post = post, category = Category.objects.get(name = "food")).save()
+
+        response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'diy'}))
+        self.assertTrue("<title> diy </title>" in response.content.decode())
+        self.assertEqual(len(response.context['posts']), 2, "Wrong number of posts passed in response.")
+
+        response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'food'}))
+        self.assertTrue("<title> food </title>" in response.content.decode())
+        self.assertEqual(len(response.context['posts'], 1, "Wrong number of posts passed in response."))
 
 # all database related tests, getting there
 
