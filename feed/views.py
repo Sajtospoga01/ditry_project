@@ -21,6 +21,7 @@ def home(request):
     posts = Post.objects.all()
     visitor_cookie_handler(request)
     context_dict = {'posts': posts}
+
     return render(request, 'feed/home.html', context=context_dict)
 
 
@@ -138,10 +139,13 @@ def show_folder(request, folder_id):
 
 
 @login_required
-def all_folders(request, user_name):
-    # returns all folders that a user account has
-    # maybe use query for this
-    return
+def all_folders(request, user_folder):
+    if request.user == user_folder:
+        folders=Folder.objects.get(user=user_folder)
+    else:
+        folders=Folder.objects.get(user=user_folder, private=False)
+
+    return folders
 
 
 @login_required
@@ -150,7 +154,9 @@ def show_user(request, user_name):
     posts = Queries.get_user_posts(user_name)
     followed_categories = Queries.get_category_following(request.user.id)
 
-    context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories}
+    folders = all_folders(request, user)
+    context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+
     return render(request,'feed/personalPage.html', context=context_dict)
 
 
@@ -254,7 +260,7 @@ def add_folder(request):
         if form.is_valid():
             # Saves new folder to the database.
             form.save()
-            return redirect(reverse('feed:ll_folders',kwargs={'username':request.user.username}))
+            return redirect(reverse('feed:all_folders',kwargs={'username':request.user.username}))
         
         else:
             print(form.errors)

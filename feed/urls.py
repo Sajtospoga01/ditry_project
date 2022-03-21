@@ -31,7 +31,6 @@ urlpatterns = [
     
     # user_name cannot be 'register', 'login', 'logout', 'help', etc.
     path('<str:username>/', views.show_user, name='account'),
-    path('<str:username>/folders/', views.all_folders, name='all_folders'),
     path('<str:username>/folders/add-folder/', views.add_folder, name='add_folder'),
     path('<str:username>/folders/<int:folder_id>/', views.show_folder, name='show_folder'),
     path('<str:username>/folders/<int:folder_id>/delete-folder/', views.delete_folder, name='delete_folder'),
