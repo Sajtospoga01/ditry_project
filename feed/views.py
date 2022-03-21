@@ -185,18 +185,18 @@ def food(request, category_id):
     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
 def crafts(request):
     category, posts = show_category_helper("Craft")
-    return render(request, 'feed_templates/crafts.html', context={'posts':posts, 'category':category})
+    return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
 
 @login_required
 def diys(request):
     category, posts = show_category_helper("Diy")
-    return render(request, 'feed_templates/diys.html', context={'posts':posts, 'category':category})
+    return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
 
 
 @login_required
 def food(request):
     category, posts = show_category_helper("Cook")
-    return render(request, 'feed_templates/food.html', context={'posts':posts, 'category':category})
+    return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
 
 
 def helper_delete_post(request,post):
@@ -471,7 +471,7 @@ def user_login(request):
             # invalid login details
             messages.info(request,'Username or Password is incorrect')
     context = {}
-    return render(request, 'feed_templates/login.html',context)
+    return render(request, 'feed/login.html',context)
 # queries exist for this, this is just a bandaid solution
 def userFollowing(request):
     get_following = FollowsUser.objects.get('following')
@@ -481,13 +481,13 @@ def userFollowing(request):
     context['followers'] = get_following
     context['topics'] = get_cat_following
 
-    return render(request,'feed_templates/userFollowing.html',context)
+    return render(request,'feed/userFollowing.html',context)
 
 def userFollowers(request):
     get_followers = FollowsUser.objects.get('follower')
     context = {}
     context['followers'] = get_followers
-    return render(request,'feed_templates/userFollower.html',context)
+    return render(request,'feed/userFollower.html',context)
 
 @login_required
 def user_logout(request):
