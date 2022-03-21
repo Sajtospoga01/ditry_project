@@ -9,71 +9,77 @@
 <link rel="stylesheet" href="/static/css/personalPage.css" type="text/css">
 
 <div id="frame">
-    <div id="author">
-        <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
-        <div id="authorDetail">
-            <a href="" id="name">Name</a>
-            <div id="followFrame">
-                <div class="follow"><a href>66 following</a></div>
-                <div class="follow"><a href>23 followers</a></div>
-            </div>
-            <div id="location">
-                <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                <a id="locationText">Location</a>
-            </div>
-            <div id="authorOpera">
-                <a class="button" href="">Share</a>
-                <a class="button" href="">Edit profile</a>
-            </div>
-        </div>
-    </div>
-    <div id="paFrame">
-        <div id="postButton">
-            <a href="">&nbspPosts</a>
-            <div id="buttonUnderline1"></div>
-        </div>
-        <div id="attemptsButton">
-            <a href="">Attempts</a>
-            <div id="buttonUnderline2"></div>
-        </div>
-    </div>
-    <div id="folderAndPics">
-        <div id="folders">
-            <div id="customFrame">
-                <div class="forderFrame">
-                    <span class="foldersText">Folders</span>
-                    <div class="folder">
-                        <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
-                        <a href=""><span>Folder Name</span></a>
-                    </div>
-                    <div class="folder">
-                        <a href="" style="border-color:blue" class="icon"></a>
-                        <a href=""><span>Folder Name2</span></a>
-                    </div>
-                    <div class="operaFrame">
-                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
-                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
-                    </div>
+    {% if user.is_authenticated %}
+        <div id="author">
+            <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+            <div id="authorDetail">
+                <a href="" id="name">{{ user.username }}</a>
+                <div id="followFrame">
+                    <div class="follow"><a href>{{ following_count }}</a></div>
+                    <div class="follow"><a href>{{ follower_count }}</a></div>
                 </div>
-                <div class="catFrame">
-                    <span class="foldersText">Categories</span>
-                    <div class="folder">
-                        <a href="" style="border-color:rgb(0, 255, 13)"  class="icon"></a>
-                        <a href=""><span>Category</span></a>
-                    </div>
-                    <div class="operaFrame">
-                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
-                        <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
-                    </div>
+                <div id="authorOpera">
+                    <a class="button" href="{% url {{ user }}'feed:update_profile'%}">Edit profile</a>
                 </div>
             </div>
         </div>
-        <div id="picFrame">
+        <div id="paFrame">
+            <div id="postButton">
+                <a href="">&nbspPosts</a>
+                <div id="buttonUnderline1"></div>
+            </div>
+            <div id="attemptsButton">
+                <a href="">Attempts</a>
+                <div id="buttonUnderline2"></div>
+            </div>
+        </div>
+        <div id="folderAndPics">
+            {% if folders %}
+                
+            <div id="folders">
+                {% for folder in folders %}
+                    <div id="customFrame">
+                        <div class="folderFrame">
+                            <span class="foldersText">Folders</span>
+                            <div class="folder">
+                                <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
+                                <a href=""><span>{{ folder.name }}</span></a>
+                            </div>
+                            <div class="operaFrame">
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                            </div>
+                        </div>
+                        <div class="catFrame">
+                            <span class="foldersText">Categories</span>
+                            {% if followed_categories %}
+                                {% for f in followed_categories %}
+                                    <div class="folder">
+                                        <a href="" style="border-color:rgb(0, 255, 13)"  class="icon"></a>
+                                        <a href=""><span>{{ f.name }}</span></a>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <div class="operaFrame">
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                No folders found.
+            {% endif %}
+        </div>
+    {% endif %}
+        <!-- <div id="picFrame">
             <div class="image">
                 <a href=""><img src="{{ MEDIA_URL }}samplePic1.png" alt="samplePic1"></a>
                 <a id="addPost" href=""><img id="addPostButton" src="{% static 'images/addPost.png' %}" alt="addPost"></a>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 
