@@ -32,11 +32,11 @@ class UserLoginForm(forms.ModelForm):
 
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
-    image = forms.ImageField()
+    picture = forms.ImageField()
 
     class Meta:
         model = Post
-        fields = {'title','image'}
+        fields = {'title','picture'}
 
 class EditProfileForm(forms.ModelForm):
     username = forms.CharField(max_length=36)
