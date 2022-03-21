@@ -2,25 +2,13 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    <link rel="stylesheet" href="/static/css/home.css" type="text/css">
-    <div class="rowLine"></div>
-    <div id="cat">
-        <a href="{% url 'feed:home' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Home</a>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-        <a href="" id="homeButton">
-            Categories
-            <div id="buttonUnderline"></div>
-        </a>
-        <a href="{% url 'feed:diys' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">DIY</a>
-        <a href="{% url 'feed:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
-        <a href="{% url 'feed:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
-    </div>
+    {{ name }}
 {% endblock %}
 
 {% block body_block %}
+<div id="postPics">
     {% if posts %}
+        <table>
         {% for post in posts %}
             <tr>
                 <td>
@@ -59,5 +47,9 @@
                 </td>
             </tr>
         {% endfor %}
-    {% %}
+        </table>
+    {% else %}
+            No posts in this category.
+    {% endif %}
+</div>
 {% endblock %}

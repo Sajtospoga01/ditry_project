@@ -49,7 +49,7 @@ def contact_us(request):
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed/trending.html', context={'posts':posts})
+    return render(request, 'feed/categories.html', context={'posts':posts, 'name': 'Trending'})
 
 
 @login_required
@@ -175,7 +175,7 @@ def all_followed_users(request):
 def show_category(request, name_category):
     posts = Queries.get_posts_in_category(name_category)
 
-    return render(request, 'categories.html', context={'posts':posts})
+    return render(request, 'feed/categories.html', context={'posts':posts, 'name': name_category})
 
 # def show_category_helper( category_name):
 #     category = Category.objects.get(name=category_name)
