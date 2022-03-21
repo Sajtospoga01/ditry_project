@@ -124,11 +124,12 @@ def show_post(request, post_id):
 
 
 @login_required
-def show_folder(request, folder_id):
+def show_folder(request, folder_id, username):
     # maybe also need user_name to get folder
     context_dict = {}
     try:
-        folder = Folder.objects.get(slug=folder_id)
+        user = UserProfile.Objects.get(username=username)
+        folder = Folder.objects.get(slug=folder_id, user=user)
         posts = Post.objects.filter(folder=folder)
         context_dict['folder']=folder
         context_dict['posts'] = posts
