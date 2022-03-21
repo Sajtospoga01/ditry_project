@@ -46,7 +46,7 @@
                             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                             <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
                             {% if user.is_authenticated %}
-                            <a href="" class="lsTest">Hi, {{ user }}}</a>
+                            <a href="{% url {{ user }}'feed:account'%}" class="lsTest">Hi, {{ user }}</a>
                             {% else %}
                             <a href="{% url 'feed:login' %}" class="lsText">Log In</a>
                             <div id="topLine"></div>
