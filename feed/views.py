@@ -113,16 +113,11 @@ def show_post(request, post_id):
     try:
         post = Post.objects.get(id = post_id)
         context_dict['post'] = post
-        context_dict['likes'] = post.likes
-
+        context_dict['creator'] = post.creator
         comments = Queries.get_comment_on_post(post)
         context_dict['comments'] = comments
-
-        attempts = Queries.get_attempts(post_id)
-        context_dict['attempts'] = attempts
     except Post.DoesNotExist:
         context_dict['post'] = None
-        context_dict['likes'] = None
         context_dict['comments'] = None
 
     return render(request, 'feed/picDetail.html', context = context_dict)
@@ -465,18 +460,28 @@ def update_profile(request):
 
 
 def register(request):
-    form = UserForm()
+    user_form = UserForm()
+    profile_form = UserProfileForm()
     if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
             username = form.cleaned_data.get('username')
             user.set_password(user.password)
             user.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+
             messages.success(request, 'Account was created for ' + username)
             login(request, user)
             return redirect('feed:login')
-    context = {'form':form}
+    context = {'user_form':user_form, 'profile_form':profile_form}
 
     return render(request,'feed/register.html',context)
 
