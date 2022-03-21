@@ -20,7 +20,15 @@ def home(request):
     # all posts uploaded to diTRY
     posts = Post.objects.all()
     visitor_cookie_handler(request)
-    context_dict = {'posts': posts}
+    context_dict = {'posts': list()}
+    index = 0
+    row = -1
+    for i in posts:
+        if index % 3 == 0:
+            row += 1
+            context_dict['posts'].append(list())
+        context_dict['posts'][row].append(i)
+        index += 1
 
     return render(request, 'feed/home.html', context=context_dict)
 
@@ -140,6 +148,7 @@ def show_folder(request, folder_id):
 
 @login_required
 def all_folders(request, user_folder):
+    # helper function
     if request.user == user_folder:
         folders=Folder.objects.get(user=user_folder)
     else:
@@ -189,6 +198,8 @@ def diys(request, category_id):
 def food(request, category_id):
     category, posts = show_category_helper(category_id)
     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
+
+@login_required
 def crafts(request):
     category, posts = show_category_helper("Craft")
     return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
@@ -300,6 +311,7 @@ def save_post(request, folder_id ,post_id):
     if folder is None:
         return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
+    form = UserPostsForm()
     if request.method == 'POST':
         pin = get_object_or_404(Post, post_id)
         form = UserPostsForm(request.POST)
@@ -347,7 +359,6 @@ def like_comment(request, comment_id):
 
 @login_required
 def comment_on_post(request, post_id):
-    form = UserCommentForm()
     if request.medthod == 'POST':
         form = UserCommentForm(request.POST)
         if form.is_valid():
@@ -355,11 +366,12 @@ def comment_on_post(request, post_id):
             comment.post_id = post_id
             comment.user_id = request.user.id
             comment.save()
+            return redirect(reverse('feed:show_comments_on_post',
+                                    kwargs={'post_id': post_id}))
 
         else:
             print(form.errors)
-
-    return redirect(reverse('feed:show_comments_on_post',
+    return redirect(reverse('feed:show_post',
                             kwargs={'post_id': post_id}))
 
 
@@ -478,7 +490,10 @@ def user_login(request):
             messages.info(request,'Username or Password is incorrect')
     context = {}
     return render(request, 'feed/login.html',context)
+
+
 # queries exist for this, this is just a bandaid solution
+@login_required
 def userFollowing(request):
     get_following = FollowsUser.objects.get('following')
     get_cat_following = FollowsCategory.objects.get('following')
@@ -489,6 +504,7 @@ def userFollowing(request):
 
     return render(request,'feed/userFollowing.html',context)
 
+@login_required
 def userFollowers(request):
     get_followers = FollowsUser.objects.get('follower')
     context = {}
