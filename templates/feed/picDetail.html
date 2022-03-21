@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/static/css/picDetail.css" type="text/css">
 
 <br><br>
+{% if user.is_authenticated %}
 <div id="detail">
     <div>
         <a href=""><img src="{% static 'images/back.png' %}" alt="back" /></a>
@@ -39,9 +40,12 @@
             </div>
             <div id="description">{{post.title}}</div>
             <div id="comments">
+			<div id="sumNum">{{len(comments)} comments</div>
 				{% for comment in comments %}
 					<div class="comment">
+					<div class="commFrame">
 						<div class="commentText">{{comment.comment}}</div>
+					</div>
 					</div>
 				{% endfor %}
             </div>
@@ -49,5 +53,6 @@
 		{% %}
     </div>
 </div>
+{% endif %}
 </br></br>
 {% endblock %}
