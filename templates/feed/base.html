@@ -5,79 +5,82 @@
 
 <html>
 
-<head>
-    <meta charset="UTF-8">
-    <title>
-        {% block title_block %}
-        {% endblock %}
-    </title>
-    <link rel="stylesheet" href="/static/css/home.css" type="text/css">
-    <div class="rowLine"></div>
-    <div id="cat">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-        <a href="{% url 'feed:home' %}" id="homeButton">
-            Home
-            <div id="buttonUnderline"></div>
-        </a>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-        <a href="{% url 'feed:crafts' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>
-        <a href="{% url 'feed:diys' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">DIY</a>
-        <a href="{% url 'feed:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
-        <a href="{% url 'feed:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
-    </div>
-</head>
+    {% block title_block %}
+        <head>
+            <meta charset="UTF-8">
+            <title>
 
-<body>
-    <div id="page">
-        <header>
-            <div id="topStrip">
-                <a href="/" id="logo">
-                    <img src="{% static 'images/logo.png' %}" alt="logo" />
+            </title>
+            <link rel="stylesheet" href="/static/css/home.css" type="text/css">
+            <div class="rowLine"></div>
+            <div id="cat">
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+                <a href="{% url 'feed:home' %}" id="homeButton">
+                    Home
+                    <div id="buttonUnderline"></div>
                 </a>
-                <div id="search">
-                    <div id="border">
-                        <div id="searchPic"><img src="{% static 'images/search.png' %}" alt="search" />
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+                <a href="{% url 'feed:crafts' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>
+                <a href="{% url 'feed:diys' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">DIY</a>
+                <a href="{% url 'feed:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
+                <a href="{% url 'feed:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
+            </div>
+        </head>
+    {% endblock %}
+
+    {% block body_block %}
+        <body>
+            <div id="page">
+                <header>
+                    <div id="topStrip">
+                        <a href="/" id="logo">
+                            <img src="{% static 'images/logo.png' %}" alt="logo" />
+                        </a>
+                        <div id="search">
+                            <div id="border">
+                                <div id="searchPic"><img src="{% static 'images/search.png' %}" alt="search" />
+                                </div>
+                                <form id="searchText" action="">
+                                    <input type="text" name="Search" value="Search" onfocus="this.value=''"
+                                        onblur="if(this.value==''){this.value='Search'}">
+                                </form>
+                            </div>
                         </div>
-                        <form id="searchText" action="">
-                            <input type="text" name="Search" value="Search" onfocus="this.value=''"
-                                onblur="if(this.value==''){this.value='Search'}">
-                        </form>
+                        <div id="login_signup">
+                            <link rel="preconnect" href="https://fonts.googleapis.com">
+                            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                            <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+                            {% if user.is_authenticated %}
+                            <a href="" class="lsTest">Hi, {{ user }}}</a>
+                            {% else %}
+                            <a href="{% url 'feed:login' %}" class="lsText">Log In</a>
+                            <div id="topLine"></div>
+                            <a href="{% url 'feed:register' %}" class="lsText">&nbsp&nbspSign Up</a>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-                <div id="login_signup">
+                </header>
+            
+                
+            
+                <div class="rowLine"></div>
+                <div id="bottom">
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-                    {% if user.is_authenticated %}
-                    <a href="" class="lsTest">Hi, {{ user }}}</a>
-                    {% else %}
-                    <a href="{% url 'feed:login' %}" class="lsText">Log In</a>
-                    <div id="topLine"></div>
-                    <a href="{% url 'feed:register' %}" class="lsText">&nbsp&nbspSign Up</a>
-                    {% endif %}
+                    <a href="{% url 'feed:about' %}" class="helpInfo">About</a>
+                    <a href="{% url 'feed:help' %}" class="helpInfo">Help</a>
+                    <a href="{% url 'feed:contact_us' %}" class="helpInfo">Contact us</a>
                 </div>
+                <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
             </div>
-        </header>
+        </body>
+    {% endblock %}
 
-        {% block body_block %}
-        {% endblock %}
-
-        <div class="rowLine"></div>
-        <div id="bottom">
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-            <a href="{% url 'feed:about' %}" class="helpInfo">About</a>
-            <a href="{% url 'feed:help' %}" class="helpInfo">Help</a>
-            <a href="{% url 'feed:contact_us' %}" class="helpInfo">Contact us</a>
-        </div>
-        <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
-    </div>
-</body>
 
     <script src="{% static 'js/jquery-3.3.1.min.js' %}" crossorigin="anonymous"></script>
     <script src="{% static 'js/jquery.js' %}" crossorigin="anonymous"></script>
