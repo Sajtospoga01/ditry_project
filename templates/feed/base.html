@@ -5,34 +5,25 @@
 
 <html>
 
-    {% block title_block %}
+    
         <head>
             <meta charset="UTF-8">
             <title>
-
+                {% block title_block %}
+                a default
+                {% endblock %}
             </title>
+            <link rel="stylesheet" href="/static/css/base.css" type="text/css">
             <link rel="stylesheet" href="/static/css/home.css" type="text/css">
-            <div class="rowLine"></div>
-            <div id="cat">
-                <link rel="preconnect" href="https://fonts.googleapis.com">
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-                <a href="{% url 'feed:home' %}" id="homeButton">
-                    Home
-                    <div id="buttonUnderline"></div>
-                </a>
-                <link rel="preconnect" href="https://fonts.googleapis.com">
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
-                <a href="{% url 'feed:crafts' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>
-                <a href="{% url 'feed:diys' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">DIY</a>
-                <a href="{% url 'feed:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
-                <a href="{% url 'feed:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>                <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+                
             </div>
         </head>
-    {% endblock %}
 
-    {% block body_block %}
         <body>
             <div id="page">
                 <header>
@@ -64,8 +55,16 @@
                         </div>
                     </div>
                 </header>
-            
-                
+                <div class="rowline"></div>
+                <div id="cat">
+                    <a href="{% url 'feed:home' %}" class="otherButton" style = "background-color: #4F81FF; border-color: #4F81FF;">Home</a>
+                    <a href="{% url 'feed:crafts' %}" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>
+                    <a href="{% url 'feed:diys' %}" class="otherButton" style="background-color: #EDD70E; border-color: #EDD70E;">DIY</a>
+                    <a href="{% url 'feed:food' %}" class="otherButton" style="background-color: #E3B5FF; border-color: #E3B5FF;">Food</a>
+                    <a href="{% url 'feed:trending' %}" class="otherButton" style="background-color: #FF5733; border-color: #FF5733;">Trending</a>
+                </div>
+                {% block body_block %}
+                {% endblock %}
             
                 <div class="rowLine"></div>
                 <div id="bottom">
@@ -79,7 +78,6 @@
                 <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
             </div>
         </body>
-    {% endblock %}
 
 
     <script src="{% static 'js/jquery-3.3.1.min.js' %}" crossorigin="anonymous"></script>
