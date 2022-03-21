@@ -172,6 +172,7 @@ class In_folder(models.Model):
 
     def __str__(self):
         return self.post.title+' is in: ' + str(self.folder.name)
+        
 class Comment_likes(models.Model):
     user = models.ForeignKey(UserProfile,on_delete=CASCADE)
     comment = models.ForeignKey(Comment,on_delete=CASCADE)
