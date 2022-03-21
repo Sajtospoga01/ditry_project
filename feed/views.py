@@ -392,7 +392,8 @@ def search_title(request):
     #https://stackoverflow.com/questions/38006125/how-to-implement-search-function-in-django
     if request.method == 'GET':
         # gets all search terms
-        queries = request.GET['q'].split()
+        query= request.GET.get('q')
+        queries =query.split()
         all_posts = Post.objects.all()
         matching_posts = []
 
@@ -408,24 +409,6 @@ def search_title(request):
     return render(request,'feed/searchTitle.html',
                   context={'matching_posts': matching_posts})
 
-
-@login_required
-def search_user(request):
-    if request.method == 'GET':
-        # gets all search terms
-        queries = request.GET['q'].split()
-        matching_users = []
-
-        # loops through all search terms
-        for query in queries:
-            if query is not None:
-                # filter users by if search term is in username
-                for u in all_users.filter(Q(username__icontains = query)):
-                    if u not in matching_users:
-                        matching_users.append(u)
-
-    return render(request,'feed/searchUser.html',
-                  context={'matching_users':matching_users})
 
 
 def reset_password(request):

@@ -45,7 +45,6 @@ urlpatterns = [
     path('follow-category/<slug:category_slug>/', views.follow_category, name='follow_category'),
     
     path('search-title/', views.search_title, name = 'search_title'),
-    path('search-user/', views.search_user, name = 'search_user'),
     
     path('add-post-to-category/', views.add_post_to_category, name='add_post_to_category'),
 ]
