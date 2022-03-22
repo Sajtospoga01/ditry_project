@@ -11,7 +11,13 @@
 <div id="frame">
     {% if user.is_authenticated %}
         <div id="author">
-            <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+            <a href="">
+                {% if user.profile_picture %}
+                    <img id="authorProfile" src="{{user.profile_picture.url}}" alt="authorProfile" />
+                {% else %}
+                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
+                {%endif%}
+            </a>
             <div id="authorDetail">
                 <a href="" id="name">{{ user.username }}</a>
                 <div id="followFrame">
@@ -43,7 +49,7 @@
                             <span class="foldersText">Folders</span>
                             <div class="folder">
                                 <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
-                                <a href=""><span>{{ folder.name }}</span></a>
+                                <a href="{% url 'feed:show_folder' user.username folder.id%}"><span>{{ folder.name }}</span></a>
                             </div>
                             <div class="operaFrame">
                                 <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
