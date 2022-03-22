@@ -19,7 +19,7 @@
     <div id="frame">
 		{%if post %}
         <div id="pic">
-            <a href=""><img src="{{ post.picture }}" alt="Picture"/></a>
+            <a href=""><img src="{{ post.picture.url  }}" alt="Picture"/></a>
         </div>
         <div id="authorCom">
             <div class="Allopera">
@@ -40,7 +40,7 @@
             </div>
             <div id="description">{{post.title}}</div>
             <div id="comments">
-			<div id="sumNum">{{len(comments)} comments</div>
+			<div id="sumNum">{{comments.count}} comments</div>
 				{% for comment in comments %}
 					<div class="comment">
 					<div class="commFrame">
@@ -50,9 +50,11 @@
 				{% endfor %}
             </div>
         </div>
-		{% %}
+        {% endif %}
+	
     </div>
 </div>
 {% endif %}
 </br></br>
+
 {% endblock %}

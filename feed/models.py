@@ -10,10 +10,11 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 # Create your models here.
 
+
 class Validators:
 
     def validate_origin_post(value):
-        
+
         try:
             query = Post.objects.filter(id=value)
             if (query.count() > 0 or value == None and value == -1):
@@ -27,15 +28,16 @@ class Validators:
 
 
 class UserProfile(User):
-    
+
     website = models.URLField(blank=True)
-    bio = models.CharField(max_length=256,blank=True,)
-    profile_picture = models.ImageField( upload_to='profile_images',
-        blank=True, validators=[validate_image_file_extension])
+    bio = models.CharField(max_length=256, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_images',
+                                        blank=True, validators=[validate_image_file_extension])
 
     def __str__(self):
         return self.username
         # return self.username + ' ' + str(self.id)
+
 
 
 class Category(models.Model):
@@ -61,12 +63,12 @@ class Post(models.Model):
         UserProfile, on_delete=CASCADE, related_name='%(class)s_requests_created')
     title = models.CharField(max_length=128, default="")
     likes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
-    #picture = models.ResizedImageField(ull=False,size=[365, 600],crop = ['middle'] , upload_to='backend', validators=[
+    # picture = models.ResizedImageField(ull=False,size=[365, 600],crop = ['middle'] , upload_to='backend', validators=[
     #                            validate_image_file_extension])
     picture = models.ImageField(null=False, upload_to='backend', validators=[
                                 validate_image_file_extension])
     original = models.IntegerField(
-        blank= False, validators=[Validators.validate_origin_post],default=-1)
+        blank=False, validators=[Validators.validate_origin_post], default=-1)
 
     def __str__(self):
         return self.title
@@ -174,15 +176,18 @@ class In_folder(models.Model):
 
     def __str__(self):
         return self.post.title+' is in: ' + str(self.folder.name)
-        
+
+
 class Comment_likes(models.Model):
-    user = models.ForeignKey(UserProfile,on_delete=CASCADE)
-    comment = models.ForeignKey(Comment,on_delete=CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=CASCADE)
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['user', 'comment'], name='user_likes_comment')
+            UniqueConstraint(fields=['user', 'comment'],
+                             name='user_likes_comment')
         ]
+
     def __str__(self):
         return self.user.username+' liked ' + str(self.comment.id)
 
@@ -419,8 +424,9 @@ class Queries:
 
     def get_user_attempts(user):
         try:
-            user_object = UserProfile.objects.get(id = user)
-            result = Post.objects.filter(creator = user_object).exclude(original = -1)
+            user_object = UserProfile.objects.get(id=user)
+            result = Post.objects.filter(
+                creator=user_object).exclude(original=-1)
             return result
 
         except:
