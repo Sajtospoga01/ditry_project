@@ -287,21 +287,22 @@ def add_folder(request):
 def like_post(request,post_id):
     # reference: https://github.com/Jebaseelanravi/instagram-clone/blob/main/insta/views.py
     post = Post.objects.get(id= post_id)
-
+    liker = UserProfile.objects.get(id=request.user.id)
     try:
-        already_Liked = Likes.objects.get(liked_post=post, liker=request.user)
+        already_Liked = Likes.objects.get(liked_post=post, liker=liker)
         Likes.objects.filter(liked_post=post, liker=request.user).delete()
+
         if post.likes>0:
             post.likes -= 1
 
-
     except Likes.DoesNotExist:
-        Likes.objects.create(liked_post=post, liker=request.user)
+        Likes.objects.create(liked_post=post, liker=liker)
         post.likes += 1
 
-    post.save()
-    # should redirect to post that was liked or disliked
-    return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
+    finally:
+        post.save()
+        # should redirect to post that was liked or disliked
+        return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
 
 
 @login_required
