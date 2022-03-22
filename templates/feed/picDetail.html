@@ -29,7 +29,14 @@
                 </div>  
             </div>
             <div id="author">
-                <a href=""><img id="authorProfile" src="{{creator.profile_picture}}" alt="authorProfile" /></a>
+                <a href="">
+                {% if post.creator.profile_picture %}
+                    <img id="authorProfile" src="{{creator.profile_picture.url}}" alt="authorProfile" />
+                {% else %}
+                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
+                {%endif%}
+                </a>
+                
                 <div id="authorDetail">
                     <a href="" id="name">{{creator.name}}</a>
                     <div id="authorOpera">
@@ -37,6 +44,7 @@
                         <a class="button" href="">&nbsp&nbspDM&nbsp&nbsp</a>
                     </div>
                 </div>
+                
             </div>
             <div id="description">{{post.title}}</div>
             <div id="comments">
