@@ -1,34 +1,70 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <title>register</title>
-</head>
+      <title>
+          Register
+      </title>
+    <link rel="stylesheet" href="/static/css/register.css" type="text/css">
+     <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+   </head>
 <body>
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{ form.username.label}}
-        {{ form.username }}
-        <br>
-        {{ form.first_name.label}}
-        {{ form.first_name }}
-        <br>
-        {{ form.last_name.label}}
-        {{ form.last_name}}
-        <br>
-        {{ form.email.label }}
-        {{ form.email }}
-        <br>
-        {{ form.password1.label }}
-        {{ form.password1 }}
-        <br>
-        {{ form.password2.label }}
-        {{ form.password2 }}
-        <br>
-        {% for message in messages %}
-            <p> {{ message }}</p>
-        {% endfor %}
-        <input type="submit" name="register">
-    </form>
+          <a href="{% url 'feed:home' %}" id="logo">
+              <img src="{% static 'images/logowhite.png' %}" alt="logo" id="logo_img" />
+          </a>
+
+  <div class="container">
+    <div class="title">Registration</div>
+    <div class="content">
+      <form action="" method="POST">
+          {% csrf_token %}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Username</span>
+              {{ form.username }}
+          </div>
+          <div class="input-box">
+            <span class="details">Email</span>
+              {{ form.email }}
+          </div>
+          <div class="input-box">
+            <span class="details">First Name</span>
+              {{ form.first_name }}
+          </div>
+          <div class="input-box">
+            <span class="details">Last Name</span>
+              {{ form.last_name }}
+          </div>
+          <div class="input-box">
+            <span class="details">Password</span>
+              {{ form.password1 }}
+          </div>
+          <div class="input-box">
+            <span class="details">Confirm Password</span>
+              {{ form.password2 }}
+          </div>
+        </div>
+
+        <div class="button">
+          <input type="submit" value="Register">
+        </div>
+      </form>
+        <p>Already have an account? <a href="{% url 'feed:login' %}">Log in here</a></p>
+
+    </div>
+  </div>
+
+  <div class="rowLine"></div>
+        <div id="bottom">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+            <a href="{% url 'feed:about' %}" class="helpInfo">About</a>
+            <a href="{% url 'feed:help' %}" class="helpInfo">Help</a>
+            <a href="{% url 'feed:contact_us' %}" class="helpInfo">Contact us</a>
+        </div>
+        <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
+
 </body>
 </html>

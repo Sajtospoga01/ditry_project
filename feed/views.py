@@ -444,20 +444,15 @@ def update_profile(request):
 
 
 def register(request):
-    user_form = UserForm()
+    form = UserForm()
     if request.method == 'POST':
-        user_form = UserForm(request.POST)
-        if user_form.is_valid():
-            user = user_form.save()
-            username = form.cleaned_data.get('username')
-            user.set_password(user.password)
-            user.save()
-
-
-            messages.success(request, 'Account was created for ' + username)
-            login(request, user)
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, 'Account was created for ' + user)
             return redirect('feed:login')
-    context = {'user_form':user_form}
+    context = {'form':form}
 
     return render(request,'feed/register.html',context)
 
