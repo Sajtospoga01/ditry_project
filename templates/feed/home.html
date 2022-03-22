@@ -18,7 +18,7 @@
             <td>
             <div class="picLine">
                 <div class="pic" style="height: 600px;">
-                    <a href=""><img class="image" width="200px";
+                    <a href="{% url 'feed:show_post' post.id%}"><img class="image" width="200px";
                         src="{{ post.picture.url }}" alt="Image of {{ post.title }}"</a>
                     <div class="allPicOpera">
                         {% if post.creator.UserProfile.profile_picture %}
