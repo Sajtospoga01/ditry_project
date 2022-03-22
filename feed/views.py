@@ -107,6 +107,17 @@ def add_post_to_category(request, category_name_slug, post_id):
     return redirect(reverse('feed:show_category',kwargs={'category_slug': category_name_slug}))
 
 
+
+#helper function
+def has_liked(request, post):
+    user = UserProfile.objects.get(id=request.user.id)
+    liked = Queries.get_liked_posts(user)
+    result = liked.objects.filter(id=post.id)
+    if result.count()>0:
+        return True
+    else:
+        return False
+
 @login_required
 def show_post(request, post_id):
     context_dict = {}
@@ -116,12 +127,16 @@ def show_post(request, post_id):
         context_dict['creator'] = post.creator
         comments = Queries.get_comment_on_post(post.id)
         context_dict['comments'] = comments
+        # liked by user?
+        is_liked = has_liked(request,post_id)
+        context_dict['is_liked'] = is_liked
    
     except Post.DoesNotExist:
         context_dict['post'] = None
         context_dict['comments'] = None
         context_dict['creator'] = None
         context_dict['numComments'] = 0
+        context_dict['is_liked'] = False
 
     return render(request, 'feed/picDetail.html', context = context_dict)
 
