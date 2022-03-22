@@ -128,7 +128,8 @@ def show_post(request, post_id):
         comments = Queries.get_comment_on_post(post.id)
         context_dict['comments'] = comments
         # liked by user?
-        is_liked = has_liked(request,post_id)
+        
+        is_liked = Functions.has_liked(request.user.id,post_id)
         context_dict['is_liked'] = is_liked
    
     except Post.DoesNotExist:

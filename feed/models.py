@@ -246,8 +246,9 @@ class Functions:
         post_object.likes = likes
         post_object.save()
     def has_liked(user,post):
-        liked = Queries.get_liked_posts(user)
-        result = liked.objects.filter(id = post.id)
+
+        result = Queries.get_liked_posts(user).filter(id = post)
+        
         if result.count()>0:
             return True
         else:

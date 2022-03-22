@@ -24,7 +24,13 @@
         <div id="authorCom">
             <div class="Allopera">
                 <div class="normal">
-                    <a href="{% url 'feed:like_post' post.id %}"><img src="{% static 'images/heart.png' %}" alt="heart" /></a>
+                    <a href="{% url 'feed:like_post' post.id %}">
+                        {% if is_liked %}
+                            <img src="{% static 'images/hearted.png' %}" alt="heart" />
+                        {% else %}
+                            <img src="{% static 'images/heart2.png' %}" alt="heart" />
+                        {% endif %}
+                    </a>
                     {{post.likes}}
                 </div>  
             </div>
