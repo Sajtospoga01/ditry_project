@@ -114,7 +114,7 @@ def show_post(request, post_id):
         post = Post.objects.get(id = post_id)
         context_dict['post'] = post
         context_dict['creator'] = post.creator
-        comments = Queries.get_comment_on_post(post)
+        comments = Queries.get_comment_on_post(post_id)
         context_dict['comments'] = comments
         if comments == None:
             context_dict['numComments'] = 0
