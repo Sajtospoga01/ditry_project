@@ -2,7 +2,6 @@
 
 {% load static %}
 
-
 <html>
 
 <head>
@@ -15,44 +14,44 @@
 </head>
 
 <body>
-    <div id="page">
-        <header>
-            <div id="topStrip">
-                <a href="{% url 'feed:home' %}" id="logo">
-                    <img src="{% static 'images/logowhite.png' %}" alt="logo" />
-                </a>
-                <div id="login_signup">
-                    <a href="" class="tipText">New user?</a>
-                    <a href= "{% url 'feed:register' %}" class="lsText">&nbspSign up</a>
-                </div>
-            </div>
-        </header>
+    <a href="{% url 'feed:home' %}" id="logo">
+          <img src="{% static 'images/logowhite.png' %}" alt="logo" id="logo_img" />
+      </a>
 
-        <div id="loginBorder">
-            <div id="loginFrame">
-                <span>Wecome to our website!</span>
+    <div class="container">
+        <div class="title">Login</div>
+        <div class="content">
+            <form action="" method="POST">
                 {% csrf_token %}
-                {{ user_form.as_p }}
-                <div id="emailFrame">
-                    <form id="emailText" action="">
-                        <input type="text" name="emailText" value="Email" onfocus="this.value=''"
-                            onblur="if(this.value==''){this.value='Email'}">
-                    </form>
+                <div class="user-details">
+                  <div class="input-box">
+                    <span class="details">Username</span>
+                      <input type="text" name="username" placeholder="XXXX">
+                  </div>
                 </div>
-                <div id="PasswordFrame">
-                    <form id="PasswordText" action="">
-                        <input type="password" name="PasswordText" value="Password" onfocus="this.value=''"
-                            onblur="if(this.value==''){this.value='Password'}">
-                    </form>
+
+                <div class="user-details">
+                  <div class="input-box">
+                    <span class="details">Password</span>
+                      <input type="password" name="password" placeholder="12345678">
+                  </div>
                 </div>
-<!--                need a style for error message-->
+
                 {% for message in messages %}
-                    {{ message }}
+                    <small style="color:red;"> {{ message }}</small>
                 {% endfor %}
-                <a href="" id="loginButton"><span>Log in</span></a>
-                <a href="" id="forgetpw">Forget passwords?</a>
-            </div>
+
+                <div class="button">
+                    <input type="submit" value="Log in">
+                </div>
+
+                <div class="help_text">
+                    <small>Don't have an account? <a href="{% url 'feed:register' %}">Sign up here</a></small><br>
+                    <small>Forget your password? <a href="{% url 'feed:reset_password' %}">Change password</a></small>
+                </div>
+            </form>
         </div>
+    </div>
 
         <div class="rowLine"></div>
         <div id="bottom">
@@ -64,7 +63,6 @@
             <a href="{% url 'feed:contact_us' %}" class="helpInfo">Contact us</a>
         </div>
         <div id="copyright">Copyright © 2022 Team 9D. All rights reserved.</div>
-    </div>
 </body>
 
 <!-- JS goes here if needed-->

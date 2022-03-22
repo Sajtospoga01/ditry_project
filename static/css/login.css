@@ -1,196 +1,128 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
 body{
-    background-image: url(background.png);
-    background-position: center center;
-    background-attachment:fixed;
-    background-size:cover;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  background-image: url(background.png);
+  background-position: center;
+  background-attachment:fixed;
+  background-size:cover;
 }
 
-#page {
-    justify-content: space-between;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+#logo_img {
+  height: 100px;
+
+
 }
 
-#page #topStrip {
-    height: 150px;
-    width: 1200px;
-    justify-content: space-between;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
+.container{
+  max-width: 500px;
+  width: 100%;
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
 }
 
-#page #topStrip #logo,
-#page #topStrip #logo:hover {
-    display: flex;
-    cursor: pointer;
+.container .title{
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+.container .title::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+.content form .user-details{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 12px 0;
+}
+form .user-details .input-box{
+  margin-bottom: 15px;
+  width: 100%;
+}
+form .input-box span.details{
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.user-details .input-box input{
+  height: 45px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  border-radius: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
 }
 
-#page #topStrip #logo img{
-    width: 304px;
+ form .button{
+   height: 45px;
+ }
+
+ form .button input{
+   height: 100%;
+   width: 100%;
+   border-radius: 5px;
+   border: none;
+   color: #fff;
+   font-size: 18px;
+   font-weight: 500;
+   letter-spacing: 1px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   background: #1ab99679;
+ }
+ form .button input:hover{
+  background: #1ab99679;
+  }
+
+ @media(max-width: 584px){
+ .container{
+  max-width: 100%;
+}
+form .user-details .input-box{
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  form .category{
+    width: 100%;
+  }
+  .content form .user-details{
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+  .user-details::-webkit-scrollbar{
+    width: 5px;
+  }
 }
 
-#page #topStrip #login_signup {
-    width: 300px;
-    height: 150px;
-    align-items: center;
-    justify-content: flex-end;
-    display: flex;
-}
-
-#page #topStrip #login_signup .tipText {
-    border-right: 7px solid #4f81ff00;
-    width: 80px;
-    height: 20px;
-    font-size: 16px;
-    color: #ffffff;
-    text-decoration: none;
-}
-
-#page #topStrip #login_signup .lsText {
-    width: 65px;
-    height: 20px;
-    font-size: 20px;
-    font-family: 'Passion One', cursive;
-    color: #ffffff;
-    text-decoration: none;
-}
-
-#page #topStrip #login_signup .lsText:hover {
-    color: #4F81FF;
-    text-decoration: none;
-}
-
-#page #loginBorder{
-    height: 900px;
-    width: 1200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#page #loginBorder #loginFrame{
-    background-color: rgb(255, 255, 255);
-    opacity: 1;
-    width: 500px;
-    height: 400px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-    border-radius: 20px;
-}
-
-#page #loginBorder #loginFrame span{
-    font-family: 'Passion One', cursive;
-    color: black;
-    font-size: 40px;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-#page #loginBorder #loginFrame #emailFrame{
-    width: 350px;
-    height: 45px;
-    border: 1.5px solid rgba(70, 70, 70, 0);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    background-color: #eeeeee;
-}
-
-#page #loginBorder #loginFrame #emailFrame:hover{
-    border: 1.5px solid #4F81FF;
-}
-
-#page #loginBorder #loginFrame #emailFrame #emailText input{
-    border: 0px;
-    border-left: 20px solid #ffffff00;
-    font-size: 20px;
-    letter-spacing: 2px;
-    outline: none;
-    width: 320px;
-    background-color: #eeeeee;
-    color: #a7a7a7b2;
-}
-
-#page #loginBorder #loginFrame #emailFrame #emailText input:hover{
-    color: #272727;
-}
-
-
-#page #loginBorder #loginFrame #PasswordFrame{
-    width: 350px;
-    height: 45px;
-    border: 1.5px solid rgba(70, 70, 70, 0);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    background-color: #eeeeee;
-}
-
-#page #loginBorder #loginFrame #PasswordFrame:hover{
-    border: 1.5px solid #4F81FF;
-}
-
-#page #loginBorder #loginFrame #PasswordFrame #PasswordText input{
-    border: 0px;
-    border-left: 20px solid #ffffff00;
-    font-size: 20px;
-    letter-spacing: 2px;
-    outline: none;
-    width: 320px;
-    background-color: #eeeeee;
-    color: #a7a7a7b2;
-}
-
-#page #loginBorder #loginFrame #PasswordFrame #PasswordText input:hover{
-    color: #272727;
-}
-
-
-#page #loginBorder #loginFrame #loginButton{
-    width: 350px;
-    height: 45px;
-    border: 1.5px solid rgba(70, 70, 70, 0);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #1ab99679;
-    text-decoration: none;
-}
-
-#page #loginBorder #loginFrame #loginButton:hover{
-    border: 1.5px solid #1AB996;
-}
-
-#page #loginBorder #loginFrame #loginButton span{
-    font-size: 30px;
-    color: #ffffff;
-    text-shadow: #6E6E6E 1px 0 0, #6E6E6E 0 1px 0, #6E6E6E -1px 0 0, #6E6E6E 0 -1px 0;
-}
-
-#page #loginBorder #loginFrame #forgetpw{
-    text-decoration: none;
-    color: #a7a7a7f3;
-}
-
-#page #loginBorder #loginFrame #forgetpw:hover{
-    text-decoration: none;
-    color: #4F81FF;
-}
-
-#page .rowLine {
+.rowLine {
+    margin-top: 100px;
     background-color: #ffffff;
-    width: 1200px;
+    width: 100%;
     height: 2px;
 }
 
-#page #bottom {
+#bottom {
     display: flex;
     width: 400px;
     height: 35px;
@@ -198,19 +130,23 @@ body{
     border-top: 20px solid rgba(255, 255, 255, 0);
 }
 
-#page #bottom .helpInfo {
+#bottom .helpInfo {
     font-size: 18px;
     font-family: 'Passion One', cursive;
     color: #ffffff;
     text-decoration: none;
 }
 
-#page #bottom .helpInfo:hover {
+#bottom .helpInfo:hover {
     color: #ffffff;
     text-decoration: none;
 }
 
-#page #copyright {
+#copyright {
     color: #ffffff;
     font-size: xx-small;
+}
+
+.help_text{
+    margin-top: 10px;
 }
