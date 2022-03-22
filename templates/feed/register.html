@@ -8,6 +8,7 @@
       </title>
     <link rel="stylesheet" href="/static/css/register.css" type="text/css">
      <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+<!--      <script defer src = "/static/js/register.js"></script>-->
    </head>
 <body>
           <a href="{% url 'feed:home' %}" id="logo">
@@ -41,17 +42,23 @@
               {{ form.password1 }}
           </div>
           <div class="input-box">
-            <span class="details">Confirm Password</span>
+            <span class="details">Confirm Password </span>
               {{ form.password2 }}
           </div>
         </div>
 
+          {% for field in form %}
+            {% for error in field.errors %}
+                <small style="color:red;">{{ error }}</small>
+            {% endfor %}
+          {% endfor %}
+
         <div class="button">
           <input type="submit" value="Register">
         </div>
+
       </form>
         <p>Already have an account? <a href="{% url 'feed:login' %}">Log in here</a></p>
-
     </div>
   </div>
 
