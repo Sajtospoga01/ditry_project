@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from operator import pos
 from unittest import result
 from django.db.models import CASCADE
 from django.db import models
@@ -239,6 +240,20 @@ class Functions:
             return True
         else:
             return False
+    def update_likes_on_post(post):
+        likes = Queries.get_post_likes(post).count()
+        post_object = Post.objects.get(id == post)
+        post_object.likes = likes
+        post_object.save()
+    def has_liked(user,post):
+        liked = Queries.get_liked_posts(user)
+        result = liked.objects.filter(id = post.id)
+        if result.count()>0:
+            return True
+        else:
+            return False
+        
+
 
 
 class Queries:
