@@ -116,7 +116,10 @@ def show_post(request, post_id):
         context_dict['creator'] = post.creator
         comments = Queries.get_comment_on_post(post)
         context_dict['comments'] = comments
-        context_dict['numComments'] = comments.count()
+        if comments == None:
+            context_dict['numComments'] = 0
+        else:
+            context_dict['numComments'] = comments.count()
     except Post.DoesNotExist:
         context_dict['post'] = None
         context_dict['comments'] = None
