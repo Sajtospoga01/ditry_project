@@ -460,7 +460,7 @@ def search_title(request):
 
 @login_required
 def update_profile(request,username):
-    update_user = UserPostsForm.objects.get(username=username)
+    update_user = UserProfile.objects.get(username=username)
     current_user = UserProfile.objects.get(username=request.user.username)
 
     if update_user == current_user:
@@ -473,7 +473,7 @@ def update_profile(request,username):
                return redirect(reverse('feed:account', kwargs={'username':current_user.username}))
 
         #update_profile does not exist yet, might have to change name
-        return render(request, 'register/update_profile.html', context={'user_form':form})
+        return render(request, 'feed/updateProfile.html', context={'user_form':form})
 
     else:
         # cannot update someone elses profile thus gets redirected to his own profile
