@@ -79,6 +79,7 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
     # boolean_attempt is True if user posts an attempt, otherwise False if original post
     # if it is an attempt, id of original is also an input argument
 
+    form = UserPostsForm()
     if request.method == 'POST':
         form = UserPostsForm(request.POST)
 
@@ -96,8 +97,8 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
             # if form not valid print errors
             print(form.errors)
 
-    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
-
+    context_dict={'form':form}
+    return render(request, 'feed/addPost.html',context=context_dict)
 
 @login_required
 def add_post_to_category(request, category_name_slug, post_id):
@@ -121,7 +122,13 @@ def has_liked(request, post):
 
 @login_required
 def show_post(request, post_id):
+<<<<<<< HEAD
     form = UserCommentForm()
+=======
+
+    form = UserPostsForm()
+
+>>>>>>> a75ac9cc8aa643544c14be1019828c3807c855d8
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
@@ -198,17 +205,17 @@ def show_user(request, username):
         followed_categories = Queries.get_category_following(request.user.id)
 
         folders = all_folders(request, user)
-        context_dict = {'user': show_user, 'current_user': current_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
+        context_dict = {'user': current_user, 'show_user': show_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
 
         return render(request, 'feed/otherUserPage.html', context=context_dict)
 
 
 
-@login_required
-def all_followed_users(request):
-    follows = Queries.get_user_following(request.user.id)
+#@login_required
+#def all_followed_users(request):
+ #   follows = Queries.get_user_following(request.user.id)
     ## also needs sepaparate url if not helper function to display on personal page
-    return
+  #  return
 
 @login_required
 def show_category(request, name_category):
