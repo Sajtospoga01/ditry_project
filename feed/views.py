@@ -294,7 +294,6 @@ def delete_folder(request, folder_id):
 def follow_user(request, username):
     following_user = UserProfile.objects.get(id = request.user.id)
     follow_user = UserProfile.objects.get(username=username)
-    
 
     if FollowsUser.objects.filter(follower=following_user, following= follow_user).exists():
         FollowsUser.objects.get(follower=following_user, following= follow_user).delete()
@@ -420,6 +419,7 @@ def comment_on_post(request, post_id):
                             kwargs={'post_id': post_id}))
 
 
+# might not need this view, if not needed, also delete url for it
 @login_required
 def delete_comment(request, comment_id):
     try:
@@ -457,16 +457,24 @@ def search_title(request):
 
 @login_required
 def update_profile(request,username):
-   form = EditProfileForm()
-   if request.method == 'POST':
-       form = EditProfileForm(request.POST)
+    update_user = UserPostsForm.objects.get(username=username)
+    current_user = UserProfile.objects.get(username=request.user.username)
 
-       if form.is_valid:
-           form.save()
-           return redirect(reverse('feed:account', kwargs={'username':request.user.username}))
+    if update_user == current_user:
+        form = EditProfileForm()
+        if request.method == 'POST':
+           form = EditProfileForm(request.POST)
 
-   #update_profile does not exist yet, might have to change name
-   return render(request, 'register/update_profile.html', context={'user_form':form})
+           if form.is_valid:
+               form.save()
+               return redirect(reverse('feed:account', kwargs={'username':current_user.username}))
+
+        #update_profile does not exist yet, might have to change name
+        return render(request, 'register/update_profile.html', context={'user_form':form})
+
+    else:
+        # cannot update someone elses profile thus gets redirected to his own profile
+        return redirect(reverse('feed:account', kwargs={'username':current_user.username}))
 
 
 def register(request):
