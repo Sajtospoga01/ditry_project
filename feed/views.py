@@ -415,20 +415,20 @@ def search_title(request):
 
 
 
-def reset_password(request):
-    # form where he enters email and new password, reset password if email matches with user email
-    if request.method == "POST":
-        email_form = ResetForm(request.POST)
-        if email_form.is_valid():
-            email = form.cleaned_data.get('email')
-            new_password = form.cleaned_data.get('password')
-            if email == request.user.email:
-                user.set_password(new_password)
-                user.save()
-                return redirect(reverse('feed:login'))
-            else:
-                messages.error(request, "Email does not match!")
-    return render(request, "resetPassword.html")
+# def reset_password(request):
+#     # form where he enters email and new password, reset password if email matches with user email
+#     if request.method == "POST":
+#         email_form = ResetForm(request.POST)
+#         if email_form.is_valid():
+#             email = form.cleaned_data.get('email')
+#             new_password = form.cleaned_data.get('password')
+#             if email == request.user.email:
+#                 user.set_password(new_password)
+#                 user.save()
+#                 return redirect(reverse('feed:login'))
+#             else:
+#                 messages.error(request, "Email does not match!")
+#     return render(request, "resetPassword.html")
 
 
 
