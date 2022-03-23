@@ -176,14 +176,28 @@ def all_folders(request, user_folder):
 
 @login_required
 def show_user(request, username):
-    user = UserProfile.objects.get(username=username)
-    posts = Queries.get_user_posts(username)
-    followed_categories = Queries.get_category_following(request.user.id)
+    show_user = UserProfile.objects.get(username=username)
+    current_user = UserProfil.objects.get(id=request.user.id)
 
-    folders = all_folders(request, user)
-    context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+    if show_user == current_user:
+        #redirects to personal page
+        posts = Queries.get_user_posts(username)
+        followed_categories = Queries.get_category_following(request.user.id)
 
-    return render(request,'feed/personalPage.html', context=context_dict)
+        folders = all_folders(request, user)
+        context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+
+        return render(request,'feed/personalPage.html', context=context_dict)
+
+    else:
+        # redirects to page of other user
+        posts = Queries.get_user_posts(username)
+        followed_categories = Queries.get_category_following(request.user.id)
+
+        folders = all_folders(request, user)
+        context_dict = {'user': show_user, 'current_user': current_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
+
+        return render(request, 'feed/otherUserPage.html', context=context_dict)
 
 
 
