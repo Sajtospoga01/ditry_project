@@ -79,6 +79,7 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
     # boolean_attempt is True if user posts an attempt, otherwise False if original post
     # if it is an attempt, id of original is also an input argument
 
+    form = UserPostsForm()
     if request.method == 'POST':
         form = UserPostsForm(request.POST)
 
@@ -96,8 +97,8 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
             # if form not valid print errors
             print(form.errors)
 
-    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
-
+    context_dict={'form':form}
+    return render(request, 'feed/addPost.html',context=context_dict)
 
 @login_required
 def add_post_to_category(request, category_name_slug, post_id):
@@ -121,6 +122,7 @@ def has_liked(request, post):
 
 @login_required
 def show_post(request, post_id):
+    form = UserPostsForm()
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
@@ -132,6 +134,7 @@ def show_post(request, post_id):
         
         is_liked = Functions.has_liked(request.user.id,post_id)
         context_dict['is_liked'] = is_liked
+        context_dict['form'] = form
    
     except Post.DoesNotExist:
         context_dict['post'] = None
@@ -139,6 +142,7 @@ def show_post(request, post_id):
         context_dict['creator'] = None
         context_dict['numComments'] = 0
         context_dict['is_liked'] = False
+        context_dict['form'] = None
     finally:
         return render(request, 'feed/picDetail.html', context = context_dict)
 
@@ -201,11 +205,11 @@ def show_user(request, username):
 
 
 
-@login_required
-def all_followed_users(request):
-    follows = Queries.get_user_following(request.user.id)
+#@login_required
+#def all_followed_users(request):
+ #   follows = Queries.get_user_following(request.user.id)
     ## also needs sepaparate url if not helper function to display on personal page
-    return
+  #  return
 
 @login_required
 def show_category(request, name_category):
