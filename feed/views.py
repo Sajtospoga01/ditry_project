@@ -68,10 +68,13 @@ def follow_category(request, category_name_slug):
 
 
 @login_required
-def show_my_attempts(request):
-    user = UserProfile.objects.get(id = request.user.id)
+def show_my_attempts(request,username):
+    user = UserProfile.objects.get(username=username)
     my_attempts = Post.objects.filter(creator=user, original__isnull=False)
-    return render(request, 'attempts.html',context={'attempts':my_attempts})
+    context={}
+    context['attempts']= my_attempts
+    context['user'] = user
+    return render(request, 'attempts.html',context)
 
 
 @login_required
