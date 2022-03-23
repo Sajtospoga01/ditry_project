@@ -403,7 +403,7 @@ def like_comment(request, comment_id):
 
 @login_required
 def comment_on_post(request, post_id):
-    if request.medthod == 'POST':
+    if request.method == 'POST':
         form = UserCommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
