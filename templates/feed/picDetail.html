@@ -58,16 +58,16 @@
 				{% for comment in comments %}
 					<div class="comment">
 					<div class="commFrame">
-						<div class="commentText">{{comment.comment}}</div>
+                        <span class="details">Comment</span>
+                        <div class="input-box">
+                            {{ form.comment }}
+                        </div>
 					</div>
-					</div>
+				    </div>
 				{% endfor %}
+                
             </div>
-            <div class="input-box">
-                <span class="details">Comment</span>
-                  {{ form.comment }}
-                  <input type="submit" value="Comment">
-            </div>
+            
         </div>
         {% endif %}
 	
