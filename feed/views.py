@@ -14,7 +14,7 @@ from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, Use
 from feed.forms import ResetForm
 from datetime import datetime
 
-
+## resetForm not used anymore?
 
 def home(request):
     # all posts uploaded to diTRY
@@ -183,15 +183,15 @@ def all_folders(request, user_folder):
 @login_required
 def show_user(request, username):
     show_user = UserProfile.objects.get(username=username)
-    current_user = UserProfil.objects.get(id=request.user.id)
+    current_user = UserProfile.objects.get(id=request.user.id)
 
     if show_user == current_user:
         #redirects to personal page
         posts = Queries.get_user_posts(username)
         followed_categories = Queries.get_category_following(request.user.id)
 
-        folders = all_folders(request, user)
-        context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+        folders = all_folders(request, show_user)
+        context_dict = {'user':show_user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
 
         return render(request,'feed/personalPage.html', context=context_dict)
 
@@ -200,7 +200,7 @@ def show_user(request, username):
         posts = Queries.get_user_posts(username)
         followed_categories = Queries.get_category_following(request.user.id)
 
-        folders = all_folders(request, user)
+        folders = all_folders(request, show_user)
         context_dict = {'user': current_user, 'show_user': show_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
 
         return render(request, 'feed/otherUserPage.html', context=context_dict)
