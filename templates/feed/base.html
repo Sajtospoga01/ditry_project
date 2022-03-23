@@ -35,7 +35,7 @@
                             <div id="border">
                                 <div id="searchPic"><img src="{% static 'images/search.png' %}" alt="search" />
                                 </div>
-                                <form id="searchText" action="">
+                                <form id="searchText" action="{% url 'feed:search_title' %}">
                                     <input type="text" name="Search" value="Search" onfocus="this.value=''"
                                         onblur="if(this.value==''){this.value='Search'}">
                                 </form>
