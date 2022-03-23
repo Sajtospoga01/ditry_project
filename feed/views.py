@@ -122,7 +122,9 @@ def has_liked(request, post):
 
 @login_required
 def show_post(request, post_id):
+
     form = UserPostsForm()
+
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
@@ -199,7 +201,7 @@ def show_user(request, username):
         followed_categories = Queries.get_category_following(request.user.id)
 
         folders = all_folders(request, user)
-        context_dict = {'user': show_user, 'current_user': current_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
+        context_dict = {'user': current_user, 'show_user': show_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
 
         return render(request, 'feed/otherUserPage.html', context=context_dict)
 
