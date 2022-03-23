@@ -121,6 +121,7 @@ def has_liked(request, post):
 
 @login_required
 def show_post(request, post_id):
+    form = UserPostsForm
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
@@ -132,6 +133,7 @@ def show_post(request, post_id):
         
         is_liked = Functions.has_liked(request.user.id,post_id)
         context_dict['is_liked'] = is_liked
+        context_dict['form'] = form
    
     except Post.DoesNotExist:
         context_dict['post'] = None
@@ -139,6 +141,7 @@ def show_post(request, post_id):
         context_dict['creator'] = None
         context_dict['numComments'] = 0
         context_dict['is_liked'] = False
+        context_dict['form'] = None
     finally:
         return render(request, 'feed/picDetail.html', context = context_dict)
 
