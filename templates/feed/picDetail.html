@@ -57,11 +57,15 @@
 			<div id="sumNum">{{comments.count}} Comments</div>
 				{% for comment in comments %}
 					<div class="comment">
+                        {{ comment.comment }}
 					<div class="commFrame">
-                        <span class="details">Comment</span>
-                        <div class="input-box">
-                            {{ form.comment }}
-                        </div>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="input-box">
+                                {{ form.comment }}
+                            </div>
+                            <input type="submit" value="Comment">
+                        </form>
 					</div>
 				    </div>
 				{% endfor %}
