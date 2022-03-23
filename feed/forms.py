@@ -36,10 +36,10 @@ class UserLoginForm(forms.ModelForm):
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
     picture = forms.ImageField()
-
+    comment = forms.CharField()
     class Meta:
         model = Post
-        fields = {'title','picture'}
+        fields = {'title','picture','comment'}
 
 class EditProfileForm(forms.ModelForm):
     username = forms.CharField(max_length=36)
