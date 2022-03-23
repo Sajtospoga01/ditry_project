@@ -74,7 +74,7 @@ def show_my_attempts(request,username):
     context={}
     context['attempts']= my_attempts
     context['user'] = user
-    return render(request, 'attempts.html',context)
+    return render(request, 'feed/attempts.html',context)
 
 
 @login_required
