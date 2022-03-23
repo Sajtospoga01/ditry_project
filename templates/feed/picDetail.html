@@ -56,7 +56,7 @@
             <div id="comments"></div>
 			<div id="sumNum">{{comments.count}} Comments</div>
                 <div class="commFrame">
-                    <form action="" method="POST">
+                    <form action="{% url 'feed:comment_on_post' post.id%}" method="POST">
                         {% csrf_token %}
                         <div class="input-box">
                             {{ form.comment }}

@@ -1,0 +1,93 @@
+{% extends 'feed/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Your page
+{% endblock %}
+
+{% block body_block %}
+<link rel="stylesheet" href="/static/css/personalPage.css" type="text/css">
+
+<div id="frame">
+    {% if user.is_authenticated %}
+        <div id="author">
+            <a href="">
+                {% if user.profile_picture %}
+                    <img id="authorProfile" src="{{user.profile_picture.url}}" alt="authorProfile" />
+                {% else %}
+                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
+                {%endif%}
+            </a>
+            <div id="authorDetail">
+                <a href="" id="name">{{ user.username }}</a>
+                <div id="followFrame">
+                    <div class="follow"><a href>{{ following_count }}</a></div>
+                    <div class="follow"><a href>{{ follower_count }}</a></div>
+                </div>
+                <div id="authorOpera">
+                    <a class="button" href="{% url 'feed:follow_user' post.creator.username  %}">Follow</a>
+                </div>
+            </div>
+        </div>
+        <div id="paFrame">
+            <div id="postButton">
+                <a href="">&nbspPosts</a>
+                <div id="buttonUnderline1"></div>
+            </div>
+            <div id="attemptsButton">
+                <a href="">Attempts</a>
+                <div id="buttonUnderline2"></div>
+            </div>
+        </div>
+        <div id="folderAndPics">
+            {% if folders %}
+                
+            <div id="folders">
+                {% for folder in folders %}
+                    <div id="customFrame">
+                        <div class="folderFrame">
+                            <span class="foldersText">Folders</span>
+                            <div class="folder">
+                                <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
+                                <a href="{% url 'feed:show_folder' user.username folder.id%}"><span>{{ folder.name }}</span></a>
+                            </div>
+                            <div class="operaFrame">
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                            </div>
+                        </div>
+                        <div class="catFrame">
+                            <span class="foldersText">Categories</span>
+                            {% if followed_categories %}
+                                {% for f in followed_categories %}
+                                    <div class="folder">
+                                        <a href="" style="border-color:rgb(0, 255, 13)"  class="icon"></a>
+                                        <a href=""><span>{{ f.name }}</span></a>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <div class="operaFrame">
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                No folders found.
+            {% endif %}
+        </div>
+    {% endif %}
+        <!-- <div id="picFrame">
+            <div class="image">
+                <a href=""><img src="{{ MEDIA_URL }}samplePic1.png" alt="samplePic1"></a>
+                <a id="addPost" href=""><img id="addPostButton" src="{% static 'images/addPost.png' %}" alt="addPost"></a>
+            </div>
+        </div>-->
+    </div>
+</div>
+
+<br><br>
+{% endblock %}

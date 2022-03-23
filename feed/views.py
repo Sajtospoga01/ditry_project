@@ -436,7 +436,7 @@ def search_title(request):
     #https://stackoverflow.com/questions/38006125/how-to-implement-search-function-in-django
     if request.method == 'GET':
         # gets all search terms
-        query= request.GET.get('q')
+        query= request.GET.get('Search')
         queries =query.split()
         all_posts = Post.objects.all()
         matching_posts = []
