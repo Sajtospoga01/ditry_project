@@ -53,7 +53,7 @@
                 
             </div>
             <div id="description">{{post.title}}</div>
-            <div id="comments">
+            <div id="comments"></div>
 			<div id="sumNum">{{comments.count}} Comments</div>
 				{% for comment in comments %}
 					<div class="comment">
@@ -62,6 +62,11 @@
 					</div>
 					</div>
 				{% endfor %}
+            </div>
+            <div class="input-box">
+                <span class="details">Comment</span>
+                  {{ form.comment }}
+                  <input type="submit" value="Comment">
             </div>
         </div>
         {% endif %}
