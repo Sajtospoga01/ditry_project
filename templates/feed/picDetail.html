@@ -24,19 +24,33 @@
         <div id="authorCom">
             <div class="Allopera">
                 <div class="normal">
-                    <a href=""><img src="{% static 'images/heart.png' %}" alt="heart" /></a>
+                    <a href="{% url 'feed:like_post' post.id %}">
+                        {% if is_liked %}
+                            <img src="{% static 'images/hearted.png' %}" alt="heart" />
+                        {% else %}
+                            <img src="{% static 'images/heart2.png' %}" alt="heart" />
+                        {% endif %}
+                    </a>
                     {{post.likes}}
                 </div>  
             </div>
             <div id="author">
-                <a href=""><img id="authorProfile" src="{{creator.profile_picture}}" alt="authorProfile" /></a>
+                <a href="">
+                {% if post.creator.profile_picture %}
+                    <img id="authorProfile" src="{{post.creator.profile_picture.url}}" alt="authorProfile" />
+                {% else %}
+                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
+                {%endif%}
+                </a>
+                
                 <div id="authorDetail">
                     <a href="" id="name">{{creator.name}}</a>
                     <div id="authorOpera">
-                        <a class="button" href="">Follow</a>
-                        <a class="button" href="">&nbsp&nbspDM&nbsp&nbsp</a>
+                        <a class="button" href="{% url 'feed:follow_user' post.creator.username  %}">Follow</a>
+                        <a class="button" href="">Attempt</a>
                     </div>
                 </div>
+                
             </div>
             <div id="description">{{post.title}}</div>
             <div id="comments">

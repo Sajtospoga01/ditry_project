@@ -107,6 +107,17 @@ def add_post_to_category(request, category_name_slug, post_id):
     return redirect(reverse('feed:show_category',kwargs={'category_slug': category_name_slug}))
 
 
+
+#helper function
+def has_liked(request, post):
+    user = UserProfile.objects.get(id=request.user.id)
+    liked = Queries.get_liked_posts(user)
+    result = liked.objects.filter(id=post.id)
+    if result.count()>0:
+        return True
+    else:
+        return False
+
 @login_required
 def show_post(request, post_id):
     context_dict = {}
@@ -114,14 +125,19 @@ def show_post(request, post_id):
         post = Post.objects.get(id = post_id)
         context_dict['post'] = post
         context_dict['creator'] = post.creator
-        comments = Queries.get_comment_on_post(post)
+        comments = Queries.get_comment_on_post(post.id)
         context_dict['comments'] = comments
-        context_dict['numComments'] = comments.count()
+        # liked by user?
+        
+        is_liked = Functions.has_liked(request.user.id,post_id)
+        context_dict['is_liked'] = is_liked
+   
     except Post.DoesNotExist:
         context_dict['post'] = None
         context_dict['comments'] = None
         context_dict['creator'] = None
         context_dict['numComments'] = 0
+        context_dict['is_liked'] = False
 
     return render(request, 'feed/picDetail.html', context = context_dict)
 
@@ -131,9 +147,9 @@ def show_folder(request, folder_id, username):
     # maybe also need user_name to get folder
     context_dict = {}
     try:
-        user = UserProfile.Objects.get(username=username)
-        folder = Folder.objects.get(slug=folder_id, user=user)
-        posts = Post.objects.filter(folder=folder)
+        user = UserProfile.objects.get(username=username)
+        folder = Folder.objects.get(id=folder_id, user=user)
+        posts = Queries.get_posts_in_folder(folder_id)
         context_dict['folder']=folder
         context_dict['posts'] = posts
 
@@ -252,16 +268,17 @@ def delete_folder(request, folder_id):
 
 
 @login_required
-def follow_user(request, user_name):
-    following_user = request.user
-    follow_user = UserProfile.objects.get(username=user_name)
+def follow_user(request, username):
+    following_user = UserProfile.objects.get(id = request.user.id)
+    follow_user = UserProfile.objects.get(username=username)
+    
 
     if FollowsUser.objects.filter(follower=following_user, following= follow_user).exists():
-        FollowsUser.objects.filter(follower=following_user, following= follow_user).delete()
+        FollowsUser.objects.get(follower=following_user, following= follow_user).delete()
     else:
-        FollowsUser.objects.filter(follower=following_user, following=follow_user).save()
+        FollowsUser.objects.get_or_create(follower=following_user, following=follow_user)
 
-    return redirect(reverse('feed:account', kwargs={'username':user_name}))
+    return redirect(reverse('feed:account', kwargs={'username':username}))
 
 
 @login_required
@@ -287,21 +304,22 @@ def add_folder(request):
 def like_post(request,post_id):
     # reference: https://github.com/Jebaseelanravi/instagram-clone/blob/main/insta/views.py
     post = Post.objects.get(id= post_id)
-
+    liker = UserProfile.objects.get(id=request.user.id)
     try:
-        already_Liked = Likes.objects.get(liked_post=post, liker=request.user)
+        already_Liked = Likes.objects.get(liked_post=post, liker=liker)
         Likes.objects.filter(liked_post=post, liker=request.user).delete()
+
         if post.likes>0:
             post.likes -= 1
 
-
     except Likes.DoesNotExist:
-        Likes.objects.create(liked_post=post, liker=request.user)
+        Likes.objects.create(liked_post=post, liker=liker)
         post.likes += 1
 
-    post.save()
-    # should redirect to post that was liked or disliked
-    return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
+    finally:
+        post.save()
+        # should redirect to post that was liked or disliked
+        return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
 
 
 @login_required
@@ -433,7 +451,7 @@ def search_title(request):
 
 
 @login_required
-def update_profile(request):
+def update_profile(request,username):
    form = EditProfileForm()
    if request.method == 'POST':
        form = EditProfileForm(request.POST)
