@@ -157,10 +157,12 @@ def show_folder(request, folder_id, username):
         user = UserProfile.objects.get(username=username)
         folder = Folder.objects.get(id=folder_id, user=user)
         posts = Queries.get_posts_in_folder(folder_id)
+        context_dict['username'] = user
         context_dict['folder']=folder
         context_dict['posts'] = posts
 
     except Folder.DoesNotExist:
+        context_dict['username'] = None
         context_dict['folder'] = None
         context_dict['posts'] = None
     finally:
