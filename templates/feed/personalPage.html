@@ -56,22 +56,6 @@
                                 <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
                             </div>
                         </div>
-                        <div class="catFrame">
-                            <span class="foldersText">Categories</span>
-                            {% if followed_categories %}
-                                {% for f in followed_categories %}
-                                    <div class="folder">
-                                        <a href="" style="border-color:rgb(0, 255, 13)"  class="icon"></a>
-                                        <a href=""><span>{{ f.name }}</span></a>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                            
-                            <div class="operaFrame">
-                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
-                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
-                            </div>
-                        </div>
                     </div>
                 {% endfor %}
             </div>

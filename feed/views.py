@@ -75,7 +75,7 @@ def show_my_attempts(request):
 
 
 @login_required
-def add_post(request,boolean_attempt, attempt_post_id=None):
+def add_post(request,boolean_attempt=False, attempt_post_id=None):
     # boolean_attempt is True if user posts an attempt, otherwise False if original post
     # if it is an attempt, id of original is also an input argument
 
