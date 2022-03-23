@@ -19,7 +19,7 @@
             <div class="picLine">
                 <div class="pic" style="height: 600px;">
                     <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
-                        src="{{ post.picture.url }}" alt="Image of {{ post.title }}">
+                        src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
                     <div class="allPicOpera">
                         {% if post.creator.profile_picture %}
                         <a href=""><img width="45px"; style="transform: translate(5px,15px);"
