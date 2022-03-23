@@ -122,9 +122,13 @@ def has_liked(request, post):
 
 @login_required
 def show_post(request, post_id):
+<<<<<<< HEAD
+    form = UserCommentForm()
+=======
 
     form = UserPostsForm()
 
+>>>>>>> a75ac9cc8aa643544c14be1019828c3807c855d8
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
