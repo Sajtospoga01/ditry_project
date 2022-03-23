@@ -49,7 +49,7 @@ def contact_us(request):
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed/categories.html', context={'posts':posts, 'name': 'Trending'})
+    return render(request, 'feed/trending.html', context={'posts':posts, 'name': 'Trending'})
 
 
 @login_required
