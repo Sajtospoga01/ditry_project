@@ -55,7 +55,7 @@ def trending(request):
 @login_required
 def follow_category(request, category_name_slug):
     # user follows category and is redirected to this category
-    following_user = request.user
+    following_user = UserProfile.objects.get(id = request.user.id)
     follows_category = Categorises.objects.get(slug=category_name_slug)
 
     if FollowsCategory.objects.filter(follower=following_user, following=follows_category).exists():
@@ -69,7 +69,8 @@ def follow_category(request, category_name_slug):
 
 @login_required
 def show_my_attempts(request):
-    my_attempts = Post.objects.filter(creator=request.user, original__isnull=False)
+    user = UserProfile.objects.get(id = request.user.id)
+    my_attempts = Post.objects.filter(creator=user, original__isnull=False)
     return render(request, 'attempts.html',context={'attempts':my_attempts})
 
 
@@ -138,8 +139,8 @@ def show_post(request, post_id):
         context_dict['creator'] = None
         context_dict['numComments'] = 0
         context_dict['is_liked'] = False
-
-    return render(request, 'feed/picDetail.html', context = context_dict)
+    finally:
+        return render(request, 'feed/picDetail.html', context = context_dict)
 
 
 @login_required
@@ -156,15 +157,16 @@ def show_folder(request, folder_id, username):
     except Folder.DoesNotExist:
         context_dict['folder'] = None
         context_dict['posts'] = None
-
-    # template show_folder.html does not exist yet, might have to change name
-    return render(request, 'feed/show_folder.html',context=context_dict)
+    finally:
+        # template show_folder.html does not exist yet, might have to change name
+        return render(request, 'feed/show_folder.html',context=context_dict)
 
 
 @login_required
 def all_folders(request, user_folder):
     # helper function
-    if request.user == user_folder:
+    user = UserProfile.objects.get(id=request.user.id)
+    if user == user_folder:
         folders=Folder.objects.filter(user=user_folder)
     else:
         folders=Folder.objects.filter(user=user_folder, private=False)
@@ -254,7 +256,8 @@ def delete_saved_post(request, post_id, folder_id):
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if post.creator == request.user:
+    user = UserProfile.objects.get(id = request.user.id)
+    if post.creator == user:
         helper_delete_post(request, post)
     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
@@ -307,7 +310,7 @@ def like_post(request,post_id):
     liker = UserProfile.objects.get(id=request.user.id)
     try:
         already_Liked = Likes.objects.get(liked_post=post, liker=liker)
-        Likes.objects.filter(liked_post=post, liker=request.user).delete()
+        Likes.objects.filter(liked_post=post, liker=liker).delete()
 
         if post.likes>0:
             post.likes -= 1
@@ -328,55 +331,55 @@ def save_post(request, folder_id ,post_id):
         folder = Folder.objects.get(slug=folder_id)
     except Folder.DoesNotExist:
         folder = None
+    finally:
+        # Cannot add post into none existing folder
+        if folder is None:
+            return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
-    # Cannot add post into none existing folder
-    if folder is None:
-        return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
+        form = UserPostsForm()
+        if request.method == 'POST':
+            pin = get_object_or_404(Post, post_id)
+            form = UserPostsForm(request.POST)
 
-    form = UserPostsForm()
-    if request.method == 'POST':
-        pin = get_object_or_404(Post, post_id)
-        form = UserPostsForm(request.POST)
+            if form.is_valid():
+                if folder:
+                    saved_post = form.save(commit=False)
+                    saved_post.likes = pin.likes
+                    saved_post.title = pin.title
+                    saved_post.creator = pin.creator
 
-        if form.is_valid():
-            if folder:
-                saved_post = form.save(commit=False)
-                saved_post.likes = pin.likes
-                saved_post.title = pin.title
-                saved_post.creator = pin.creator
+                    # folder currently not in model, how to save in specific folder?
+                    saved_post.folder = folder
+                    saved_post.save()
 
-                # folder currently not in model, how to save in specific folder?
-                saved_post.folder = folder
-                saved_post.save()
+                    return redirect(reverse('feed:show_user',
+                                            kwargs={'username':request.user.username,'folder_id':folder_id}))
+            else:
+                print(form.errors)
 
-                return redirect(reverse('feed:show_user',
-                                        kwargs={'username':request.user.username,'folder_id':folder_id}))
-        else:
-            print(form.errors)
-
-    context_dict = {'form': form, 'folder': folder}
-    return render(request, 'feed/addPost.html', context=context_dict)
+        context_dict = {'form': form, 'folder': folder}
+        return render(request, 'feed/addPost.html', context=context_dict)
 
 # might not need this view, if not needed also delete url for it
 @login_required
 def like_comment(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
     post_id = comment.post_id
+    liker = UserProfile.objects.get(id=request.user.id)
 
     try:
         # name of comment_likes class might have to  be changed
-        already_Liked = Likes.objects.get(liked_comment=comment, liker=request.user)
+        already_Liked = Likes.objects.get(liked_comment=comment, liker=liker)
         Likes.objects.filter(liked_post=Post, liker=request.user).delete()
         comment.likes -= 1
 
     except Likes.DoesNotExist:
         # name of comment_likes class might have to  be changed
-        Likes.objects.create(liked_post=Post, liker=request.user)
+        Likes.objects.create(liked_post=Post, liker=liker)
         comment.likes += 1
-
-    comment.save()
-
-    return redirect(reverse('feed:show_comments_on_post', kwargs={'post_id':post_id}))
+    finally:
+        comment.save()
+        return redirect(reverse('feed:show_comments_on_post', kwargs={'post_id':post_id}))
 
 
 @login_required
@@ -400,8 +403,9 @@ def comment_on_post(request, post_id):
 @login_required
 def delete_comment(request, comment_id):
     try:
-        this_comment = Comment.objects.get(id=comment_id, user_id=request.user)
-        Comment.objects.filter(id=comment_id, user_id=request.user).delete()
+        user = UserProfile.objects.get(id=request.user.id)
+        this_comment = Comment.objects.get(id=comment_id, user_id=user)
+        Comment.objects.filter(id=comment_id, user_id=user).delete()
         post_id = this_comment.post_id
         return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
     except Comment.DoesNotExist:
