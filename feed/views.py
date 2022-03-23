@@ -410,8 +410,6 @@ def comment_on_post(request, post_id):
             comment.post_id = post_id
             comment.user_id = request.user.id
             comment.save()
-            return redirect(reverse('feed:show_comments_on_post',
-                                    kwargs={'post_id': post_id}))
 
         else:
             print(form.errors)
