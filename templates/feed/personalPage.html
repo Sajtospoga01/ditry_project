@@ -75,9 +75,14 @@
                     <tr>
                         {% for post in post_row %}
                         <td>
-                            <div>
-                                <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365px; height: 600px; object-fit: cover;"
-                                    src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                            <div class="picLine">
+                                <div class="pic" style="height: 600px;">
+                                    <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                                        src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                                    <div class="allPicOpera">
+                                                {{ post.title }}
+                                    </div>
+                                </div>
                             </div>
                         </td>
                         {% endfor %}
