@@ -17,7 +17,7 @@
             <div class="spaceFrame">
                 <div class="picFrame">
                     <div id="author">
-                        <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
+                        <a href="{% url 'feed:account' user.username %}"><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
                         <div id="authorDetail">
                             <a href="{% url 'feed:account' users.username %}" id="name">{{ users.username }}</a>
                             <div id="following">{{ users.follower }}</div>

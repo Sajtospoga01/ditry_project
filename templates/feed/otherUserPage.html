@@ -34,10 +34,6 @@
                 <a href="">&nbspPosts</a>
                 <div id="buttonUnderline1"></div>
             </div>
-            <div id="attemptsButton">
-                <a href="">Attempts</a>
-                <div id="buttonUnderline2"></div>
-            </div>
         </div>
         <div id="folderAndPics">
             {% if folders %}
@@ -84,19 +80,28 @@
             {% else %}
                 No folders found.
             {% endif %}
-            <table>
-                {% for post in posts %}
-                    <tr>
-                        <td>
-                            <div>
-                                <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365px; height: 600px; object-fit: cover;"
-                                    src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
-                            </div>
-                        </td>
-                    </tr>
-                
-                {% endfor %}
-                </table>
+            <div id="postPics">
+                <table>
+                    {% for post_row in posts %}
+                        <tr>
+                            {% for post in post_row %}
+                            <td>
+                                <div class="picLine">
+                                    <div class="pic" style="height: 600px;">
+                                        <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                                            src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                                        <div class="allPicOpera">
+                                                    {{ post.title }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    
+                    {% endfor %}
+                    </table>
+            </div>
         </div>
     {% endif %}
     
