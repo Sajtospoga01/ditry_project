@@ -37,4 +37,16 @@ $(document).ready(function() {
 	});	
 
 
+	
+	if ( $(window).width() > 1260) {
+		alert('3 columns needed');
+	}else if( $(window).width() > 820){
+		alert('2 columns needed');
+	}else{
+		alert('1 column needed');
+	}
+	
+
+
 })
+
