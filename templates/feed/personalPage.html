@@ -32,11 +32,17 @@
         <div id="paFrame">
             <div id="postButton">
                 <a href="">&nbspPosts</a>
-                <div id="buttonUnderline1"></div>
+                
             </div>
             <div id="attemptsButton">
                 <a href="{% url 'feed:show_my_attempts' user.username%}">Attempts</a>
-                <div id="buttonUnderline2"></div>
+                
+            </div>
+            <div id="postButton">
+                <a href="{% url 'feed:following'%}">Following</a>
+            </div>
+            <div id="postButton">
+                <a href="{% url 'feed:followers'%}">Followers</a>
             </div>
         </div>
         <div id="folderAndPics">

@@ -518,18 +518,16 @@ def user_login(request):
 # queries exist for this, this is just a bandaid solution
 @login_required(login_url='feed:login')
 def userFollowing(request):
-    get_following = FollowsUser.objects.get('following')
-    get_cat_following = FollowsCategory.objects.get('following')
-    
+    get_following = Queries.get_user_following(user=request.username)
+
     context = {}
     context['followers'] = get_following
-    context['topics'] = get_cat_following
 
     return render(request,'feed/userFollowing.html',context)
 
 @login_required(login_url='feed:login')
 def userFollowers(request):
-    get_followers = FollowsUser.objects.get('follower')
+    get_followers = Queries.get_user_follows(user=request.username)
     context = {}
     context['followers'] = get_followers
     return render(request,'feed/userFollower.html',context)
