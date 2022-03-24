@@ -35,16 +35,18 @@
                 </div>  
             </div>
             <div id="author">
-                <a href="">
-                {% if post.creator.profile_picture %}
-                    <img id="authorProfile" src="{{post.creator.profile_picture.url}}" alt="authorProfile" />
-                {% else %}
-                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
-                {%endif%}
+                <a href="{% url 'feed:account' post.creator.username %}">
+                    {% if post.creator.profile_picture %}
+                        <img id="authorProfile" src="{{post.creator.profile_picture.url}}" alt="authorProfile" style = "object-fit: cover;width:60px; height:60px;border-radius: 50%;"/>
+                    {% else %}
+                        <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" style = "object-fit: cover;width:60px; height:60px;border-radius: 50%;"/>
+                    {%endif%}
+                    
+                    
                 </a>
                 
                 <div id="authorDetail">
-                    <a href="" id="name">{{creator.name}}</a>
+                    <a href="{% url 'feed:account' post.creator.username %}" align = "center" id="name">{{post.creator.username}}</a>
                     <div id="authorOpera">
                         <a class="button" href="{% url 'feed:follow_user' post.creator.username  %}">Follow</a>
                         <a class="button" href="{% url 'feed:add_post' post.id %}">Attempt</a>
@@ -65,8 +67,8 @@
                     </form>
                 </div>
 				{% for comment in comments %}
-					<div class="comment">
-                        {{ comment.user.username }}
+					<div class="commentStyle">
+                        {{ comment.user.username }}:
                         {{ comment.comment }}
 				    </div>
 				{% endfor %}

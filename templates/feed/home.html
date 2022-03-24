@@ -22,23 +22,25 @@
                     <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
                         src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
                     <div class="allPicOpera">
+                        <a href="{% url 'feed:account' post.creator.username %}">
                         {% if post.creator.profile_picture %}
-                        <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                        <img  style="transform: translate(5px,15px); object-fit: cover;width:45px; height:45px;border-radius: 50%;"
                                 src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
                                 <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                                     alt="followPic" /></div>
-                            </a>			
+                            		
                         {% else %}
-                            <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                            <img style="transform: translate(5px,15px); object-fit: cover;width:45px; height:45px; border-radius: 50%;"
                                 src="{{ MEDIA_URL }}profile.png" alt="profile picture1" />
                                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                                         alt="followPic" /></div>
-                            </a>
+                            
+                        </a>	
                         {% endif %}
                         <a href="{% url 'feed:account' post.creator.username %}" class="authorName">{{ post.creator.username }}</a>
                         {% if user.is_authenticated %}
                             <a href = "{% url 'feed:like_post' post.id %}">
-                            
+                                
 								<!-- needs to be taken from model (whether liked or not) to decide url -->
                                 <img class="heartButton" id="{{ post.id }}" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart" /></a>
 
