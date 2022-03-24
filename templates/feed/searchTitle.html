@@ -7,51 +7,56 @@
 {% endblock %}
 
 {% block body_block %}
-<link rel="stylesheet" href="/static/css/searchTitle.css" type="text/css">
 {% if user.is_authenticated %}
 <div id="frame">
     <div id="tipText"><span>All results are shown below.</span></div>
-    
-    <div id="resultFrame">
-        {% for post_row in matching_posts %}
-        <tr>
-            {% for post in post_row %}   
-            <td>
-                <div class="picLine">
-                    <div class="pic" style="height: 600px;">
-                        <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
-                            src="{{ post.picture.url }}" alt="Image of {{ post.title }}">
-                        <div class="allPicOpera">
-                            {% if post.creator.UserProfile.profile_picture %}
-                            <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                                    src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
-                                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                                        alt="followPic" /></div>
-                                </a>			
-                            {% else %}
+    <div id="postPics">
+        <table>
+        
+        {% if matching_posts %}
+            {% for post_row in matching_posts %}
+            <tr>
+                {% for post in post_row %}
+                    <td>
+                    <div class="picLine">
+                        <div class="pic" style="height: 600px;">
+                            <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                                src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                            <div class="allPicOpera">
+                                {% if post.creator.profile_picture %}
                                 <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                                    src="{{ MEDIA_URL }}profile.png" alt="profile picture1" />
+                                        src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
                                         <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                                             alt="followPic" /></div>
-                                </a>
-                            {% endif %}
-                            <a href="" class="authorName">{{ post.creator.username }}</a>
-                            {% if user.is_authenticated %}
-    
-                                <img class="heartButton" id="{{ post.id }}" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart" /></a>
-                                <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
-                                    alt="chat-bubble-dots" /></a>
-                        {% endif %}
+                                    </a>			
+                                {% else %}
+                                    <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                                        src="{{ MEDIA_URL }}profile.png" alt="profile picture1" />
+                                            <div class="followPic"><img src="{% static 'images/followPic.png' %}"
+                                                alt="followPic" /></div>
+                                    </a>
+                                {% endif %}
+                                <a href="{% url 'feed:account' post.creator.username %}" class="authorName">{{ post.creator.username }}</a>
+                                {% if user.is_authenticated %}
+                                    <a href = "{% url 'feed:like_post' post.id %}">
+                                    
+                                        <!-- needs to be taken from model (whether liked or not) to decide url -->
+                                        <img class="heartButton" id="{{ post.id }}" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart" /></a>
+        
+                                    <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
+                                        alt="chat-bubble-dots" /></a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </td>
+                    </td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </tr>	
-        {% endfor %}
+        {% else %}
+            <p>No results matching search {{ query }}</p>
+        {% endif %}
+        </table>
         </div>
-</div>
-{% else %}
-    No posts to show.
-{% endif %}
+        <br><br>
 {% endblock %}

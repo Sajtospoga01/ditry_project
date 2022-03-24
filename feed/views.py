@@ -474,7 +474,7 @@ def search_title(request):
                         matching_posts.append(p)
 
     return render(request,'feed/searchTitle.html',
-                  context={'matching_posts': tableify(matching_posts)})
+                  context={'matching_posts': tableify(matching_posts), 'query': query})
 
 @login_required(login_url='feed:login')
 def update_profile(request,username):
