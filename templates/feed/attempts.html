@@ -6,9 +6,10 @@
 {% endblock %}
 
 {% block body_block %}
+<div id="postPics">
 <table>
     {% if posts %}
-    {% for post_row in posts}
+    {% for post_row in posts %}
     <tr>
         {% for post in post_row %}
         <td>
@@ -17,16 +18,17 @@
                     <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
                         src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
                     <div class="allPicOpera">
-                        <img class="heartButton" id="{{ post.id }}" width="25px" src="{% static 'images/heart2.png' %}" alt="heart" />
-                        <img src="{% static 'images/chat-bubble-dots.png' %}" alt="chat-bubble-dots" />
+                                {{ post.title }}
                     </div>
                 </div>
             </div>
             </td>
+        {% endfor %}
     </tr>
     {% endfor %}
     {% else %}
         You haven't attempted anything yet!
     {% endif %}
 </table>
+</div>
 {% endblock %}

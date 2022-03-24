@@ -70,11 +70,9 @@ def follow_category(request, category_name_slug):
 @login_required(login_url='feed:login')
 def show_my_attempts(request,username):
     user = UserProfile.objects.get(username=username)
-    my_attempts = Post.objects.filter(creator=user, original__isnull=False)
-    context = {}
-    context['attempts']= my_attempts
-    context['user'] = user
-    return render(request, 'feed/attempts.html',context)
+    my_attempts = Queries.get_user_attempts(user.id)
+    print("LENGTH", len(my_attempts))
+    return render(request, 'feed/attempts.html', {'posts': tableify(my_attempts), 'user': user})
 
 
 @login_required
