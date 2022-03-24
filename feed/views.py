@@ -126,21 +126,12 @@ def add_post_to_category(request, category_name_slug, post_id):
 
 
 
-#helper function
-def has_liked(request, post):
-    user = UserProfile.objects.get(username=request.user.username)
-    liked = Queries.get_liked_posts(user)
-    result = liked.objects.filter(id=post.id)
-    if result.count()>0:
-        return True
-    else:
-        return False
+
 
 @login_required(login_url='feed:login')
 def show_post(request, post_id):
 
     form = UserCommentForm()
-
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
@@ -149,8 +140,8 @@ def show_post(request, post_id):
         comments = Queries.get_comment_on_post(post.id)
         context_dict['comments'] = comments
         # liked by user?
-        
-        is_liked = Functions.has_liked(request.user.username,post_id)
+
+        is_liked = Functions.has_liked(request.user.id,post_id)
         context_dict['is_liked'] = is_liked
         context_dict['form'] = form
    
