@@ -36,6 +36,7 @@ http://127.0.0.1:8000/
 - https://stackoverflow.com/questions/38006125/how-to-implement-search-function-in-django (last accessed: 16.03.2022)
 - https://github.com/Jebaseelanravi/instagram-clone/blob/main/insta/views.py   (last accessed: 16.03.2022, used to create like_post view)
 - https://stackoverflow.com/questions/28764571/display-image-from-imagefield-by-means-of-for (last accessed: 24.03.2022)
+- https://stackoverflow.com/questions/524992/how-to-implement-a-back-link-on-django-templates (last accessed: 24.03.2022)
 
 ##
 Web Application development project repo - team 9D
