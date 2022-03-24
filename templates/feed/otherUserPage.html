@@ -52,8 +52,12 @@
                                 <a href="{% url 'feed:show_folder' show_user.username folder.id%}"><span>{{ folder.name }}</span></a>
                             </div>
                             <div class="operaFrame">
-                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
-                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                                {% if user == cur_user %}
+                                <div class="operaFrame">
+                                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="catFrame">
@@ -67,10 +71,12 @@
                                 {% endfor %}
                             {% endif %}
                             
-                            <div class="operaFrame">
-                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
-                                <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
-                            </div>
+                            {% if user == cur_user %}
+                                <div class="operaFrame">
+                                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/addPost.png' %}" alt="addCat"></a>
+                                    <a class="addDeleteCat" href=""><img class="addDeleteCatButton" src="{% static 'images/delete.png' %}" alt="deleteCat"></a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}

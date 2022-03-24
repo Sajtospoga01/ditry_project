@@ -200,10 +200,15 @@ def all_folders(request, user_folder):
 def show_user(request, username):
     show_user = UserProfile.objects.get(username=username)
     current_user = UserProfile.objects.get(id=request.user.id)
+    cur_user = UserProfile.objects.get(username=request.user.username)
 
+    context_dict = {}
+    context_dict['user'] = show_user
+    context_dict['cur_user'] = cur_user
+    
     if show_user == current_user:
         #redirects to personal page
-        posts = Queries.get_user_posts(username)
+        posts = Queries.get_user_posts(show_user.id)
         followed_categories = Queries.get_category_following(request.user.id)
 
         folders = all_folders(request, show_user)
@@ -213,7 +218,7 @@ def show_user(request, username):
 
     else:
         # redirects to page of other user
-        posts = Queries.get_user_posts(username)
+        posts = Queries.get_user_posts(show_user.id)
         followed_categories = Queries.get_category_following(request.user.id)
 
         folders = all_folders(request, show_user)
