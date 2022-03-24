@@ -1,4 +1,4 @@
-{% extends 'feed/base.html' %}
+{% extends 'feed/personalPage.html' %}
 {% load staticfiles %}
 
 
@@ -6,10 +6,10 @@
     Followers
 {% endblock %}
 
-{% block body_block %}
+{% block content-block %}
 <link rel="stylesheet" href="/static/css/userFllowers.css" type="text/css">
 <div id="frame">
-    <div id="tipText"><span>Here is your fans.</span></div>
+    <div id="tipText"><span>Here are your fans.</span></div>
     <div class="rowLine"></div>
     <div id="resultFrame">
         {% if followers %}

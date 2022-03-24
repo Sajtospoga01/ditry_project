@@ -203,7 +203,7 @@ def show_user(request, username):
         followed_categories = Queries.get_category_following(request.user.id)
 
         folders = all_folders(request, show_user)
-        context_dict = {'user':show_user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+        context_dict = {'user':show_user, 'posts':tableify(posts), 'followed_categories':followed_categories, 'folders':folders}
 
         return render(request,'feed/personalPage.html', context=context_dict)
 

@@ -1,11 +1,11 @@
-{% extends 'feed/base.html' %}
+{% extends 'feed/personalPage.html' %}
 {% load staticfiles %}
 
 {% block title_block %}
     Your attempts
 {% endblock %}
 
-{% block body_block %}
+{% block content-block %}
 <div id="postPics">
 <table>
     {% if posts %}

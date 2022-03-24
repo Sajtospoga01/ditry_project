@@ -31,20 +31,22 @@
         </div>
         <div id="paFrame">
             <div id="postButton">
-                <a href="">&nbspPosts</a>
+                <a href="{% url 'feed:account' user.username %}">&nbspPosts</a>
                 
             </div>
             <div id="attemptsButton">
-                <a href="{% url 'feed:show_my_attempts' user.username%}">Attempts</a>
+                <a href="{% url 'feed:show_my_attempts' user.username %}">Attempts</a>
                 
             </div>
             <div id="postButton">
-                <a href="{% url 'feed:following'%}">Following</a>
+                <a href="{% url 'feed:following' %}">Following</a>
             </div>
             <div id="postButton">
-                <a href="{% url 'feed:follower'%}">Followers</a>
+                <a href="{% url 'feed:follower' %}">Followers</a>
             </div>
         </div>
+
+        {% block content-block %}
         <div id="folderAndPics">
             {% if folders %}
                 
@@ -68,20 +70,30 @@
             {% else %}
                 No folders found.
             {% endif %}
+        </div>
+        <div id="postPics">
             <table>
-                {% for post in posts %}
+                {% for post_row in posts %}
                     <tr>
+                        {% for post in post_row %}
                         <td>
-                            <div>
-                                <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365px; height: 600px; object-fit: cover;"
-                                    src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                            <div class="picLine">
+                                <div class="pic" style="height: 600px;">
+                                    <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                                        src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                                    <div class="allPicOpera">
+                                                {{ post.title }}
+                                    </div>
+                                </div>
                             </div>
                         </td>
+                        {% endfor %}
                     </tr>
                 
                 {% endfor %}
                 </table>
         </div>
+        {% endblock %}
     {% endif %}
     
     </div>
