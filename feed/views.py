@@ -530,16 +530,16 @@ def user_login(request):
 @login_required(login_url='feed:login')
 def userFollowing(request):
     cur_user = UserProfile.objects.get(username=request.user.username)
-    get_following = Queries.get_user_following(user=cur_user)
+    get_following = Queries.get_user_following(user=cur_user.id)
     context = {}
-    context['followers'] = get_following
+    context['following'] = get_following
 
     return render(request,'feed/userFollowing.html',context)
 
 @login_required(login_url='feed:login')
 def userFollowers(request):
     cur_user = UserProfile.objects.get(username=request.user.username)
-    get_followers = Queries.get_user_follows(user=cur_user)
+    get_followers = Queries.get_user_follows(user=cur_user.id)
     context = {}
     context['followers'] = get_followers
     return render(request,'feed/userFollower.html',context)
