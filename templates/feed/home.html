@@ -24,16 +24,14 @@
                     <div class="allPicOpera">
                         <a href="{% url 'feed:account' post.creator.username %}">
                         {% if post.creator.profile_picture %}
-                        <img  style="transform: translate(5px,15px); object-fit: cover;width:45px; height:45px;border-radius: 50%;"
+                        <img  style="transform: translate(5px,2px); object-fit: cover;width:45px; height:45px;border-radius: 50%;"
                                 src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
-                                <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                                    alt="followPic" /></div>
+                                
                             		
                         {% else %}
-                            <img style="transform: translate(5px,15px); object-fit: cover;width:45px; height:45px; border-radius: 50%;"
+                            <img style="transform: translate(5px,2px); object-fit: cover;width:45px; height:45px; border-radius: 50%;"
                                 src="{{ MEDIA_URL }}profile.png" alt="profile picture1" />
-                                    <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                                        alt="followPic" /></div>
+                                    
                             
                         </a>	
                         {% endif %}
