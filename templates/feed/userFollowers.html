@@ -19,12 +19,8 @@
                         <div id="author">
                             <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
                             <div id="authorDetail">
-                                <a href="" id="name">{{ user.username }}</a>
+                                <a href="{% url 'feed:account' user.username %}" id="name">{{ user.username }}</a>
                                 <div id="following">{{ user.followers }}</div>
-                                <div id="location">
-                                    <a><img src="{% static 'images/location.png' %}" alt="location" /></a>
-                                    <a id="locationText">Location</a>
-                                </div>
                             </div>
                         </div>
                     </div>

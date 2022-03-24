@@ -19,7 +19,7 @@
                     <div id="author">
                         <a href=""><img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" /></a>
                         <div id="authorDetail">
-                            <a href="" id="name">{{ users.username }}</a>
+                            <a href="{% url 'feed:account' users.username %}" id="name">{{ users.username }}</a>
                             <div id="following">{{ users.follower }}</div>
                         </div>
                     </div>
