@@ -9,8 +9,9 @@
 <div id="postPics">
     {% if posts %}
         <table>
-        {% for post in posts %}
+        {% for post_row in posts %}
             <tr>
+                {% for post in post_row %}
                 <td>
                     <div class="picLine">
                         <div class="pic" style="height: 600px;">
@@ -41,6 +42,7 @@
                         </div>
                     </div>
                 </td>
+                {% endfor %}
             </tr>
         {% endfor %}
         </table>
