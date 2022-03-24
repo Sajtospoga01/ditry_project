@@ -53,16 +53,26 @@
                 
             </div>
             <div id="description">{{post.title}}</div>
-            <div id="comments">
+            <div id="comments"></div>
 			<div id="sumNum">{{comments.count}} Comments</div>
+                <div class="commFrame">
+                    <form action="{% url 'feed:comment_on_post' post.id%}" method="POST">
+                        {% csrf_token %}
+                        <div class="input-box">
+                            {{ form.comment }}
+                        </div>
+                        <input type="submit" value="Comment">
+                    </form>
+                </div>
 				{% for comment in comments %}
 					<div class="comment">
-					<div class="commFrame">
-						<div class="commentText">{{comment.comment}}</div>
-					</div>
-					</div>
+                        {{ comment.user.username }}
+                        {{ comment.comment }}
+				    </div>
 				{% endfor %}
+                
             </div>
+            
         </div>
         {% endif %}
 	

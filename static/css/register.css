@@ -61,6 +61,7 @@ form .input-box span.details{
   display: block;
   font-weight: 500;
   margin-bottom: 5px;
+  outline: none;
 }
 .user-details .input-box input{
   height: 45px;

@@ -12,16 +12,16 @@
         {% for post in posts %}
             <tr>
                 <td>
-                    <div class = "picLine">
-                        <div class="pic" style="height: 600px">
-                            <a href><img class="image" width="200px" src="{{ post.picture.url }}"
-                                alt="Image of {{ post.picture.title }}"></a>
+                    <div class="picLine">
+                        <div class="pic" style="height: 600px;">
+                            <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                                src="{{ post.picture.url }}" alt="Image of {{ post.title }}">
                             <div class="allPicOpera">
-                                {% if post.creator.UserProfile.profile_picture %}
-                                    <a href=""><img width="45px"; style="transform: translate(5px,15px);"
-                                            src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
-                                            <div class="followPic"><img src="{% static 'images/followPic.png' %}"
-                                                alt="followPic" /></div>
+                                {% if post.creator.profile_picture %}
+                                <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                                        src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
+                                        <div class="followPic"><img src="{% static 'images/followPic.png' %}"
+                                            alt="followPic" /></div>
                                     </a>			
                                 {% else %}
                                     <a href=""><img width="45px"; style="transform: translate(5px,15px);"
@@ -30,26 +30,22 @@
                                                 alt="followPic" /></div>
                                     </a>
                                 {% endif %}
-                                <a href="" class="authorName">{{ post.creator.username }}</a>
+                                <a href="{% url 'feed:account' post.creator.username %}" class="authorName">{{ post.creator.username }}</a>
                                 {% if user.is_authenticated %}
-                                            
-                                            
-                                    <img class="heartButton" id="{{ post.id }}" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart" /></a>
+                                    <a href = "{% url 'feed:like_post' post.id %}">
+                                        <img class="heartButton" id="{{ post.id }}" width="25px"; src="{% static 'images/heart2.png' %}" alt="heart" /></a>
                                     <a href=""><img src="{% static 'images/chat-bubble-dots.png' %}"
                                         alt="chat-bubble-dots" /></a>
-                                        
-                                        
                                 {% endif %}
                             </div>
                         </div>
-
                     </div>
                 </td>
             </tr>
         {% endfor %}
         </table>
     {% else %}
-            No {{ name }} posts yet.
+        No {{ name }} posts yet.
     {% endif %}
 </div>
 {% endblock %}

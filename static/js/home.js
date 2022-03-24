@@ -24,6 +24,7 @@ $(document).ready(function() {
 	});
 	
 	
+	// increase like of post 
 	$('.heartButton').click(function() {
 		var id = event.target.id;
 		var post = document.getElementById(id);
@@ -35,5 +36,33 @@ $(document).ready(function() {
 			}
 		)
 	});	
-	
+
+
+	adjustColumns();
+
+
+	$(window).resize(function(){
+		adjustColumns();
+	})
+
+
+
 })
+
+// currently just prints out alert of estimated no. columns
+function adjustColumns(){
+	var pictureWidth = 460;		// may need to be adjusted
+	var windowWidth = $(window).width();
+
+	if( windowWidth < pictureWidth){
+		alert('1 column needed');
+	}else if( windowWidth < pictureWidth*2){
+		alert ('2 columns needed');
+	}else if( windowWidth < pictureWidth*3){
+		alert ('3 columns needed');
+	}else if( windowWidth < pictureWidth*4){
+		alert ('4 columns needed');
+	}else if( windowWidth < pictureWidth*5){
+		alert ('5 columns needed');
+	}
+}

@@ -52,7 +52,7 @@ class UserPostsForm(forms.ModelForm):
     original = forms.IntegerField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = Post
-        fields = {'title','picture','comment'}
+        fields = {'title','picture'}
 
 class EditProfileForm(forms.ModelForm):
     username = forms.CharField(max_length=36)
@@ -63,12 +63,11 @@ class EditProfileForm(forms.ModelForm):
         fields = {'username','profile_picture' }
 
 class UserCommentForm(forms.ModelForm):
-    username = forms.CharField()
-    content = forms.CharField(max_length=128)
+    comment = forms.CharField(max_length=128)
 
     class Meta:
         model = Comment
-        fields = {'user', 'content'}
+        fields = {'comment'}
 
 class FolderForm(forms.ModelForm):
     foldername = forms.CharField()

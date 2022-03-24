@@ -13,9 +13,7 @@ from django.conf.urls.static import static
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
 from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm
-from feed.forms import ResetForm
 from datetime import datetime
-
 
 
 def home(request):
@@ -36,25 +34,25 @@ def home(request):
 
 
 def about(request):
-    return render(request,'feed/about.html' )
+    return render(request, 'feed/about.html')
 
 
 def help(request):
-    return render(request,'feed/help.html')
+    return render(request, 'feed/help.html')
 
 
 def contact_us(request):
-    return render(request,'feed/contact_us.html')
+    return render(request, 'feed/contact_us.html')
 
 
-@login_required
+@login_required(login_url='feed:login')
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed/categories.html', context={'posts':posts, 'name': 'Trending'})
+    return render(request, 'feed/trending.html', context={'posts':posts, 'name': 'Trending'})
 
 
-@login_required
+@login_required(login_url='feed:login')
 def follow_category(request, category_name_slug):
     # user follows category and is redirected to this category
     following_user = UserProfile.objects.get(id = request.user.id)
@@ -69,11 +67,14 @@ def follow_category(request, category_name_slug):
     return redirect(reverse('feed:show_category', kwargs={'category_slug': category_name_slug}))
 
 
-@login_required
-def show_my_attempts(request):
-    user = UserProfile.objects.get(id = request.user.id)
+@login_required(login_url='feed:login')
+def show_my_attempts(request,username):
+    user = UserProfile.objects.get(username=username)
     my_attempts = Post.objects.filter(creator=user, original__isnull=False)
-    return render(request, 'attempts.html',context={'attempts':my_attempts})
+    context = {}
+    context['attempts']= my_attempts
+    context['user'] = user
+    return render(request, 'feed/attempts.html',context)
 
 
 @login_required
@@ -107,7 +108,7 @@ def add_post(request, boolean_attempt, attempt_post_id=None):
     context = {'form':form}
     return render(request, 'feed/addPost.html',context)
 
-@login_required
+@login_required(login_url='feed:login')
 def add_post_to_category(request, category_name_slug, post_id):
     post = Post.objects.get(id = post_id)
     category = Categorises.objects.get(slug=category_name_slug)
@@ -127,8 +128,11 @@ def has_liked(request, post):
     else:
         return False
 
-@login_required
+@login_required(login_url='feed:login')
 def show_post(request, post_id):
+
+    form = UserCommentForm()
+
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)
@@ -140,6 +144,7 @@ def show_post(request, post_id):
         
         is_liked = Functions.has_liked(request.user.username,post_id)
         context_dict['is_liked'] = is_liked
+        context_dict['form'] = form
    
     except Post.DoesNotExist:
         context_dict['post'] = None
@@ -147,11 +152,12 @@ def show_post(request, post_id):
         context_dict['creator'] = None
         context_dict['numComments'] = 0
         context_dict['is_liked'] = False
+        context_dict['form'] = None
     finally:
         return render(request, 'feed/picDetail.html', context = context_dict)
 
 
-@login_required
+@login_required(login_url='feed:login')
 def show_folder(request, folder_id, username):
     # maybe also need user_name to get folder
     context_dict = {}
@@ -159,10 +165,12 @@ def show_folder(request, folder_id, username):
         user = UserProfile.objects.get(username=username)
         folder = Folder.objects.get(id=folder_id, user=user)
         posts = Queries.get_posts_in_folder(folder_id)
+        context_dict['username'] = user
         context_dict['folder']=folder
         context_dict['posts'] = posts
 
     except Folder.DoesNotExist:
+        context_dict['username'] = None
         context_dict['folder'] = None
         context_dict['posts'] = None
     finally:
@@ -170,7 +178,7 @@ def show_folder(request, folder_id, username):
         return render(request, 'feed/show_folder.html',context=context_dict)
 
 
-@login_required
+@login_required(login_url='feed:login')
 def all_folders(request, user_folder):
     # helper function
     user = UserProfile.objects.get(id=request.user.id)
@@ -182,26 +190,40 @@ def all_folders(request, user_folder):
     return folders
 
 
-@login_required
+@login_required(login_url='feed:login')
 def show_user(request, username):
-    user = UserProfile.objects.get(username=username)
-    posts = Queries.get_user_posts(username)
-    followed_categories = Queries.get_category_following(request.user.id)
+    show_user = UserProfile.objects.get(username=username)
+    current_user = UserProfile.objects.get(id=request.user.id)
 
-    folders = all_folders(request, user)
-    context_dict = {'user':user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+    if show_user == current_user:
+        #redirects to personal page
+        posts = Queries.get_user_posts(username)
+        followed_categories = Queries.get_category_following(request.user.id)
 
-    return render(request,'feed/personalPage.html', context=context_dict)
+        folders = all_folders(request, show_user)
+        context_dict = {'user':show_user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
+
+        return render(request,'feed/personalPage.html', context=context_dict)
+
+    else:
+        # redirects to page of other user
+        posts = Queries.get_user_posts(username)
+        followed_categories = Queries.get_category_following(request.user.id)
+
+        folders = all_folders(request, show_user)
+        context_dict = {'user': current_user, 'show_user': show_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
+
+        return render(request, 'feed/otherUserPage.html', context=context_dict)
 
 
 
-@login_required
-def all_followed_users(request):
-    follows = Queries.get_user_following(request.user.id)
+#@login_required
+#def all_followed_users(request):
+ #   follows = Queries.get_user_following(request.user.id)
     ## also needs sepaparate url if not helper function to display on personal page
-    return
+  #  return
 
-@login_required
+@login_required(login_url='feed:login')
 def show_category(request, name_category):
     posts = Queries.get_posts_in_category(name_category)
 
@@ -251,7 +273,7 @@ def helper_delete_post(request,post):
         post.delete()
 
 
-@login_required
+@login_required(login_url='feed:login')
 def delete_saved_post(request, post_id, folder_id):
     # needs to check if post in specific folder and if folder by request.user
     post = get_object_or_404(Post, id=post_id)
@@ -261,7 +283,7 @@ def delete_saved_post(request, post_id, folder_id):
                                                 folder_id, 'username':request.user.username}))
 
 
-@login_required
+@login_required(login_url='feed:login')
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     user = UserProfile.objects.get(id = request.user.id)
@@ -270,7 +292,7 @@ def delete_post(request, post_id):
     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
-@login_required
+@login_required(login_url='feed:login')
 def delete_folder(request, folder_id):
     folder = get_object_or_404(Post, id=folder_id)
     if request.method == 'POST':
@@ -278,11 +300,10 @@ def delete_folder(request, folder_id):
     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
-@login_required
+@login_required(login_url='feed:login')
 def follow_user(request, username):
     following_user = UserProfile.objects.get(id = request.user.id)
     follow_user = UserProfile.objects.get(username=username)
-    
 
     if FollowsUser.objects.filter(follower=following_user, following= follow_user).exists():
         FollowsUser.objects.get(follower=following_user, following= follow_user).delete()
@@ -292,7 +313,7 @@ def follow_user(request, username):
     return redirect(reverse('feed:account', kwargs={'username':username}))
 
 
-@login_required
+@login_required(login_url='feed:login')
 def add_folder(request):
     form = FolderForm()
 
@@ -311,7 +332,7 @@ def add_folder(request):
     return render(request, 'feed/add_folder.html', context={'form': form})
 
 
-@login_required
+@login_required(login_url='feed:login')
 def like_post(request,post_id):
     # reference: https://github.com/Jebaseelanravi/instagram-clone/blob/main/insta/views.py
     post = Post.objects.get(id= post_id)
@@ -333,7 +354,7 @@ def like_post(request,post_id):
         return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
 
 
-@login_required
+@login_required(login_url='feed:login')
 def save_post(request, folder_id ,post_id):
     try:
         folder = Folder.objects.get(slug=folder_id)
@@ -369,7 +390,7 @@ def save_post(request, folder_id ,post_id):
         return render(request, 'feed/addPost.html', context=context_dict)
 
 # might not need this view, if not needed also delete url for it
-@login_required
+@login_required(login_url='feed:login')
 def like_comment(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
     post_id = comment.post_id
@@ -390,17 +411,15 @@ def like_comment(request, comment_id):
         return redirect(reverse('feed:show_comments_on_post', kwargs={'post_id':post_id}))
 
 
-@login_required
+@login_required(login_url='feed:login')
 def comment_on_post(request, post_id):
-    if request.medthod == 'POST':
+    if request.method == 'POST':
         form = UserCommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post_id = post_id
             comment.user_id = request.user.id
             comment.save()
-            return redirect(reverse('feed:show_comments_on_post',
-                                    kwargs={'post_id': post_id}))
 
         else:
             print(form.errors)
@@ -408,7 +427,8 @@ def comment_on_post(request, post_id):
                             kwargs={'post_id': post_id}))
 
 
-@login_required
+# might not need this view, if not needed, also delete url for it
+@login_required(login_url='feed:login')
 def delete_comment(request, comment_id):
     try:
         user = UserProfile.objects.get(id=request.user.id)
@@ -420,13 +440,13 @@ def delete_comment(request, comment_id):
         return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
-@login_required
+@login_required(login_url='feed:login')
 def search_title(request):
     # for reference:
     #https://stackoverflow.com/questions/38006125/how-to-implement-search-function-in-django
     if request.method == 'GET':
         # gets all search terms
-        query= request.GET.get('q')
+        query= request.GET.get('Search')
         queries =query.split()
         all_posts = Post.objects.all()
         matching_posts = []
@@ -443,18 +463,26 @@ def search_title(request):
     return render(request,'feed/searchTitle.html',
                   context={'matching_posts': matching_posts})
 
-@login_required
+@login_required(login_url='feed:login')
 def update_profile(request,username):
-   form = EditProfileForm()
-   if request.method == 'POST':
-       form = EditProfileForm(request.POST)
+    update_user = UserProfile.objects.get(username=username)
+    current_user = UserProfile.objects.get(username=request.user.username)
 
-       if form.is_valid:
-           form.save()
-           return redirect(reverse('feed:account', kwargs={'username':request.user.username}))
+    if update_user == current_user:
+        form = EditProfileForm()
+        if request.method == 'POST':
+           form = EditProfileForm(request.POST)
 
-   #update_profile does not exist yet, might have to change name
-   return render(request, 'register/update_profile.html', context={'user_form':form})
+           if form.is_valid:
+               form.save()
+               return redirect(reverse('feed:account', kwargs={'username':current_user.username}))
+
+        #update_profile does not exist yet, might have to change name
+        return render(request, 'feed/updateProfile.html', context={'user_form':form})
+
+    else:
+        # cannot update someone elses profile thus gets redirected to his own profile
+        return redirect(reverse('feed:account', kwargs={'username':current_user.username}))
 
 
 def register(request):
@@ -488,7 +516,7 @@ def user_login(request):
 
 
 # queries exist for this, this is just a bandaid solution
-@login_required
+@login_required(login_url='feed:login')
 def userFollowing(request):
     get_following = FollowsUser.objects.get('following')
     get_cat_following = FollowsCategory.objects.get('following')
@@ -499,14 +527,14 @@ def userFollowing(request):
 
     return render(request,'feed/userFollowing.html',context)
 
-@login_required
+@login_required(login_url='feed:login')
 def userFollowers(request):
     get_followers = FollowsUser.objects.get('follower')
     context = {}
     context['followers'] = get_followers
     return render(request,'feed/userFollower.html',context)
 
-@login_required
+@login_required(login_url='feed:login')
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
