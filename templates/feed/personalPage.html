@@ -68,6 +68,19 @@
             {% else %}
                 No folders found.
             {% endif %}
+            <table>
+                {% for post in posts %}
+                    <tr>
+                        <td>
+                            <div>
+                                <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365px; height: 600px; object-fit: cover;"
+                                    src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                            </div>
+                        </td>
+                    </tr>
+                
+                {% endfor %}
+                </table>
         </div>
     {% endif %}
     
