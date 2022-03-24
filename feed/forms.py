@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from feed.models import Post, Folder, Comment, UserProfile
+from feed.models import Post, Folder, Comment, UserProfile, Categorises, Category
 from string import Template
 from django.utils.safestring import mark_safe
 
@@ -53,6 +53,12 @@ class UserPostsForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = {'title','picture'}
+
+class PostCategoryForm(forms.ModelForm):
+    category = forms.ModelChoiceField(queryset=Category.objects.all())
+    class Meta:
+        model = Categorises
+        fields = {'category',}
 
 class EditProfileForm(forms.ModelForm):
     username = forms.CharField(max_length=36)

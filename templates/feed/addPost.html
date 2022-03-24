@@ -11,7 +11,7 @@
 {% block body_block %}
 <link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
 
-<form method="post" enctype="multipart/form-data" action="{% url 'feed:add_post' 0 %}">
+<form method="post" enctype="multipart/form-data" action="{% url 'feed:add_post' %}">
     {% csrf_token %}
     {% for hidden in form.hidden_fields %}
         {{ hidden }}
@@ -32,6 +32,10 @@
                 {{ form.comment }}
                 {{ form.comment.errors }}
             </div>
+            <div>
+                {{ category_form.category }}
+                {{ category_form.errors}}
+            </div>
         </div>
     </div>
     {% for field in form %}
@@ -45,6 +49,7 @@
 </form>
 
 <br><br>
+<div id="page">
 <div id="detail">
     <div>
         <a href=""><img src="{% static 'images/back.png' %}" alt="back" /></a>
@@ -89,6 +94,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <br><br>
 {% endblock %}

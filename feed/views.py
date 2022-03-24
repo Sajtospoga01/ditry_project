@@ -8,11 +8,9 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.conf import settings
-from django.conf.urls.static import static
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
-from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm
+from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm, PostCategoryForm
 from datetime import datetime
 
 
@@ -78,24 +76,31 @@ def show_my_attempts(request,username):
 
 
 @login_required
-def add_post(request, boolean_attempt, attempt_post_id=None):
-    # boolean_attempt is True if user posts an attempt, otherwise False if original post
+def add_post(request, original_id=None):
     # if it is an attempt, id of original is also an input argument
 
     user = UserProfile.objects.get(username=request.user.username)
     if request.method == 'POST':
         form = UserPostsForm(request.POST)
+        category_form = PostCategoryForm(request.POST)
 
-        if form.is_valid():
+        if form.is_valid() and category_form.is_valid():
+            # add picture and user
             post = form.save(commit=False)
             post.creator = user
             if 'picture' in request.FILES:
                 post.picture = request.FILES['picture']
             post.save()
-            if boolean_attempt!=0 and attempt_post_id!=None:
+
+            # categorise
+            categorise = category_form.save(commit=False)
+            categorise.post = post
+            categorise.save()
+
+            if original_id!=None:
                 attempt_id = post.id
                 # if it is an attempt redirect to show all attempts
-                Functions.set_original(attempt_post_id, attempt_id)
+                Functions.set_original(original_id, attempt_id)
                 return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
 
             post_id = post.id
@@ -105,7 +110,8 @@ def add_post(request, boolean_attempt, attempt_post_id=None):
             print(form.errors)
     else:
         form = UserPostsForm()
-    context = {'form':form}
+        category_form = PostCategoryForm()
+    context = {'form':form, 'category_form': category_form}
     return render(request, 'feed/addPost.html',context)
 
 @login_required(login_url='feed:login')
