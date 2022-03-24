@@ -14,19 +14,24 @@
     border-right: 10px solid rgb(255, 255, 255);
     align-items: center;
     justify-content: space-around;
-
 }
 
-#page #detail #frame #pic form{
+#page #detail #frame #pic{
     display: flex;
     align-items: center;
     background-color: rgb(226, 226, 226);
     height: 600px;
+    width: 400px;
     border-radius: 20px;
     border: 2px solid #ffffff;
+    justify-content: center;
 }
 
-#page #detail #frame #pic form:hover{
+#page #detail #frame #pic #upload{
+    border-left: 50px solid #00000000;
+}
+
+#page #detail #frame #pic:hover{
     border-color: #2d7ef7;
 }
 
@@ -35,8 +40,6 @@
     width: 300px;
     border-left:100px solid rgb(226, 226, 226)
 }
-
-
 
 #page #detail #frame #authorCom{
     width: 400px;
@@ -80,18 +83,11 @@
     border-top: 5px solid #ffffff;
 }
 
-#page #detail #frame #authorCom #author{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 400px;
-}
-
 #page #detail #frame #authorCom #author #titleText input:hover{
     border-bottom: 2px solid #2d7ef7;
 }
 
-#page #detail #frame #authorCom #author #titleText input {
+#page #detail #frame .input-box .inputText{
     height: 60px;
     width: 416px;
     font-weight: 600px;
@@ -100,7 +96,8 @@
     letter-spacing: 0.5px;
     border: 0px;
     outline: none;
-    border-bottom: 2px solid #e4e4e4;
+    display: flex;
+    flex-direction: column;
 }
 
 #page #detail #frame #authorCom #author #authorFrame{
@@ -155,7 +152,12 @@
     border-color: #880a0a;
 }
 
-#page #detail #frame #authorCom #save #saveFrame #saveButton {
+#page #detail #frame .button{
+    display: flex;
+    justify-content: flex-end;
+}
+
+#page #detail #frame .button input{
     font-family: 'Passion One', cursive;
     border: 7px solid;
     border-left: 26px solid;
@@ -169,8 +171,7 @@
     border-color: #e23c3c;
 }
 
-
-
-#page #detail #frame #authorCom .save:hover{
-    font-size: 16px;
+#page #detail #frame .button input:hover {
+    background-color: #c40000;
+    border-color: #c40000;
 }

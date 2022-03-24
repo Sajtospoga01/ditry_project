@@ -13,9 +13,9 @@
         <div id="author">
             <a href="">
                 {% if show_user.profile_picture %}
-                    <img id="authorProfile" src="{{show_user.profile_picture.url}}" alt="authorProfile" />
+                    <img id="authorProfile" src="{{show_user.profile_picture.url}}" alt="authorProfile" style = "object-fit: cover;width:100px; height:100px;border-radius: 50%;"/>
                 {% else %}
-                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
+                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" style = "object-fit: cover;width:100px; height:100px;border-radius: 50%;"/>
                 {%endif%}
             </a>
             <div id="authorDetail">

@@ -20,8 +20,10 @@
     <div id = "page">
         <div id="detail"><div id="frame">
             <div id="pic">
-                {{ form.picture.errors }}
-                {{ form.picture }}
+                <div id="upload">
+                    {{ form.picture.errors }}
+                    {{ form.picture }}
+                </div>
             </div>
             <div id="authorCom">
                 <div class="Allopera">
@@ -31,9 +33,11 @@
                     </div>
                 </div>
             <div class="input-box">
-                <span class="details">Add your title</span>
-                {{ form.title.errors }}
-                {{ form.title }}
+                <div class="inputText">
+                    <span class="details">Add your title</span>
+                    {{ form.title.errors }}
+                    {{ form.title }}
+                </div>
             </div>
             
             <div>
