@@ -14,7 +14,7 @@
 {% if user.is_authenticated %}
 <div id="detail">
     <div>
-        <a href=""><img src="{% static 'images/back.png' %}" alt="back" /></a>
+        <a href="{{request.META.HTTP_REFERER}}"><img src="{% static 'images/back.png' %}" alt="back" /></a>
     </div>
     <div id="frame">
 		{%if post %}
