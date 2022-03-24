@@ -13,8 +13,9 @@
     <div id="tipText"><span>All results are shown below.</span></div>
     
     <div id="resultFrame">
-        {% for post in matching_posts %}
-    
+        {% for post_row in matching_posts %}
+        <tr>
+            {% for post in post_row %}   
             <td>
                 <div class="picLine">
                     <div class="pic" style="height: 600px;">
@@ -44,11 +45,11 @@
                         </div>
                     </div>
                 </div>
-            </td>	
+            </td>
+            {% endfor %}
+        </tr>	
         {% endfor %}
-    
         </div>
-    
 </div>
 {% else %}
     No posts to show.

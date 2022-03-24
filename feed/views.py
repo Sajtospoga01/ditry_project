@@ -18,18 +18,20 @@ def home(request):
     # all posts uploaded to diTRY
     posts = Post.objects.all()
     visitor_cookie_handler(request)
-    context_dict = {'posts': list()}
+    return render(request, 'feed/home.html', context={'posts': tableify(posts)})
+
+# helper function to turn posts into a list of lists for easy grid view
+def tableify(posts):
+    table = list()
     index = 0
     row = -1
     for i in posts:
         if index % 3 == 0:
             row += 1
-            context_dict['posts'].append(list())
-        context_dict['posts'][row].append(i)
+            table.append(list())
+        table[row].append(i)
         index += 1
-
-    return render(request, 'feed/home.html', context=context_dict)
-
+    return table
 
 def about(request):
     return render(request, 'feed/about.html')
@@ -47,7 +49,7 @@ def contact_us(request):
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed/categories.html', context={'posts':posts, 'name': 'Trending'})
+    return render(request, 'feed/categories.html', context={'posts':tableify(posts), 'name': 'Trending'})
 
 
 @login_required(login_url='feed:login')
@@ -173,7 +175,7 @@ def show_folder(request, folder_id, username):
         posts = Queries.get_posts_in_folder(folder_id)
         context_dict['username'] = user
         context_dict['folder']=folder
-        context_dict['posts'] = posts
+        context_dict['posts'] = tableify(posts)
 
     except Folder.DoesNotExist:
         context_dict['username'] = None
@@ -238,7 +240,7 @@ def show_user(request, username):
 def show_category(request, name_category):
     posts = Queries.get_posts_in_category(name_category)
 
-    return render(request, 'feed/categories.html', context={'posts':posts, 'name': name_category})
+    return render(request, 'feed/categories.html', context={'posts':tableify(posts), 'name': name_category})
 
 # def show_category_helper( category_name):
 #     category = Category.objects.get(name=category_name)
@@ -472,7 +474,7 @@ def search_title(request):
                         matching_posts.append(p)
 
     return render(request,'feed/searchTitle.html',
-                  context={'matching_posts': matching_posts})
+                  context={'matching_posts': tableify(matching_posts)})
 
 @login_required(login_url='feed:login')
 def update_profile(request,username):
