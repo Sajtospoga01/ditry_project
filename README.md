@@ -1,7 +1,7 @@
-# DIYTry
+# DITry
 ## A picture-sharing website
 
-DIYTry is a web application that allows the user to upload pictures of his own creation, save ideas by other users in folders and follow other users. Its features are specified below.
+DITry is a web application that allows the user to upload pictures of his own creation, save ideas by other users in folders and follow other users. Its features are specified below.
 
 
 ## Features
@@ -15,7 +15,7 @@ DIYTry is a web application that allows the user to upload pictures of his own c
 - Users can view the top ten liked posts by clicking on 'trending'
 
 
-## Run DIYTry
+## Run DITry
 After installing everything needed, you can now run the project by doing the following:
 
 ````
