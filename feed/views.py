@@ -518,8 +518,8 @@ def user_login(request):
 # queries exist for this, this is just a bandaid solution
 @login_required(login_url='feed:login')
 def userFollowing(request):
-    get_following = Queries.get_user_following(user=request.username)
-
+    cur_user = UserProfile.objects.get(username=request.user.username)
+    get_following = Queries.get_user_following(user=cur_user)
     context = {}
     context['followers'] = get_following
 
@@ -527,7 +527,8 @@ def userFollowing(request):
 
 @login_required(login_url='feed:login')
 def userFollowers(request):
-    get_followers = Queries.get_user_follows(user=request.username)
+    cur_user = UserProfile.objects.get(username=request.user.username)
+    get_followers = Queries.get_user_follows(user=cur_user)
     context = {}
     context['followers'] = get_followers
     return render(request,'feed/userFollower.html',context)
