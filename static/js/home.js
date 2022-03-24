@@ -23,7 +23,8 @@ $(document).ready(function() {
 		}		
 	});
 	
-
+	
+	// increase like of post 
 	$('.heartButton').click(function() {
 		var id = event.target.id;
 		var post = document.getElementById(id);
@@ -36,20 +37,21 @@ $(document).ready(function() {
 		)
 	});	
 
-	resizeWindow();
+
+	adjustColumns();
 
 
 	$(window).resize(function(){
-		resizeWindow();
+		adjustColumns();
 	})
 
 
 
 })
 
-// currently just prints out estimated no. columns
-function resizeWindow(){
-	var pictureWidth = 460;
+// currently just prints out alert of estimated no. columns
+function adjustColumns(){
+	var pictureWidth = 460;		// may need to be adjusted
 	var windowWidth = $(window).width();
 
 	if( windowWidth < pictureWidth){
