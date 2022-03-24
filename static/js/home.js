@@ -36,17 +36,31 @@ $(document).ready(function() {
 		)
 	});	
 
+	resizeWindow();
 
-	
-	if ( $(window).width() > 1260) {
-		alert('3 columns needed');
-	}else if( $(window).width() > 820){
-		alert('2 columns needed');
-	}else{
-		alert('1 column needed');
-	}
-	
+
+	$(window).resize(function(){
+		resizeWindow();
+	})
+
 
 
 })
 
+// currently just prints out estimated no. columns
+function resizeWindow(){
+	var pictureWidth = 460;
+	var windowWidth = $(window).width();
+
+	if( windowWidth < pictureWidth){
+		alert('1 column needed');
+	}else if( windowWidth < pictureWidth*2){
+		alert ('2 columns needed');
+	}else if( windowWidth < pictureWidth*3){
+		alert ('3 columns needed');
+	}else if( windowWidth < pictureWidth*4){
+		alert ('4 columns needed');
+	}else if( windowWidth < pictureWidth*5){
+		alert ('5 columns needed');
+	}
+}
