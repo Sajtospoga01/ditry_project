@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from feed.models import Post, Folder, Comment, UserProfile
+from string import Template
+from django.utils.safestring import mark_safe
 
 class UserForm(UserCreationForm):
     ## this is for register
@@ -33,10 +35,21 @@ class UserLoginForm(forms.ModelForm):
         model = User
         fields = {'username' , 'password'}
 
+class PictureWidget(forms.widgets.Widget):
+
+    def render(self, name, value, attrs=None, **kwargs):
+
+        html =  Template("""<img src="$link"/>""")
+
+        return mark_safe(html.substitute(link=value))
+
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
-    picture = forms.ImageField()
+    picture = forms.ImageField(required=False)
     comment = forms.CharField()
+
+    likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
+    original = forms.IntegerField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = Post
         fields = {'title','picture','comment'}

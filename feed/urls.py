@@ -6,7 +6,6 @@ app_name ='feed'
 urlpatterns = [
     path('', views.home, name ='home'),
     path('about/', views.about, name = 'about'),
-    path('add-post/', views.add_post, name='add_post'),
     path('trending/', views.trending, name='trending'),
     path('help/', views.help, name='help'),
     path('contact-us/', views.contact_us, name='contact_us'),
@@ -31,6 +30,7 @@ urlpatterns = [
     
     # user_name cannot be 'register', 'login', 'logout', 'help', etc.
     path('<str:username>/', views.show_user, name='account'),
+    path('add-post/<int:boolean_attempt>/', views.add_post, name='add_post'),
     path('<str:username>/folders/add-folder/', views.add_folder, name='add_folder'),
     path('<str:username>/folders/<int:folder_id>/', views.show_folder, name='show_folder'),
     path('<str:username>/folders/<int:folder_id>/delete-folder/', views.delete_folder, name='delete_folder'),

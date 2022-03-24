@@ -8,6 +8,8 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.conf import settings
+from django.conf.urls.static import static
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
 from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm
@@ -75,19 +77,24 @@ def show_my_attempts(request):
 
 
 @login_required
-def add_post(request,boolean_attempt, attempt_post_id=None):
+def add_post(request, boolean_attempt, attempt_post_id=None):
     # boolean_attempt is True if user posts an attempt, otherwise False if original post
     # if it is an attempt, id of original is also an input argument
 
+    user = UserProfile.objects.get(username=request.user.username)
     if request.method == 'POST':
         form = UserPostsForm(request.POST)
 
         if form.is_valid():
-            post = form.save()
-            if boolean_attempt and attempt_post_id!=None:
+            post = form.save(commit=False)
+            post.creator = user
+            if 'picture' in request.FILES:
+                post.picture = request.FILES['picture']
+            post.save()
+            if boolean_attempt!=0 and attempt_post_id!=None:
                 attempt_id = post.id
                 # if it is an attempt redirect to show all attempts
-                Queries.set_original(attempt_post_id, attempt_id)
+                Functions.set_original(attempt_post_id, attempt_id)
                 return redirect(reverse('feed:show_my_attempts', kwargs={'username':request.user.username}))
 
             post_id = post.id
@@ -95,9 +102,10 @@ def add_post(request,boolean_attempt, attempt_post_id=None):
         else:
             # if form not valid print errors
             print(form.errors)
-
-    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
-
+    else:
+        form = UserPostsForm()
+    context = {'form':form}
+    return render(request, 'feed/addPost.html',context)
 
 @login_required
 def add_post_to_category(request, category_name_slug, post_id):
@@ -111,7 +119,7 @@ def add_post_to_category(request, category_name_slug, post_id):
 
 #helper function
 def has_liked(request, post):
-    user = UserProfile.objects.get(id=request.user.id)
+    user = UserProfile.objects.get(username=request.user.username)
     liked = Queries.get_liked_posts(user)
     result = liked.objects.filter(id=post.id)
     if result.count()>0:
@@ -130,7 +138,7 @@ def show_post(request, post_id):
         context_dict['comments'] = comments
         # liked by user?
         
-        is_liked = Functions.has_liked(request.user.id,post_id)
+        is_liked = Functions.has_liked(request.user.username,post_id)
         context_dict['is_liked'] = is_liked
    
     except Post.DoesNotExist:

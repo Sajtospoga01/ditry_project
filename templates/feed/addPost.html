@@ -3,13 +3,46 @@
 
 
 {% block title_block %}
-    picture detail
+ Add Post
 {% endblock %}
 
 
 
 {% block body_block %}
 <link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
+
+<form method="post" enctype="multipart/form-data" action="{% url 'feed:add_post' 0 %}">
+    {% csrf_token %}
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    <div>
+    
+            <div class="input-box">
+                <span class="details">Add your title</span>
+                {{ form.title.errors }}
+                {{ form.title }}
+            </div>
+            <div id="pic">
+                {{ form.picture.errors }}
+                {{ form.picture }}
+            </div>
+            <div>
+                <span class="input-box">Tell everyone what your picture is about</span>
+                {{ form.comment }}
+                {{ form.comment.errors }}
+            </div>
+        </div>
+    </div>
+    {% for field in form %}
+    {% for error in field.errors %}
+        <small style="color:red;">{{ error }}</small>
+    {% endfor %}
+  {% endfor %}
+  <div class="button">
+      <input type="submit" name="submit" value="Post">
+  </div>
+</form>
 
 <br><br>
 <div id="detail">
