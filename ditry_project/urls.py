@@ -38,4 +38,10 @@ urlpatterns = [
     path('reset-password-complete',
          auth_views.PasswordResetCompleteView.as_view(template_name="feed/password_reset_done.html"),
          name="password_reset_complete"),
+    path('change-password',
+         auth_views.PasswordChangeView.as_view(template_name="feed/password_change.html"),
+         name="password_change"),
+    path('change-password-done',
+         auth_views.PasswordChangeDoneView.as_view(template_name="feed/password_reset_done.html"),
+         name='password_change_done')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
