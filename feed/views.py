@@ -20,6 +20,7 @@ def home(request):
     visitor_cookie_handler(request)
     return render(request, 'feed/home.html', context={'posts': tableify(posts)})
 
+
 # helper function to turn posts into a list of lists for easy grid view
 def tableify(posts):
     if not posts: return posts
@@ -33,6 +34,7 @@ def tableify(posts):
         table[row].append(i)
         index += 1
     return table
+
 
 def about(request):
     return render(request, 'feed/about.html')
@@ -114,17 +116,6 @@ def add_post(request, original_id=None):
         category_form = PostCategoryForm()
     context = {'form':form, 'category_form': category_form}
     return render(request, 'feed/addPost.html',context)
-
-@login_required(login_url='feed:login')
-def add_post_to_category(request, category_name_slug, post_id):
-    post = Post.objects.get(id = post_id)
-    category = Categorises.objects.get(slug=category_name_slug)
-    # post is added to category
-    Functions.connect_post_to_category(post, category)
-    return redirect(reverse('feed:show_category',kwargs={'category_slug': category_name_slug}))
-
-
-
 
 
 @login_required(login_url='feed:login')
@@ -271,36 +262,36 @@ def show_category(request, name_category):
 #     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
 
 
-def helper_delete_post(request,post):
-    if request.method == 'POST':
-        post.delete()
+# def helper_delete_post(request,post):
+#     if request.method == 'POST':
+#         post.delete()
 
 
-@login_required(login_url='feed:login')
-def delete_saved_post(request, post_id, folder_id):
-    # needs to check if post in specific folder and if folder by request.user
-    post = get_object_or_404(Post, id=post_id)
-    helper_delete_post(request,post)
-    return redirect(reverse('feed:show_folder',
-                                        kwargs={'folder_id':
-                                                folder_id, 'username':request.user.username}))
+# @login_required(login_url='feed:login')
+# def delete_saved_post(request, post_id, folder_id):
+#     # needs to check if post in specific folder and if folder by request.user
+#     post = get_object_or_404(Post, id=post_id)
+#     helper_delete_post(request,post)
+#     return redirect(reverse('feed:show_folder',
+#                                         kwargs={'folder_id':
+#                                                 folder_id, 'username':request.user.username}))
 
 
-@login_required(login_url='feed:login')
-def delete_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    user = UserProfile.objects.get(id = request.user.id)
-    if post.creator == user:
-        helper_delete_post(request, post)
-    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
+# @login_required(login_url='feed:login')
+# def delete_post(request, post_id):
+#     post = get_object_or_404(Post, id=post_id)
+#     user = UserProfile.objects.get(id = request.user.id)
+#     if post.creator == user:
+#         helper_delete_post(request, post)
+#     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
-@login_required(login_url='feed:login')
-def delete_folder(request, folder_id):
-    folder = get_object_or_404(Post, id=folder_id)
-    if request.method == 'POST':
-        folder.delete()
-    return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
+# @login_required(login_url='feed:login')
+# def delete_folder(request, folder_id):
+#     folder = get_object_or_404(Post, id=folder_id)
+#     if request.method == 'POST':
+#         folder.delete()
+#     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
 @login_required(login_url='feed:login')
@@ -430,17 +421,17 @@ def comment_on_post(request, post_id):
                             kwargs={'post_id': post_id}))
 
 
-# might not need this view, if not needed, also delete url for it
-@login_required(login_url='feed:login')
-def delete_comment(request, comment_id):
-    try:
-        user = UserProfile.objects.get(id=request.user.id)
-        this_comment = Comment.objects.get(id=comment_id, user_id=user)
-        Comment.objects.filter(id=comment_id, user_id=user).delete()
-        post_id = this_comment.post_id
-        return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
-    except Comment.DoesNotExist:
-        return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
+# # might not need this view, if not needed, also delete url for it
+# @login_required(login_url='feed:login')
+# def delete_comment(request, comment_id):
+#     try:
+#         user = UserProfile.objects.get(id=request.user.id)
+#         this_comment = Comment.objects.get(id=comment_id, user_id=user)
+#         Comment.objects.filter(id=comment_id, user_id=user).delete()
+#         post_id = this_comment.post_id
+#         return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
+#     except Comment.DoesNotExist:
+#         return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
 @login_required(login_url='feed:login')
