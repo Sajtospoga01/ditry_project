@@ -317,7 +317,7 @@ def follow_user(request, username):
 
 
 @login_required(login_url='feed:login')
-def add_folder(request):
+def add_folder(request,username):
     form = FolderForm()
 
     # tests if HTTP POST
@@ -327,12 +327,12 @@ def add_folder(request):
         if form.is_valid():
             # Saves new folder to the database.
             form.save()
-            return redirect(reverse('feed:all_folders',kwargs={'username':request.user.username}))
+            return redirect(reverse('feed:all_folders',kwargs={'username':username.user.username}))
         
         else:
             print(form.errors)
 
-    return render(request, 'feed/add_folder.html', context={'form': form})
+    return render(request, 'feed/add_folder.html', context={'form':form })
 
 
 @login_required(login_url='feed:login')

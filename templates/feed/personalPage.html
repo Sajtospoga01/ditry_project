@@ -44,6 +44,9 @@
             <div id="postButton">
                 <a href="{% url 'feed:follower' %}">Followers</a>
             </div>
+            <div id="postButton">
+                <a href="{% url 'feed:add_folder' user.username %}">Add Folder</a>
+            </div>
         </div>
 
         {% block content-block %}

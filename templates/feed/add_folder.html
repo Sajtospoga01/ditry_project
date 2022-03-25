@@ -6,4 +6,35 @@
 {% endblock %}
 
 {% block body_block %}
+    <head>
+    <meta charset="UTF-8">
+      <title>
+          Register
+      </title>
+    <link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+      
+   </head>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'feed:add_folder' user.username %}">
+        {% csrf_token %}
+        <div id="page">
+            <div id="detail">
+                <div id="frame">
+                    <div class="input-box">
+                        <div class="inputText">
+                            <span class="input-box">Whats the folder name?</span>
+                                {{ form.title.errors }}
+                                {{ form.foldername }}
+                        </div>
+                    </div>
+                    <div class="button">
+                        <input type="submit" name="submit" value="Make folder">
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+    <br><br>
 {% endblock %}
