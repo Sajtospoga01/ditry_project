@@ -25,7 +25,7 @@ urlpatterns = [
     #path('show-post/<int:post_id>/<int:comment_id>/delete-comment/', views.delete_comment, name='delete_comment'),
 
     path('add-post/', views.add_post, name='add_post'),
-    path('add-post/<int:post_id>/', views.add_post, name='add_post'),
+    path('add-post/<int:original_id>/', views.add_post, name='add_post'),
     path('account/<str:username>/', views.show_user, name='account'),
     path('<str:username>/folders/add-folder/', views.add_folder, name='add_folder'),
     path('<str:username>/folders/<int:folder_id>/', views.show_folder, name='show_folder'),
