@@ -199,7 +199,7 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("""<input type="text" name="comment" required id="id_comment">""" in response_body, "comment box not displayed")
         self.assertTrue("""<input type="submit" name="submit" value="Post">""" in response_body, "post button not displayed")
     
-    def test_my_account(self):
+    def test_my_account_view(self):
         response = self.client.get(reverse('feed:account', kwargs={'username':'alicej'}))
         response_body = response.content.decode()
 
@@ -213,11 +213,10 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("test attempt" in response_body, "couldn't find post 'test attempt'")
 
 
-    def test_other_account(self):
+    def test_other_account_view(self):
         response = self.client.get(reverse('feed:account', kwargs={'username':'bobs'}))
         response_body = response.content.decode()
 
-        self.assertEqual(response.status_code, 200, "account page not returned with status code 200")
         self.assertEqual(response.status_code, 200, "account page not returned with status code 200")
         self.assertEqual(response.context['show_user'].username, "bobs", "show_user should be bobs")
         self.assertEquals(response.context['user'].username, "alicej", "should have alicej as current user")
@@ -228,6 +227,30 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("""<a class="button" href="/feed/follow-user/bobs/">Follow</a>""" in response_body, "doesn't display follow button")
         self.assertTrue("""<a href="/feed/bobs/folders/1/"><span>test folder</span></a>""" in response_body, "doesnt display folder")
         self.assertTrue("test" in response_body, "couldn't find post 'test'")
+
+    def test_my_attempts_view(self):
+        response = self.client.get(reverse('feed:show_my_attempts', kwargs={'username':'alicej'}))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "my attempts page not returned with status code 200")
+        self.assertEqual(Helper.num_posts_on_page(response), 1, "alicej should have one attempt")
+        self.assertEqual(response.context['user'].username, "alicej", "user should be alicej")
+
+        self.assertTrue("test attempt" in response_body, "couldn't find post test attempt")
+        self.assertTrue("""<a href="" id="name">alicej</a>""" in response_body, "doesn't display username")
+        self.assertTrue("""<a class="button" href="/feed/alicej/update-profile/">Edit profile</a>""" in response_body, "doesn't display edit profile button")
+
+    def test_follow_user_view(self):
+        self.client.post(reverse('feed:register'),
+            {'username': 'charlied', 'first_name': 'charlie', 'last_name': 'doe', 'email': 'charlie@gmail.com', 'password1': 'testpassword', 'password2': 'testpassword'})
+        response = self.client.get(reverse('feed:follow_user', kwargs={'username':'charlied'}))
+        self.assertEqual(response.status_code, 302, "Should be redirected when following user.")
+        self.assertEqual(response.url, reverse('feed:account', kwargs={'username':'charlied'}), "Should be redirected to charlied's account.")
+
+        follows = FollowsUser.objects.filter(follower=UserProfile.objects.get(username="alicej"))
+        self.assertEqual(len(follows), 2, "alicej should now follow 2 users")
+        self.assertTrue(follows.get(following=UserProfile.objects.get(username="charlied")), "charlied should be in users that alicej follows")
+    
 
 # all database related tests, done
 
