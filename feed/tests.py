@@ -140,8 +140,8 @@ class PopulatedViewTests(TestCase):
     def test_show_post(self):
         response = self.client.get(reverse('feed:show_post', kwargs={'post_id':1}))
         response_body = response.content.decode()
-        self.assertEqual(response.status_code, 200, "Show post page nt returned with status code 200.")
-        self.assertTrue('<div id="description">test</div>' in response_body, "could not find post title 'test'")
+        self.assertEqual(response.status_code, 200, "Show post page not returned with status code 200.")
+        self.assertTrue('<div id="title">test</div>' in response_body, "could not find post title 'test'")
         self.assertTrue("""<img src="/static/images/hearted.png" alt="heart" />""" in response_body, "heart should be filled in - alicej has liked post 1")
 
         self.assertEqual(len(response.context['comments']), 2, "should be two comments.")
@@ -251,8 +251,33 @@ class PopulatedViewTests(TestCase):
         self.assertTrue(follows.get(following=UserProfile.objects.get(username="charlied")), "charlied should be in users that alicej follows")
 
     def test_search_title_view(self):
-        pass
-    # form test search and add attempt post
+        response = self.client.get(reverse('feed:search_title'), {'Search':'test'})
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "search page not returned with status 200")
+        self.assertEqual(Helper.num_posts_on_page(response, name='matching_posts'),2, "should be two posts matching 'test'")
+
+    def test_reset_password_view(self):
+        response = self.client.get(reverse('reset_password'))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "reset password not returned with status code 200")
+        self.assertTrue("""<div id="help_text">Enter your email address below to continue.</div>""" in response_body, "couldn't find enter email address message on page")
+        self.assertTrue("""<input type="submit" value="Send email">""" in response_body, "couldn't find send email button in page")
+
+    def test_change_password_view(self):
+        response = self.client.get(reverse('password_change'))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "change password page not returned with status code")
+        self.assertTrue("""<div class="title">Change password</div>""" in response_body, "couldn't find change password title, also couldn't tell you why I decided to test this")
+        self.assertTrue("""<input type="password" name="old_password" autofocus required id="id_old_password">""" in response_body, "couldn't find input box for old password")
+        self.assertTrue("""<input type="password" name="new_password1" required id="id_new_password1">""" in response_body, "couldn't find input box for new password")
+        self.assertTrue("""<input type="password" name="new_password2" required id="id_new_password2">""" in response_body, "couldn't find confirm password input box")
+        self.assertTrue("""<input type="submit" value="Change password">""" in response_body, "couldn't find submit button")
+
+    # form test add attempt post
+    # test add post view for enctype
 
 
 # all database related tests, done
@@ -596,6 +621,13 @@ class FormTests(TestCase):
 
     def test_folder_form_functionality(self): # unimplemented
         pass
+
+    def test_password_reset_form(self):
+        pass
+
+    def test_change_password_form(self):
+        pass
+
 # helper functions, for helping
 class Helper:
     # yes I know there's a population script, but it hadn't been written yet
