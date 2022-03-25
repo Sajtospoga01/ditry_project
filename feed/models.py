@@ -63,7 +63,7 @@ class Post(models.Model):
     creator = models.ForeignKey(
         UserProfile, on_delete=CASCADE, related_name='%(class)s_requests_created')
     title = models.CharField(max_length=128, default="")
-    description = models.CharField(max_length=128,default="")
+    #description = models.CharField(max_length=128,default="")
     likes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     # picture = models.ResizedImageField(ull=False,size=[365, 600],crop = ['middle'] , upload_to='backend', validators=[
     #                            validate_image_file_extension])
