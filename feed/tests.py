@@ -72,9 +72,11 @@ class BlankViewTests(TestCase):
         self.assertTrue('No diy posts yet.' in response_body, "'No diy posts yet.' message not displayed.")
         self.assertTrue(not response.context['posts'], "Non-empty posts context.")
     
-    def test_trending_view(self):
-        response = self.client.get(reverse('feed:trending'))
-        self.assertEqual(response.status_code, 302, "Trending category page not returned with status code 302.")
+    def test_not_signed_in_views(self):
+        for view in []:
+            response = self.client.get(reverse(view))
+            self.assertEqual(response.status_code, 302, f"{view} page not returned with status code 302.")
+            self.assertEqual(response.url, reverse('feed:login'), f"{view} doesn't redirect to login when not logged in")
 
     def test_trending_view_signed_in(self):
         self.client.login(username='alicej', password='testpassword')
@@ -95,6 +97,7 @@ class BlankViewTests(TestCase):
 class PopulatedViewTests(TestCase):
     def setUp(self):
         Helper.create_model_setup()
+        # login because nothing interesting happens if you're not
         self.client.login(username='alicej', password='testpassword')
 
     def test_home_view_with_posts(self):
@@ -142,7 +145,7 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("""<img src="/static/images/hearted.png" alt="heart" />""" in response_body, "heart should be filled in - alicej has liked post 1")
 
         self.assertEqual(len(response.context['comments']), 2, "should be two comments.")
-        # could probably dod more here
+        # could probably add more here
 
     def test_like_post(self):
         response = self.client.get(reverse('feed:like_post', kwargs={'post_id':2}))
@@ -181,6 +184,50 @@ class PopulatedViewTests(TestCase):
         self.assertEqual(response.status_code, 302, "Should be redirected when commenting on post.")
         self.assertEqual(response.url, reverse('feed:show_post', kwargs={'post_id':1}), "Should be redirected to show post 1.")
         # see forms tests for actual comment
+    
+    def test_add_post_view(self):
+        # see forms tests for making post
+        response = self.client.get(reverse('feed:add_post'))
+        response_body = response.content.decode()
+        self.assertEqual(response.status_code, 200, "add page not returned with status code 200")
+        self.assertTrue(response.context.get('form')!=None, "add_post should pass back form")
+        self.assertTrue(response.context.get('category_form')!=None, "add post should pass back category_form")
+
+        self.assertTrue("""<input type="file" name="picture" accept="image/*" id="id_picture">""" in response_body, "picture field nnot displayed")
+        self.assertTrue("""<select name="category" required id="id_category">""" in response_body, "category select box not displayed")
+        self.assertTrue("""<input type="text" name="title" maxlength="24" required id="id_title">""" in response_body, "title box not displayed")
+        self.assertTrue("""<input type="text" name="comment" required id="id_comment">""" in response_body, "comment box not displayed")
+        self.assertTrue("""<input type="submit" name="submit" value="Post">""" in response_body, "post button not displayed")
+    
+    def test_my_account(self):
+        response = self.client.get(reverse('feed:account', kwargs={'username':'alicej'}))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "account page not returned with status code 200")
+        self.assertEqual(response.context['user'].username, "alicej", "show_user should be alicej")
+        self.assertEqual(Helper.num_posts_on_page(response), 1, "alicej should have 1 post")
+
+        self.assertTrue("""<a href="" id="name">alicej</a>""" in response_body, "doesn't display username")
+        self.assertTrue("""<a class="button" href="/feed/alicej/update-profile/">Edit profile</a>""" in response_body, "doesn't display edit profile button")
+        self.assertTrue("""No folders found.""" in response_body, "doesn't display no folders message")
+        self.assertTrue("test attempt" in response_body, "couldn't find post 'test attempt'")
+
+
+    def test_other_account(self):
+        response = self.client.get(reverse('feed:account', kwargs={'username':'bobs'}))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "account page not returned with status code 200")
+        self.assertEqual(response.status_code, 200, "account page not returned with status code 200")
+        self.assertEqual(response.context['show_user'].username, "bobs", "show_user should be bobs")
+        self.assertEquals(response.context['user'].username, "alicej", "should have alicej as current user")
+        self.assertEqual(Helper.num_posts_on_page(response), 1, "bobs should have 1 post")
+
+        self.assertTrue("""<a href="" id="name">bobs</a>""" in response_body, "doesn't display username")
+        self.assertFalse("""<a class="button" href="/feed/bobs/update-profile/">Edit profile</a>""" in response_body, "displays edit profile button")
+        self.assertTrue("""<a class="button" href="/feed/follow-user/bobs/">Follow</a>""" in response_body, "doesn't display follow button")
+        self.assertTrue("""<a href="/feed/bobs/folders/1/"><span>test folder</span></a>""" in response_body, "doesnt display folder")
+        self.assertTrue("test" in response_body, "couldn't find post 'test'")
 
 # all database related tests, done
 
