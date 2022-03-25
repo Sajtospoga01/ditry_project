@@ -22,6 +22,7 @@ def home(request):
 
 # helper function to turn posts into a list of lists for easy grid view
 def tableify(posts):
+    if not posts: return posts
     table = list()
     index = 0
     row = -1
@@ -535,7 +536,7 @@ def userFollowers(request):
     context['followers'] = get_followers
     return render(request,'feed/userFollower.html',context)
 
-@login_required(login_url='feed:login')
+@login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)

@@ -1,11 +1,12 @@
 import os
-import warnings
 import importlib
+import tempfile
 from django.urls import reverse
 from django.test import TestCase
 from django.conf import settings
 
 from feed.models import *
+from feed.forms import *
 from django.contrib.auth.models import User
 from django.core.files.images import ImageFile
 
@@ -31,6 +32,11 @@ class BlankViewTests(TestCase):
         self.views_module_listing = dir(self.views_module)
 
         self.project_urls_module = importlib.import_module('ditry_project.urls')
+        user2 = UserProfile.objects.create_user(username = "alicej", email = "alice@gmail.com", password = "testpassword")
+        user2.first_name = "alice"
+        user2.last_name = "jones"
+        user2.bio = "a bio"
+        
 
     def test_home_view_exists(self):
         name_exists = 'home' in self.views_module_listing
@@ -56,32 +62,40 @@ class BlankViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200, f"Home page not returned with status code 200.")
         self.assertTrue('Feed empty.' in response.content.decode(), f"'Feed empty.' message not displayed.")
-        self.assertEqual(len(response.context['posts']),0, f"Non-empty posts context.")
+        self.assertTrue(not response.context['posts'], f"Non-empty posts context.")
     
     def test_category_view(self):
         self.client.login(username='alicej', password='testpassword')
         response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'diy'}))
-        print("RESPONSE: ", response)
-        self.assertEqual(response.status_code, 200, "Craft category page not returned with status code 200.")
-        self.assertTrue('No Craft posts yet.' in response.content.decode(), "'No posts in this category.' message not displayed.")
-        self.assertEqual(len(response.context['posts']), 0, "Non-empty posts context.")
+        response_body = response.content.decode()
+
+        self.assertTrue('No diy posts yet.' in response_body, "'No diy posts yet.' message not displayed.")
+        self.assertTrue(not response.context['posts'], "Non-empty posts context.")
     
     def test_trending_view(self):
         response = self.client.get(reverse('feed:trending'))
-
         self.assertEqual(response.status_code, 302, "Trending category page not returned with status code 302.")
 
     def test_trending_view_signed_in(self):
         self.client.login(username='alicej', password='testpassword')
         response = self.client.get(reverse('feed:trending'))
+        response_body = response.content.decode()
 
-        self.assertEqual(response.status_code, 200, "Trending category page not returned with status code 200.")
-        self.assertTrue('No posts in this category.' in response.content.decode(), "'No posts in this category.' message not displayed.")
-        self.assertEqual(len(response.context['posts']), 0, "Non-empty posts context.")
+        self.assertTrue('No Trending posts yet.' in response_body, "'No Trending posts yet.' message not displayed.")
+        self.assertTrue(not response.context['posts'], "Non-empty posts context.")
+    
+    def test_logout(self):
+        self.client.login(username='alicej', password='testpassword')
+
+        response = self.client.get(reverse('feed:logout'))
+        self.assertEqual(response.status_code, 302, "Should be redirected when logging out.")
+        self.assertEqual(response.url, reverse('feed:home'), "Should be redirected to home page.")
+        self.assertTrue('_auth_user_id' not in self.client.session, "Not properly logged out.")
 
 class PopulatedViewTests(TestCase):
     def setUp(self):
         Helper.create_model_setup()
+        self.client.login(username='alicej', password='testpassword')
 
     def test_home_view_with_posts(self):
         response = self.client.get(reverse('feed:home'))
@@ -94,12 +108,13 @@ class PopulatedViewTests(TestCase):
         Categorises.objects.create(post = post, category = Category.objects.get(name = "food")).save()
 
         response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'diy'}))
-        self.assertTrue("diy" in response.content.decode())
-        self.assertEqual(len(response.context['posts']), 2, "Wrong number of posts passed in response.")
+        response_body = response.content.decode()
+        self.assertTrue("diy" in response_body)
+        self.assertEqual(Helper.num_posts_on_page(response), 2, "Wrong number of posts passed in response.")
 
         response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'food'}))
         self.assertTrue("food" in response.content.decode())
-        self.assertEqual(len(response.context['posts'], 1, "Wrong number of posts passed in response."))
+        self.assertEqual(Helper.num_posts_on_page(response), 1, "Wrong number of posts passed in response.")
 
 # all database related tests, done
 
@@ -231,7 +246,7 @@ class QueryTests(TestCase):
         self.assertTrue(folders.get(id = 1) != None, f"Expected query to return folder 1.")
 
 
-# tests for the population script, done except one
+# tests for the population script, done
 class PopulationScriptTests(TestCase):
     def setUp(self):
         try:
@@ -326,7 +341,7 @@ class PopulationScriptTests(TestCase):
         self.assertEqual(len(folder_content), 1, f"Expected folder to contain 1 post, conttains {len(folder_content)}.")
         self.assertEqual(folder_content[0].post.id, 1, f"Expected folder to contain post 1, contains post {folder_content[0].post}.")
 
-# admin interface tests
+# admin interface tests, done
 class AdminTests(TestCase):
 
     def setUp(self):
@@ -418,24 +433,29 @@ class FormTests(TestCase):
             {'username': 'charlied', 'first_name': 'charlie', 'last_name': 'doe', 'email': 'charlie@gmail.com', 'password1': 'testpassword', 'password2': 'testpassword'})
         users = UserProfile.objects.filter(username = 'charlied')
         self.assertEqual(len(users), 1, "Adding a user doesn't add it to the users.")
-    
-    def test_userprofile_form(self):
-        pass
+        self.assertTrue(self.client.login(username='charlied', password='testpassword'), "Could not login with new user.")
+
     def test_login_form(self):
-        pass
-    def test_post_form_functionality(self): # probably should be picture not image
-        self.client.post(reverse('feed:add_post'), 
-            {'title': 'test post', 'picture': 'sample/sample_3.jpg'})
-        posts = Post.objects.filter(title = 'test post')
-        self.assertEqual(len(posts), 1, "The post form doesn't work.")
+        self.client.post(reverse('feed:login'),
+            {'username': 'alicej', 'password': 'testpassword'})
+        response = self.client.get(reverse('feed:home'))
+        response_body = response.content.decode()
+        self.assertTrue("Hi, alicej" in response_body, "Can't see add post button on home page - now logged in.")
+
+    # def test_post_form_functionality(self):
+    #     self.client.login(username="alicej", password="testpassword")
+    #     self.client.post(reverse('feed:add_post', {'title':'test post', 'picture': tempfile.NamedTemporaryFile(suffix=".jpg").name, 'category': 'craft'}))
+    #     posts = Post.objects.filter(title = 'test post')
+    #     self.assertEqual(len(posts), 1, "The post form doesn't work.")
 
     def test_comment_form_functionality(self):
+        self.client.login(username="alicej", password="testpassword")
         self.client.post(reverse('feed:comment_on_post', kwargs={'post_id':1}), 
-            {'username':'alicej', 'content':'whoop another test'})
+            {'comment':'whoop another test'})
         comments = Comment.objects.filter(comment = 'whoop another test')
         self.assertEqual(len(comments), 1, "The comment form doesn't work.")
 
-    def test_folder_form_functionality(self):
+    def test_folder_form_functionality(self): # unimplemented
         pass
 # helper functions, for helping
 class Helper:
@@ -491,8 +511,8 @@ class Helper:
         In_folder.objects.create(folder = folder, post = post).save()
     
     # gets number of posts on page when arranged in grid view
-    def num_posts_on_page(response):
-        return sum([len(row) for row in response.context['posts']])
+    def num_posts_on_page(response, name='posts'):
+        return sum([len(row) for row in response.context[name]])
 
     def get_template(path_to_template):
         f = open(path_to_template, 'r')
