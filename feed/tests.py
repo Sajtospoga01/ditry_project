@@ -115,6 +115,72 @@ class PopulatedViewTests(TestCase):
         response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'food'}))
         self.assertTrue("food" in response.content.decode())
         self.assertEqual(Helper.num_posts_on_page(response), 1, "Wrong number of posts passed in response.")
+    
+    def test_contact_us_view(self):
+        response = self.client.get(reverse('feed:contact_us'))
+        self.assertEqual(response.status_code, 200, "Contact us page not returned with status code 200")
+        self.assertTrue("""<span style="font-size: 20px; font-weight: 400;">Currently there is no way of contacting us.</span>""" in response.content.decode(), "Didn't find expected content on contact us page.")
+    
+    def test_user_following_view(self):
+        response = self.client.get(reverse('feed:following'))
+        response_body = response.content.decode()
+        self.assertEqual(response.status_code, 200, "User Following page did not return with status code 200.")
+        self.assertTrue(f"""<a href="{reverse('feed:account', kwargs={'username':'bobs'})}">""" in response_body, "User bobs not displayed in alicej's following")
+        self.assertTrue('<div id="tipText"><span>You follow...</span></div>' in response_body, "Could not find 'You follow...' message")
+
+    def test_user_follower_view(self):
+        response = self.client.get(reverse('feed:follower'))
+        response_body = response.content.decode()
+        self.assertEqual(response.status_code, 200, "User follower page did not return with status code 200.")
+        self.assertTrue("You have no followers. Post your content to get noticed!" in response_body, "Could not find no followers message.")
+
+    def test_show_post(self):
+        response = self.client.get(reverse('feed:show_post', kwargs={'post_id':1}))
+        response_body = response.content.decode()
+        self.assertEqual(response.status_code, 200, "Show post page nt returned with status code 200.")
+        self.assertTrue('<div id="description">test</div>' in response_body, "could not find post title 'test'")
+        self.assertTrue("""<img src="/static/images/hearted.png" alt="heart" />""" in response_body, "heart should be filled in - alicej has liked post 1")
+
+        self.assertEqual(len(response.context['comments']), 2, "should be two comments.")
+        # could probably dod more here
+
+    def test_like_post(self):
+        response = self.client.get(reverse('feed:like_post', kwargs={'post_id':2}))
+        self.assertEqual(response.status_code, 302, "Should be redirected when liking post.")
+        self.assertEqual(response.url, reverse('feed:show_post', kwargs={'post_id':2}), "Should be redirected to show post 2.")
+
+        response = self.client.get(reverse('feed:show_post', kwargs={'post_id':2}))
+        response_body = response.content.decode()
+        self.assertTrue("""<img src="/static/images/hearted.png" alt="heart" />""" in response_body, "heart should be filled in - alicej has liked post 2 now")
+        self.assertTrue(response.context['is_liked'], "context should say liked")
+
+        post = Post.objects.get(id=2)
+        self.assertEqual(post.likes, 2, "post 2 should have 2 likes now")
+    
+    def test_unlike_post(self):
+        response = self.client.get(reverse('feed:like_post', kwargs={'post_id':1}))
+
+        self.assertEqual(response.status_code, 302, "Should be redirected when liking post.")
+        self.assertEqual(response.url, reverse('feed:show_post', kwargs={'post_id':1}), "Should be redirected to show post 1.")
+
+        response = self.client.get(reverse('feed:show_post', kwargs={'post_id':1}))
+        response_body = response.content.decode()
+        self.assertTrue("""<img src="/static/images/heart2.png" alt="heart" />""" in response_body, "heart should be empty - alicej unliked post 1")
+        self.assertFalse(response.context['is_liked'], "context should say not liked")
+
+        post = Post.objects.get(id=1)
+        self.assertEqual(post.likes, 1, "post 1 should have 1 likes now")
+
+    def test_save_post(self):
+        #response = self.client.get(reverse('feed:save_post', kwargs={'post_id':1}))
+        #response_body = response.content.decode()
+        pass
+
+    def test_comment_on_post(self):
+        response = self.client.get(reverse('feed:comment_on_post', kwargs={'post_id':1}))
+        self.assertEqual(response.status_code, 302, "Should be redirected when commenting on post.")
+        self.assertEqual(response.url, reverse('feed:show_post', kwargs={'post_id':1}), "Should be redirected to show post 1.")
+        # see forms tests for actual comment
 
 # all database related tests, done
 
@@ -495,7 +561,11 @@ class Helper:
 
         Likes.objects.create(liker = user1, liked_post = post).save()
         Likes.objects.create(liker = user2, liked_post = post).save()
+        post.likes += 2
+        post.save()
         Likes.objects.create(liker = user1, liked_post = attempt_post).save()
+        attempt_post.likes += 1
+        attempt_post.save()
 
         FollowsCategory.objects.create(follower = user1, following = diy).save()
         FollowsCategory.objects.create(follower = user1, following = food).save()
