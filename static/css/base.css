@@ -87,6 +87,19 @@
     text-decoration: none;
 }
 
+#page #topStrip #login_signup .lsText2{
+    width: 129px;
+    height: 20px;
+    font-size: 20px;
+    font-family: 'Passion One', cursive;
+    color: #707070;
+    text-decoration: none;}
+
+#page #topStrip #login_signup .lsText2:hover {
+    color: #4F81FF;
+    text-decoration: none;
+}
+
 #page #topStrip #login_signup .lsText:hover {
     color: #4F81FF;
     text-decoration: none;
