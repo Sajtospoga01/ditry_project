@@ -192,10 +192,10 @@ def show_user(request, username):
         #redirects to personal page
         posts = Queries.get_user_posts(show_user.id)
         followed_categories = Queries.get_category_following(request.user.id)
-
         folders = all_folders(request, show_user)
-        context_dict = {'user':show_user, 'posts':tableify(posts), 'followed_categories':followed_categories, 'folders':folders}
 
+        context_dict = {'user':show_user, 'posts':tableify(posts), 'followed_categories':followed_categories, 'folders':folders}
+        
         return render(request,'feed/personalPage.html', context=context_dict)
 
     else:
@@ -309,20 +309,26 @@ def follow_user(request, username):
 @login_required(login_url='feed:login')
 def add_folder(request,username):
     form = FolderForm()
+    add_folder_user = UserProfile.objects.get(username=username)
+    current_user = UserProfile.objects.get(username=request.user.username)
+    # can only add folder for own account
+    if current_user == add_folder_user:
+        # tests if HTTP POST
+        if request.method == 'POST':
+            form = FolderForm(request.POST)
 
-    # tests if HTTP POST
-    if request.method == 'POST':
-        form = FolderForm(request.POST)
+            if form.is_valid():
+                # Saves new folder to the database.
+                form.save()
+                return redirect(reverse('feed:all_folders',kwargs={'username':username}))
 
-        if form.is_valid():
-            # Saves new folder to the database.
-            form.save()
-            return redirect(reverse('feed:all_folders',kwargs={'username':username.user.username}))
-        
-        else:
-            print(form.errors)
+            else:
+                print(form.errors)
 
-    return render(request, 'feed/add_folder.html', context={'form':form })
+        return render(request, 'feed/add_folder.html', context={'form':form })
+
+    else:
+        return redirect(reverse('feed:account', kwargs={'username':username}))
 
 
 @login_required(login_url='feed:login')
