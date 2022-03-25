@@ -212,7 +212,6 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("""No folders found.""" in response_body, "doesn't display no folders message")
         self.assertTrue("test attempt" in response_body, "couldn't find post 'test attempt'")
 
-
     def test_other_account_view(self):
         response = self.client.get(reverse('feed:account', kwargs={'username':'bobs'}))
         response_body = response.content.decode()
@@ -250,7 +249,11 @@ class PopulatedViewTests(TestCase):
         follows = FollowsUser.objects.filter(follower=UserProfile.objects.get(username="alicej"))
         self.assertEqual(len(follows), 2, "alicej should now follow 2 users")
         self.assertTrue(follows.get(following=UserProfile.objects.get(username="charlied")), "charlied should be in users that alicej follows")
-    
+
+    def test_search_title_view(self):
+        pass
+    # form test search and add attempt post
+
 
 # all database related tests, done
 
