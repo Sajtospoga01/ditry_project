@@ -136,6 +136,16 @@
     border: 20px solid rgb(255, 255, 255);
 }
 
+#page #detail #frame #title {
+    word-wrap: break-word;
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+	width: 400 px;
+    color: black;
+    border: 20px solid rgb(255, 255, 255);
+}
+
 #page #detail #frame #comments #sumNum {
     word-wrap: break-word;
     border: 20px solid rgb(255, 255, 255);
