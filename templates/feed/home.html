@@ -9,10 +9,17 @@
 
 {% block body_block %}
 
+<script>
+    user_id = {{user.id}};
+    var urlConstruct = "{% url 'feed:get_likes' %}";
+    
+</script>
 <div id="postPics">
 <table>
 
 {% if posts %}
+{% csrf_token %}
+    
     {% for post_row in posts %}
     <tr>
         {% for post in post_row %}

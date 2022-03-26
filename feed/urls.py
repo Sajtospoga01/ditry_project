@@ -14,7 +14,7 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('following/',views.userFollowing,name='following'),
     path('followers/',views.userFollowers,name='follower'),
-
+    path('get-likes/',views.get_home_likes,name = 'get_likes'),
     path('show-category/<str:name_category>/', views.show_category, name='show_category'),
     
     path('show-post/<int:post_id>/', views.show_post, name='show_post'),
