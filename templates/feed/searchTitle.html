@@ -7,13 +7,20 @@
 {% endblock %}
 
 {% block body_block %}
+
 {% if user.is_authenticated %}
+<script>
+    user_id = {{user.id}};
+    var urlConstruct = "{% url 'feed:get_likes' %}";
+    
+</script>
 <div id="frame">
     <div id="tipText"><span>All results are shown below.</span></div>
     <div id="postPics">
         <table>
         
         {% if matching_posts %}
+        {% csrf_token %}
             {% for post_row in matching_posts %}
             <tr>
                 {% for post in post_row %}
