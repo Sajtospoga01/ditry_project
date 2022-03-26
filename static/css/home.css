@@ -88,7 +88,6 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-
 }
 
 #page #postPics .picLine .pic .image {
@@ -96,7 +95,6 @@
     position: absolute;
     top: -50px;
 }
-
 
 #page #postPics .picLine .pic .allPicOpera {
     height: 50px;
@@ -115,6 +113,14 @@
 #page #postPics .picLine .pic .allPicOpera .followPic {
     width: 30px;
     transform: translate(16px, -10px);
+}
+
+.authPic {
+    transform: translate(5px, 2px);
+    object-fit: cover;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 #page #postPics .picLine .pic .allPicOpera .authorName {

@@ -2,7 +2,7 @@
 from multiprocessing import context
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -569,6 +569,18 @@ def visitor_cookie_handler(request):
 
     # Update/ set the visits cookie
     request.session['visits'] = visits
+
+def get_home_likes(request):
+    
+    if(request.is_ajax()):
+        user = request.POST.get('user')#
+        likes = Queries.get_liked_posts(user)
+        data = list()
+        if likes != None:
+            for like in likes:
+                data.append(like.id)
+        return JsonResponse({'data':data})
+    return JsonResponse({})
 
 
 

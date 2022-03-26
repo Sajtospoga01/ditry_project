@@ -62,8 +62,8 @@ class Post(models.Model):
     id = models.AutoField(primary_key=True)
     creator = models.ForeignKey(
         UserProfile, on_delete=CASCADE, related_name='%(class)s_requests_created')
-    title = models.CharField(max_length=128, default="")
-    #description = models.CharField(max_length=128,default="")
+    title = models.CharField(max_length=128, default="",validators=[MinLengthValidator(1)])
+    description = models.CharField(max_length=256,default="")
     likes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     # picture = models.ResizedImageField(ull=False,size=[365, 600],crop = ['middle'] , upload_to='backend', validators=[
     #                            validate_image_file_extension])

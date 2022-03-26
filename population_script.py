@@ -23,19 +23,22 @@ def populate():
          "title":"title1",
          "likes":23,
          "picture": "sample_1.jpg",
-         "creator":1
+         "creator":1,
+         "description":"populate 1"
         },
         {"id":2,
          "title":"title2",
          "likes":54,
          "picture": "sample_2.jpg",
-         "creator":2
+         "creator":2,
+         "description":"populate 2"
         },
         {"id":3,
          "title":"title3",
          "likes":92,
          "picture": "sample_3.jpg",
-         "creator":1
+         "creator":1,
+         "description":"populate 3"
         }        
     ]
     test_profile = [
@@ -127,7 +130,7 @@ def populate():
     user = get_user(id)
     for post in post_populate:
             
-            p = add_post(post["id"],post["title"],post["likes"],post["picture"],get_user(post["creator"]))
+            p = add_post(post["id"],post["title"],post["likes"],post["picture"],get_user(post["creator"]),post["description"])
            
 
     for cat in categories_populate:
@@ -160,11 +163,11 @@ def add_category(name):
     c.save()
     return c
 
-def add_post(id,title,likes,picture,creator):
+def add_post(id,title,likes,picture,creator,description):
     def_post = Post.objects.filter(id = id)
     if(def_post.count()==0):
         im = ImageFile(Image.open("sample_images/"+picture))
-        Post.objects.get_or_create(id = id,creator = creator,title = title,likes = likes)
+        Post.objects.get_or_create(id = id,creator = creator,title = title,likes = likes,description = description)
         c = Post.objects.get(id = id)
         
         c.picture.save(picture, ImageFile(open("sample_images/"+picture,"rb")))

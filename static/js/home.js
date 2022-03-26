@@ -1,15 +1,14 @@
 $(document).ready(function() {
-
-    // note - need to find from model whether heart button is liked by current user then can call like functions together
-
+    getLikes()
+        // note - need to find from model whether heart button is liked by current user then can call like functions together
 
 
     // toggles colour of heart button is liked/hearted
-
     $('.heartButton').click(function() {
         var id = event.target.id;
         var post = document.getElementById(id);
         var src = post.getAttribute('src');
+
 
         var unliked = "/static/images/heart2.png";
         var liked = "/static/images/hearted.png";
@@ -23,7 +22,6 @@ $(document).ready(function() {
         }
     });
 
-
     // increase like of post 
     $('.heartButton').click(function() {
         var id = event.target.id;
@@ -35,6 +33,7 @@ $(document).ready(function() {
                 post.html(data);
             }
         )
+
     });
 
 
@@ -64,5 +63,44 @@ function adjustColumns() {
         //alert ('4 columns needed');
     } else if (windowWidth < pictureWidth * 5) {
         //alert ('5 columns needed');
+    }
+}
+const csrf = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+const getLikes = function() {
+    $.ajax({
+        type: 'POST',
+        url: urlConstruct,
+        data: {
+            'csrfmiddlewaretoken': csrf,
+            'user': user_id,
+
+        },
+        success: (res) => {
+            setLikes(res)
+        },
+        error: (err) => {
+            console.log(err)
+        }
+
+
+    })
+}
+
+
+const setLikes = function(result) {
+    console.log("setting likes")
+
+    //var unliked = "/static/images/heart2.png";
+    var liked = "/static/images/hearted.png"
+    console.log(result)
+    for (let i = 0; i < result["data"].length; i++) {
+        console.log(i)
+        var post = document.getElementById(result["data"][i]);
+        if (post != null) {
+            post.setAttribute('src', liked);
+        }
+
+
+
     }
 }
