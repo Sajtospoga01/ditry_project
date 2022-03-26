@@ -1,5 +1,6 @@
 import os
 import importlib
+import re
 import tempfile
 from django.urls import reverse
 from django.test import TestCase
@@ -141,11 +142,15 @@ class PopulatedViewTests(TestCase):
         response = self.client.get(reverse('feed:show_post', kwargs={'post_id':1}))
         response_body = response.content.decode()
         self.assertEqual(response.status_code, 200, "Show post page not returned with status code 200.")
+
         self.assertTrue('<div id="title">test</div>' in response_body, "could not find post title 'test'")
         self.assertTrue("""<img src="/static/images/hearted.png" alt="heart" />""" in response_body, "heart should be filled in - alicej has liked post 1")
+        self.assertTrue("""<a href="/feed/account/bobs/" align = "center" id="name">bobs</a>""" in response_body, "couldn't find link to bobs' profile")
+        self.assertTrue("""<a class="button" href="/feed/follow-user/bobs/">Follow</a>""" in response_body, "couldn't find follow button")
+        self.assertTrue("""<a class="button" href="/feed/add-post/1/">Attempt</a>""" in response_body, "couldn't find attempt button")
+        self.assertTrue("""<input type="text" name="comment" maxlength="128" required id="id_comment">""" in response_body, "couldn't find comment box")
 
         self.assertEqual(len(response.context['comments']), 2, "should be two comments.")
-        # could probably add more here
 
     def test_like_post(self):
         response = self.client.get(reverse('feed:like_post', kwargs={'post_id':2}))
@@ -174,11 +179,6 @@ class PopulatedViewTests(TestCase):
         post = Post.objects.get(id=1)
         self.assertEqual(post.likes, 1, "post 1 should have 1 likes now")
 
-    def test_save_post(self):
-        #response = self.client.get(reverse('feed:save_post', kwargs={'post_id':1}))
-        #response_body = response.content.decode()
-        pass
-
     def test_comment_on_post(self):
         response = self.client.get(reverse('feed:comment_on_post', kwargs={'post_id':1}))
         self.assertEqual(response.status_code, 302, "Should be redirected when commenting on post.")
@@ -193,12 +193,13 @@ class PopulatedViewTests(TestCase):
         self.assertTrue(response.context.get('form')!=None, "add_post should pass back form")
         self.assertTrue(response.context.get('category_form')!=None, "add post should pass back category_form")
 
-        self.assertTrue("""<input type="file" name="picture" accept="image/*" id="id_picture">""" in response_body, "picture field nnot displayed")
+        self.assertTrue("""<form method="post" enctype="multipart/form-data" action="/feed/add-post/">""")
+        self.assertTrue("""<input type="file" name="picture" accept="image/*" id="id_picture">""" in response_body, "picture field ot displayed")
         self.assertTrue("""<select name="category" required id="id_category">""" in response_body, "category select box not displayed")
         self.assertTrue("""<input type="text" name="title" maxlength="24" required id="id_title">""" in response_body, "title box not displayed")
         self.assertTrue("""<input type="text" name="comment" required id="id_comment">""" in response_body, "comment box not displayed")
         self.assertTrue("""<input type="submit" name="submit" value="Post">""" in response_body, "post button not displayed")
-    
+
     def test_my_account_view(self):
         response = self.client.get(reverse('feed:account', kwargs={'username':'alicej'}))
         response_body = response.content.decode()
@@ -275,10 +276,6 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("""<input type="password" name="new_password1" required id="id_new_password1">""" in response_body, "couldn't find input box for new password")
         self.assertTrue("""<input type="password" name="new_password2" required id="id_new_password2">""" in response_body, "couldn't find confirm password input box")
         self.assertTrue("""<input type="submit" value="Change password">""" in response_body, "couldn't find submit button")
-
-    # form test add attempt post
-    # test add post view for enctype
-
 
 # all database related tests, done
 
@@ -408,7 +405,6 @@ class QueryTests(TestCase):
         folders = Queries.get_user_folders(1)
         self.assertEqual(len(folders), 1, f"Expected query to return only 1 folder.")
         self.assertTrue(folders.get(id = 1) != None, f"Expected query to return folder 1.")
-
 
 # tests for the population script, done
 class PopulationScriptTests(TestCase):
@@ -622,11 +618,16 @@ class FormTests(TestCase):
     def test_folder_form_functionality(self): # unimplemented
         pass
 
-    def test_password_reset_form(self):
-        pass
-
     def test_change_password_form(self):
-        pass
+        self.client.login(username="alicej", password="testpassword")
+        self.client.post(reverse('password_change'), 
+        {'old_password':'testpassword', 'new_password1':'changedpassword', 'new_password2':'changedpassword'})
+        self.client.get(reverse('feed:logout'))
+        self.client.login(username="alicej", password="changedpassword")
+        
+        response = self.client.get(reverse('feed:home'))
+        response_body = response.content.decode()
+        self.assertTrue("Hi, alicej" in response_body, "Can't see add post button on home page - now logged in.")
 
 # helper functions, for helping
 class Helper:
