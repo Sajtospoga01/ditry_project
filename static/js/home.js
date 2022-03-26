@@ -4,7 +4,6 @@ $(document).ready(function() {
 
 
     // toggles colour of heart button is liked/hearted
-    alertId();
     $('.heartButton').click(function() {
         var id = event.target.id;
         var post = document.getElementById(id);
@@ -22,7 +21,6 @@ $(document).ready(function() {
             alert("unliked");
         }
     });
-
 
     // increase like of post 
     $('.heartButton').click(function() {
@@ -49,12 +47,6 @@ $(document).ready(function() {
 
 
 })
-
-
-function alertId() {
-    //alert(user_id)
-}
-
 
 // currently just prints out alert of estimated no. columns
 function adjustColumns() {
@@ -94,6 +86,7 @@ const getLikes = function() {
     })
 }
 
+
 const setLikes = function(result) {
     console.log("setting likes")
 
@@ -103,8 +96,10 @@ const setLikes = function(result) {
     for (let i = 0; i < result["data"].length; i++) {
         console.log(i)
         var post = document.getElementById(result["data"][i]);
+        if (post != null) {
+            post.setAttribute('src', liked);
+        }
 
-        post.setAttribute('src', liked);
 
 
     }

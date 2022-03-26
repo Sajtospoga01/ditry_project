@@ -6,8 +6,14 @@
 {% endblock %}
 
 {% block body_block %}
+<script>
+    user_id = {{user.id}};
+    var urlConstruct = "{% url 'feed:get_likes' %}";
+    
+</script>
 <div id="postPics">
     {% if posts %}
+    {% csrf_token %}
         <table>
         {% for post_row in posts %}
             <tr>
