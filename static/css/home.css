@@ -75,8 +75,7 @@
 
 #page #postPics .picLine {
     width: 365px;
-    border: 30px solid #ffffff;
-    border-right: 0px;
+    border: 15px solid #ffffff;
     justify-content: flex-start;
     align-items: center;
     display: flex;
@@ -99,12 +98,12 @@
     width: 365px;
     height: 600px;
     background-color: #d8d8d8;
-    border-bottom: 30px solid #ffffff;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     position: relative;
     overflow: hidden;
+    border-radius: 30px;
 }
 
 #page #postPics .picLine .pic .image {
