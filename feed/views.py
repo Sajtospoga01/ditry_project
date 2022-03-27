@@ -325,9 +325,9 @@ def add_folder(request,username):
 
             if form.is_valid():
                 # Saves new folder to the database.
-                form.save()
-                return redirect(reverse('feed:all_folders',kwargs={'username':username}))
-
+                folder = form.save(commit=False)
+                folder.user = current_user
+                folder.save()
             else:
                 print(form.errors)
 

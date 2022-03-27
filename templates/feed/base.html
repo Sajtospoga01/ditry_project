@@ -46,6 +46,10 @@
                         <div class="rowline" id="cat" style="width:150px">
                             <a href="{% url 'feed:add_post' %}" class="otherButton" style = "background-color: #e23c3c; border-color: #e23c3c;">Add post</a>
                         </div>
+                        <div class="rowline" id="cat" style="width:150px">
+                            {% block addfolder_block %}
+                            {% endblock %}
+                        </div>
                         {% endif %}
                         <div id="login_signup">
                             <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -77,7 +77,7 @@ class UserCommentForm(forms.ModelForm):
         fields = {'comment'}
 
 class FolderForm(forms.ModelForm):
-    foldername = forms.CharField()
+    name = forms.CharField()
 
     class Meta:
         model = Folder

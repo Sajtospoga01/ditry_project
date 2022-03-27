@@ -5,10 +5,14 @@
     Your page
 {% endblock %}
 
+{% block addfolder_block %}
+    <a href="{% url 'feed:add_folder' user.username %}" class="otherButton" style = "background-color: #e23c3c; border-color: #e23c3c;">Add folder</a>
+{% endblock %}
 {% block body_block %}
 <link rel="stylesheet" href="/static/css/personalPage.css" type="text/css">
 
 <div id="frame">
+    
     {% if user.is_authenticated %}
         <div id="author">
             <a href="">
@@ -43,9 +47,6 @@
             </div>
             <div id="postButton">
                 <a href="{% url 'feed:follower' %}">Followers</a>
-            </div>
-            <div id="postButton">
-                <a href="{% url 'feed:add_folder' user.username %}">Add Folder</a>
             </div>
         </div>
 
