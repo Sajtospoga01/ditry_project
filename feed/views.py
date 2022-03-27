@@ -74,7 +74,7 @@ def follow_category(request, category_name_slug):
 def show_my_attempts(request,username):
     user = UserProfile.objects.get(username=username)
     my_attempts = Queries.get_user_attempts(user.id)
-    return render(request, 'feed/attempts.html', {'posts': tableify(my_attempts), 'user': user})
+    return render(request, 'feed/attempts.html', {'posts': my_attempts, 'user': user})
 
 
 @login_required
