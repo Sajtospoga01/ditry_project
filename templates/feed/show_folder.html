@@ -9,18 +9,18 @@
     {% if post in posts %}
         <td>
             <div class="picLine">
-                <div class="pic" style="height: 600px;">
-                    <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                <div class="picBackground">
+                    <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage"
                         src="{{ post.picture.url }}" alt="Image of {{ post.title }}">
                     <div class="allPicOpera">
                         {% if post.creator.UserProfile.profile_picture %}
-                        <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                        <a href=""><img class = "authPic"
                                 src="{{ post.creator.profile_picture.url }}" alt="profile picture" />
                                 <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                                     alt="followPic" /></div>
                             </a>			
                         {% else %}
-                            <a href=""><img width="45px"; style="transform: translate(5px,15px);"
+                            <a href=""><img class = "authPic"
                                 src="{{ MEDIA_URL }}profile.png" alt="profile picture1" />
                                     <div class="followPic"><img src="{% static 'images/followPic.png' %}"
                                         alt="followPic" /></div>

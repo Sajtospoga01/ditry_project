@@ -37,9 +37,9 @@
             <div id="author">
                 <a href="{% url 'feed:account' post.creator.username %}">
                     {% if post.creator.profile_picture %}
-                        <img id="authorProfile" src="{{post.creator.profile_picture.url}}" alt="authorProfile" style = "object-fit: cover;width:60px; height:60px;border-radius: 50%;"/>
+                        <img class="authorPic" src="{{post.creator.profile_picture.url}}" alt="authorProfile" />
                     {% else %}
-                        <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" style = "object-fit: cover;width:60px; height:60px;border-radius: 50%;"/>
+                        <img class="authorPic" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
                     {%endif%}
                     
                     

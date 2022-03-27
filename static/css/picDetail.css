@@ -77,6 +77,13 @@
     border: 20px solid rgb(255, 255, 255);
 }
 
+#page #detail #frame #authorCom #author a .authorPic {
+    object-fit: cover;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
 #page #detail #frame #authorCom #author #authorDetail {
     border: 20px solid rgb(255, 255, 255);
     width: 240px;
@@ -141,7 +148,7 @@
     font-size: 20px;
     font-weight: 500;
     text-decoration: none;
-	width: 400 px;
+    width: 400 px;
     color: black;
     border: 20px solid rgb(255, 255, 255);
 }

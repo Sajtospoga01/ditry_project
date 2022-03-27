@@ -1,0 +1,13 @@
+.block {
+    height: 500px;
+}
+
+.block .aboutText {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.block .helpText {
+    font-size: 30px;
+    font-weight: 900;
+}

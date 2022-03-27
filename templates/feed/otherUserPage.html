@@ -13,9 +13,9 @@
         <div id="author">
             <a href="">
                 {% if show_user.profile_picture %}
-                    <img id="authorProfile" src="{{show_user.profile_picture.url}}" alt="authorProfile" style = "object-fit: cover;width:100px; height:100px;border-radius: 50%;"/>
+                    <img class="authorPic" src="{{show_user.profile_picture.url}}" alt="authorProfile"/>
                 {% else %}
-                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" style = "object-fit: cover;width:100px; height:100px;border-radius: 50%;"/>
+                    <img class="authorPic" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" />
                 {%endif%}
             </a>
             <div id="authorDetail">
@@ -44,7 +44,7 @@
                         <div class="folderFrame">
                             <span class="foldersText">Folders</span>
                             <div class="folder">
-                                <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
+                                <a href=""  class="icon1"></a>
                                 <a href="{% url 'feed:show_folder' show_user.username folder.id%}"><span>{{ folder.name }}</span></a>
                             </div>
                             <div class="operaFrame">
@@ -61,7 +61,7 @@
                             {% if followed_categories %}
                                 {% for f in followed_categories %}
                                     <div class="folder">
-                                        <a href="" style="border-color:rgb(0, 255, 13)"  class="icon"></a>
+                                        <a href=""   class="icon2"></a>
                                         <a href=""><span>{{ f.name }}</span></a>
                                     </div>
                                 {% endfor %}
@@ -87,8 +87,8 @@
                             {% for post in post_row %}
                             <td>
                                 <div class="picLine">
-                                    <div class="pic" style="height: 600px;">
-                                        <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                                    <div class="picBackground" >
+                                        <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage" 
                                             src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
                                         <div class="allPicOpera">
                                                     {{ post.title }}

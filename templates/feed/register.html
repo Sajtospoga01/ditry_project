@@ -49,7 +49,7 @@
 
           {% for field in form %}
             {% for error in field.errors %}
-                <small style="color:red;">{{ error }}</small>
+                <small class = "status-message">{{ error }}</small>
             {% endfor %}
           {% endfor %}
 

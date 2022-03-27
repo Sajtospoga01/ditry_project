@@ -26,8 +26,8 @@
                 {% for post in post_row %}
                     <td>
                     <div class="picLine">
-                        <div class="pic" style="height: 600px;">
-                            <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
+                        <div class="picBackground" >
+                            <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage" 
                                 src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
                             <div class="allPicOpera">
                                 <a href="{% url 'feed:account' post.creator.username %}">
