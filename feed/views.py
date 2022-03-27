@@ -472,7 +472,7 @@ def search_title(request):
 def update_profile(request,username):
     update_user = UserProfile.objects.get(username=username)
     current_user = UserProfile.objects.get(username=request.user.username)
-    form = None
+    form = EditProfileForm()
 
     if update_user == current_user:
         if request.method == 'POST':
