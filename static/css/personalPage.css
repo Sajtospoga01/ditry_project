@@ -167,7 +167,7 @@
 
 #page #frame #folderAndPics #folders #customFrame {
     width: 200px;
-    height: 700px;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
