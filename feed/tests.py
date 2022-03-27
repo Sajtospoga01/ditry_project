@@ -101,8 +101,10 @@ class PopulatedViewTests(TestCase):
 
     def test_home_view_with_posts(self):
         response = self.client.get(reverse('feed:home'))
-        self.assertTrue("" in response.content.decode())
+        response_body = response.content.decode()
         self.assertEqual(Helper.num_posts_on_page(response), 2, f"Wrong number of posts passed in response.")
+        #some general content tests
+        self.assertTrue("""<a href="/feed/add-post/" class="otherButton" style = "background-color: #e23c3c; border-color: #e23c3c;">Add post</a>""")
 
     def test_category_view_with_posts(self):
         post = Post.objects.create(id = 3, creator = UserProfile.objects.get(username = "alicej"), title = "food test", likes = 0)
