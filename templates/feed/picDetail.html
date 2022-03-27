@@ -12,12 +12,19 @@
 
 <br><br>
 {% if user.is_authenticated %}
+
+
 <div id="detail">
     <div>
         <a href="{{request.META.HTTP_REFERER}}"><img src="{% static 'images/back.png' %}" alt="back" /></a>
     </div>
     <div id="frame">
 		{%if post %}
+        <script>
+            user_id = {{user.id}};
+            var urlConstructFollow = "{% url 'feed:get_follows' %}";
+            user_2_id = {{post.creator.id}};
+        </script>
         <div id="pic">
             <a href=""><img src="{{ post.picture.url  }}" alt="Picture"/></a>
         </div>
@@ -48,7 +55,7 @@
                 <div id="authorDetail">
                     <a href="{% url 'feed:account' post.creator.username %}" align = "center" id="name">{{post.creator.username}}</a>
                     <div id="authorOpera">
-                        <a class="button" href="{% url 'feed:follow_user' post.creator.username  %}">Follow</a>
+                        <a id = "follow" class="button" href="{% url 'feed:follow_user' post.creator.username  %}">Follow</a>
                         <a class="button" href="{% url 'feed:add_post' post.id %}">Attempt</a>
                     </div>
                 </div>
@@ -83,5 +90,5 @@
 </div>
 {% endif %}
 </br></br>
-
+<script src="{% static 'js/picDetail.js' %}" crossorigin="anonymous"></script>
 {% endblock %}

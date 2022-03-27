@@ -588,5 +588,20 @@ def get_home_likes(request):
         return JsonResponse({'data':data})
     return JsonResponse({})
 
-
+def get_follows(request):
+    if(request.is_ajax()):
+        user = request.POST.get('user')
+        other_user = request.POST.get('other_user')
+        followed = Queries.get_user_following(user)
+        print(followed)
+        
+        is_following = followed.filter(id = other_user)
+        if(is_following != None):
+            if is_following.count()>0:
+                return JsonResponse({'followed':True})
+            else:
+                return JsonResponse({'followed':False})
+        else:
+            return JsonResponse({'followed':False})
+    return JsonResponse({})
 

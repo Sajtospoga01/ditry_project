@@ -9,7 +9,14 @@
 <link rel="stylesheet" href="/static/css/personalPage.css" type="text/css">
 
 <div id="frame">
+
     {% if user.is_authenticated %}
+        {%csrf_token%}
+        <script>
+            user_id = {{user.id}};
+            var urlConstructFollow = "{% url 'feed:get_follows' %}";
+            user_2_id = {{show_user.id}};
+        </script>
         <div id="author">
             <a href="">
                 {% if show_user.profile_picture %}
@@ -25,7 +32,7 @@
                     <div class="follow"><a href>{{ follower_count }}</a></div>
                 </div>
                 <div id="authorOpera">
-                    <a class="button" href="{% url 'feed:follow_user' show_user  %}">Follow</a>
+                    <a id = "follow" class="button" href="{% url 'feed:follow_user' show_user  %}">Follow</a>
                 </div>
             </div>
         </div>
@@ -105,4 +112,5 @@
 </div>
 
 <br><br>
+<script src="{% static 'js/picDetail.js' %}" crossorigin="anonymous"></script>
 {% endblock %}
