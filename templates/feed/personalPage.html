@@ -74,25 +74,26 @@
             {% else %}
                 No folders found.
             {% endif %}
-        </div>
-        <div id="postPics">
-            <div class = "wrapper">
-                {% for post in posts %}
-                    
-                            <div class="picLine">
-                                <div class="picBackground">
-                                    <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage"
-                                        src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
-                                    <div class="allPicOpera">
-                                                {{ post.title }}
+            <div id="postPics">
+                <div class = "wrapper">
+                    {% for post in posts %}
+                        
+                                <div class="picLine">
+                                    <div class="picBackground">
+                                        <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage"
+                                            src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                                        <div class="allPicOpera">
+                                                    {{ post.title }}
+                                        </div>
                                     </div>
                                 </div>
+                           
+                    
+                    {% endfor %}
                             </div>
-                       
-                
-                {% endfor %}
-                        </div>
+            </div>
         </div>
+        
         {% endblock %}
     {% endif %}
     
