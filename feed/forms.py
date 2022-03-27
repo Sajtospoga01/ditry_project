@@ -88,14 +88,15 @@ class FolderForm(forms.ModelForm):
 class AddPostToFolderForm(forms.ModelForm):
     folder_list = None
     folder = None
-    post = None
+    
     class Meta:
         model = In_folder
-        fields = {'folder','post',}
+        fields = {'folder'}
     def __init__(self,cur_user,*args,**kwargs):
         ## this should technically pull the folders that the user has, but it returns the dummy folders 
         super(AddPostToFolderForm,self).__init__(*args,**kwargs)
-        self.fields['folder_list'] = forms.ModelChoiceField(Queries.get_user_folders(cur_user.id))
+        self.fields['folder'] = forms.ModelChoiceField(Queries.get_user_folders(cur_user.id))
+        
 class ResetForm(forms.ModelForm):
     email = forms.EmailField()
     new_password = forms.PasswordInput()

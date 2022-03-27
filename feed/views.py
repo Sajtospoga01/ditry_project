@@ -546,8 +546,27 @@ def user_logout(request):
     return redirect(reverse('feed:home'))
 
 def add_post_to_folder(request,post_id):
+
+    if request.method == 'POST':
+        post_object = Post.objects.get(id=post_id)
+        form = AddPostToFolderForm(request.user,request.POST)
+
+        if form.is_valid():
+         
+            object = form.save(commit=False)
+            
+            object.post = post_object
+            object.save()
+            return redirect(reverse('feed:show_folder', kwargs={'username':request.user.username,'folder_id':object.folder.id}))
+        else:
+            
+            print(form.errors)
+    else:
+        post_object = Post.objects.get(id=post_id)
+        form = AddPostToFolderForm(request.user)
+
     
-    form = AddPostToFolderForm(request.user)
+    
     
     context_dict = {}
     try:
@@ -562,7 +581,7 @@ def add_post_to_folder(request,post_id):
         is_liked = Functions.has_liked(request.user.id,post_id)
         context_dict['is_liked'] = is_liked
         
-   
+
     except Post.DoesNotExist:
         context_dict['post'] = None
         context_dict['comments'] = None
@@ -574,7 +593,15 @@ def add_post_to_folder(request,post_id):
         
     finally:
         
-        return render(request,'feed/add_to_folder.html',context_dict)
+        return render(request,'feed/add_to_folder.html',context_dict)    
+        
+        
+            
+  
+
+
+
+
 
 
 # helper function
