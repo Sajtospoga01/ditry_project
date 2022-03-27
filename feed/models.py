@@ -103,6 +103,8 @@ class Folder(models.Model):
     user = models.ForeignKey(
         UserProfile, on_delete=CASCADE, related_name='%(class)s_user_folder')
     private = models.BooleanField(default=False, null=False)
+    def __str__(self):
+        return self.name
 
 
 class FollowsUser(models.Model):

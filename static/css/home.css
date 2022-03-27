@@ -104,6 +104,8 @@
     position: relative;
     overflow: hidden;
     border-radius: 30px;
+    border: #4F81FF;
+    border-width: 1px;
 }
 
 #page #postPics .picLine .pic .image {
