@@ -143,10 +143,12 @@
     width: 90%;
     display: flex;
     flex-direction: row;
+    min-width: 550px;
 }
 
 #page #frame #folderAndPics #folders {
-    width: 300px;
+    height: min-content;
+    width: auto;
     border-radius: 30px;
     border: 2px solid rgb(255, 255, 255);
     border-color: #707070;

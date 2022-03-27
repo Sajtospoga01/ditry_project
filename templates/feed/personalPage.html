@@ -55,10 +55,11 @@
             {% if folders %}
                 
             <div id="folders">
+                <span class="foldersText">Folders</span>
                 {% for folder in folders %}
                     <div id="customFrame">
                         <div class="folderFrame">
-                            <span class="foldersText">Folders</span>
+                            
                             <div class="folder">
                                 <a href="{% url 'feed:show_folder' user.username folder.id%}" class="icon1"></a>
                                 <a href="{% url 'feed:show_folder' user.username folder.id%}"><span>{{ folder.name }}</span></a>
