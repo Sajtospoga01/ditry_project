@@ -63,18 +63,29 @@
                 
             </div>
 			<div id="title">{{post.title}}</div>
+           
             <div id="description">{{post.description}}</div>
             {% block add_post%}
             
-
-			<div id="sumNum">{{comments.count}} Comments</div>
-                <div class="commFrame">
-                    <form action="{% url 'feed:comment_on_post' post.id%}" method="POST">
+            
+			<div class = "commentStyle">
+                {{comments.count}} 
+                {% if comments.count == 1%}
+                Comment
+                {%else%}
+                Comments
+                {%endif%}
+            </div>
+                <div >
+                    <form action="{% url 'feed:comment_on_post' post.id%}" method="POST" class = "commentInputFormat">
                         {% csrf_token %}
                         <div class="input-box">
                             {{ form.comment }}
                         </div>
-                        <input type="submit" value="Comment">
+                        <div class="submit-box">
+                            <input type="submit" value="Comment" class = "submit-box">
+                        </div>
+                        
                     </form>
                 </div>
 				{% for comment in comments %}
