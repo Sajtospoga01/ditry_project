@@ -6,9 +6,10 @@
 }
 
 #page #topStrip {
-    height: 150px;
+    height: auto;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     display: flex;
     flex-direction: row;
 }
@@ -66,10 +67,11 @@
 
 #page #topStrip #login_signup {
     border: 2px;
-    width: 300px;
+    width: auto;
     height: 150px;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
     display: flex;
 }
 
@@ -79,7 +81,7 @@
 }
 
 #page #topStrip #login_signup .lsText {
-    width: 65px;
+    width: auto;
     height: 20px;
     font-size: 20px;
     font-family: 'Passion One', cursive;
@@ -87,13 +89,14 @@
     text-decoration: none;
 }
 
-#page #topStrip #login_signup .lsText2{
+#page #topStrip #login_signup .lsText2 {
     width: 129px;
     height: 20px;
     font-size: 20px;
     font-family: 'Passion One', cursive;
     color: #707070;
-    text-decoration: none;}
+    text-decoration: none;
+}
 
 #page #topStrip #login_signup .lsText2:hover {
     color: #4F81FF;
