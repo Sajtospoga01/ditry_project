@@ -1,17 +1,19 @@
 #page #detail {
     display: flex;
     justify-content: space-around;
-    width: 1000px;
+    width: auto;
 }
 
 #page #detail #frame {
     box-shadow: rgb(119, 119, 119) 10px 10px 50px 5px;
-    width: 900px;
+    width: auto;
     border-radius: 30px;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     border: 30px solid rgb(255, 255, 255);
     border-right: 10px solid rgb(255, 255, 255);
+    justify-content: center;
 }
 
 #page #detail #frame #pic {
@@ -142,8 +144,8 @@
     color: black;
     min-height: 150px;
     height: auto;
-    width: 400px;
-    border: 20px solid rgb(255, 255, 255);
+    width: 95%;
+    padding: 20px;
 }
 
 #page #detail #frame #title {
@@ -151,7 +153,7 @@
     font-size: 30px;
     font-weight: 900;
     text-decoration: none;
-    width: 400 px;
+    width: 85%;
     color: black;
     border: 20px solid rgb(255, 255, 255);
 }
