@@ -46,8 +46,8 @@ class PictureWidget(forms.widgets.Widget):
 
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
-    picture = forms.ImageField()
-    comment = forms.CharField()
+    picture = forms.ImageField(required=False)
+    comment = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20}), required=False)
     
     likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     original = forms.IntegerField(widget=forms.HiddenInput(), required=False)

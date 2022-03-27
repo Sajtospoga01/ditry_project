@@ -18,46 +18,53 @@
         {{ hidden }}
     {% endfor %}
     <div id = "page">
-        <div id="detail"><div id="frame">
-            <div id="pic">
-                <div id="upload">
-                    {{ form.picture.errors }}
-                    {{ form.picture }}
-                </div>
-            </div>
-            <div id="authorCom">
-                <div class="Allopera">
-                    <div id="choose">
-							<span class="category type">Choose the category </span>
-                            {{ category_form.category }}
-                            {{ category_form.errors}}
+        <div id="detail">
+            <div id="frame">
+                <div id="pic">
+                    <div id="upload">
+                       {{ form.picture.errors }}
+                       {{ form.picture }}
+                       {% if no_pic_error %}
+                            <span class="pic-error" >{{ no_pic_error }}</span>
+                        {% endif %}
                     </div>
                 </div>
-            <div class="input-box">
-                <div class="inputText">
-                    <span class="details">Add your title</span>
-                    {{ form.title.errors }}
-                    {{ form.title }}
+                <div id="authorCom">
+                    <div class="Allopera">
+                        <div id="choose">
+							<span class="input-label">Choose the category </span>
+                            {{ category_form.category }}
+                            {{ category_form.errors}}
+                        </div>
+                    </div>
+                    <div id="authorCom">
+                        <div class="input-box">
+                            <div class="text-input">
+                                <span class="input-label">Add your title</span>
+                                {{ form.title.errors }}
+                                {{ form.title }}
+                            </div>
+                        </div>
+            
+                        <div class="text-input">
+                            <span class="input-label">Tell everyone what your picture is about</span>
+                            {{ form.comment }}
+                            {{ form.comment.errors }}
+                        </div>
+                    </div>
+            
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                        <small style="color:red;">{{ error }}</small>
+                    {% endfor %}
+                    {% endfor %}
+                    <div class="button">
+                        <input id="submitbutton" type="submit" name="submit" value="Post">
+                    </div>
                 </div>
             </div>
-            
-            <div>
-                <span class="input-box">Tell everyone what your picture is about</span>
-                {{ form.comment }}
-                {{ form.comment.errors }}
-            </div>
-            
-            {% for field in form %}
-            {% for error in field.errors %}
-                <small style="color:red;">{{ error }}</small>
-            {% endfor %}
-            {% endfor %}
-            <div class="button">
-                <input type="submit" name="submit" value="Post">
-            </div>
-        </div></div></div>
+        </div>
     </div>
 </form>
-
 <br><br>
 {% endblock %}

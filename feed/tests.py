@@ -1,7 +1,5 @@
 import os
 import importlib
-import re
-import tempfile
 from django.urls import reverse
 from django.test import TestCase
 from django.conf import settings
@@ -194,7 +192,7 @@ class PopulatedViewTests(TestCase):
         self.assertTrue(response.context.get('category_form')!=None, "add post should pass back category_form")
 
         self.assertTrue("""<form method="post" enctype="multipart/form-data" action="/feed/add-post/">""")
-        self.assertTrue("""<input type="file" name="picture" accept="image/*" id="id_picture">""" in response_body, "picture field ot displayed")
+        self.assertTrue("""<input type="file" name="picture" accept="image/*" required id="id_picture">""" in response_body, "picture field ot displayed")
         self.assertTrue("""<select name="category" required id="id_category">""" in response_body, "category select box not displayed")
         self.assertTrue("""<input type="text" name="title" maxlength="24" required id="id_title">""" in response_body, "title box not displayed")
         self.assertTrue("""<input type="text" name="comment" required id="id_comment">""" in response_body, "comment box not displayed")

@@ -92,6 +92,9 @@ def add_post(request, original_id=None):
             post.creator = user
             if 'picture' in request.FILES:
                 post.picture = request.FILES['picture']
+            else:
+                context = {'no_pic_error': 'You must include a picture.', 'form': form, 'category_form': category_form }
+                return render(request, 'feed/addPost.html', context)
             post.save()
 
             # categorise

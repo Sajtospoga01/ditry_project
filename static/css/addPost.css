@@ -36,7 +36,7 @@
 }
 
 
-#page #detail #frame #pic form input{
+#page #detail #frame #pic input{
     width: 300px;
     border-left:100px solid rgb(226, 226, 226)
 }
@@ -61,7 +61,7 @@
     border-bottom: 50px solid rgb(255, 255, 255);
 }
 
-#page #detail #frame #authorCom .Allopera #choose {
+#page #detail #frame #authorCom .Allopera #choose select{
     font-size: 20px;
     color: #000000;
     outline: none;
@@ -74,7 +74,7 @@
     border-color:#e9e9e9;
 }
 
-#page #detail #frame #authorCom .Allopera #choose #chooseButton:hover {
+#page #detail #frame #authorCom .Allopera #choose select:hover{
     color: #5b5b61;
 }
 
@@ -83,7 +83,7 @@
     border-top: 5px solid #ffffff;
 }
 
-#page #detail #frame #authorCom #author #titleText input:hover{
+#page #detail #frame #authorCom #author input:hover{
     border-bottom: 2px solid #2d7ef7;
 }
 
@@ -175,3 +175,43 @@
     background-color: #c40000;
     border-color: #c40000;
 }
+
+span.input-label{
+    font-family: 'Passion One', cursive;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    outline: none;
+    border:5px solid;
+    border-right:15px;
+    border-left:15px;
+    border-radius: 7px;
+    border-color:#e9e9e9;
+  }
+.text-input input{
+    height: 45px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    border-radius: 5px;
+    padding-left: 15px;
+    border: 1px solid #ccc;
+    border-bottom-width: 2px;
+    transition: all 0.3s ease;
+  }
+  .text-input textarea{
+    height: 225px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    border-radius: 5px;
+    padding-left: 15px;
+    border: 1px solid #ccc;
+    border-bottom-width: 2px;
+    transition: all 0.3s ease;
+  }
+  .pic-error {
+      align:center;
+  }
