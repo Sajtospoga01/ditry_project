@@ -104,7 +104,8 @@ class PopulatedViewTests(TestCase):
         response_body = response.content.decode()
         self.assertEqual(Helper.num_posts_on_page(response), 2, f"Wrong number of posts passed in response.")
         #some general content tests
-        self.assertTrue("""<a href="/feed/add-post/" class="otherButton" style = "background-color: #e23c3c; border-color: #e23c3c;">Add post</a>""")
+        self.assertTrue("""<a href="/feed/add-post/" class="otherButton" style = "background-color: #e23c3c; border-color: #e23c3c;">Add post</a>""" in response_body, "couldn't find add post button in home")
+        self.assertTrue("""<a href="/feed/show-category/Craft/" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>""")
 
     def test_category_view_with_posts(self):
         post = Post.objects.create(id = 3, creator = UserProfile.objects.get(username = "alicej"), title = "food test", likes = 0)
