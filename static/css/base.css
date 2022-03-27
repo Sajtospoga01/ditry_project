@@ -16,8 +16,8 @@
 
 #page #topStrip #logo,
 #page #topStrip #logo:hover {
-    width: 400px;
-    height: 150px;
+    width: 350px;
+    height: auto;
     display: flex;
     cursor: pointer;
 }
