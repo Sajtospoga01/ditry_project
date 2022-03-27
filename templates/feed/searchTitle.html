@@ -17,14 +17,13 @@
 <div id="frame">
     <div id="tipText"><span>All results are shown below.</span></div>
     <div id="postPics">
-        <table>
+        <div class = "wrapper">
+        
         
         {% if matching_posts %}
         {% csrf_token %}
-            {% for post_row in matching_posts %}
-            <tr>
-                {% for post in post_row %}
-                    <td>
+            {% for post in matching_posts %}
+            
                     <div class="picLine">
                         <div class="picBackground" >
                             <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage" 
@@ -57,15 +56,13 @@
                             </div>
                         </div>
                     </div>
-                    </td>
-                    {% endfor %}
-                </tr>
+         
             {% endfor %}
         {% else %}
             <p>No results matching search {{ query }}</p>
         {% endif %}
-        </table>
+                </div>
         </div>
-        <br><br>
+        
     {% endif %}
 {% endblock %}

@@ -7,12 +7,11 @@
 
 {% block content-block %}
 <div id="postPics">
-<table>
+    <div class = "wrapper">
+
     {% if posts %}
-    {% for post_row in posts %}
-    <tr>
-        {% for post in post_row %}
-        <td>
+    {% for post in posts %}
+    
             <div class="picLine">
                 <div class="picBackground">
                     <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage" 
@@ -22,13 +21,11 @@
                     </div>
                 </div>
             </div>
-            </td>
-        {% endfor %}
-    </tr>
+   
     {% endfor %}
     {% else %}
         You haven't attempted anything yet!
     {% endif %}
-</table>
+    </div>
 </div>
 {% endblock %}

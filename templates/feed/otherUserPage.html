@@ -81,11 +81,9 @@
                 No folders found.
             {% endif %}
             <div id="postPics">
-                <table>
-                    {% for post_row in posts %}
-                        <tr>
-                            {% for post in post_row %}
-                            <td>
+                <div class = "wrapper">
+                    {% for post in posts %}
+                        
                                 <div class="picLine">
                                     <div class="picBackground" >
                                         <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage" 
@@ -95,12 +93,10 @@
                                         </div>
                                     </div>
                                 </div>
-                            </td>
-                            {% endfor %}
-                        </tr>
+                           
                     
                     {% endfor %}
-                    </table>
+                </div>
             </div>
         </div>
     {% endif %}

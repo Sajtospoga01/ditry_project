@@ -18,7 +18,7 @@ def home(request):
     # all posts uploaded to diTRY
     posts = Post.objects.all()
     visitor_cookie_handler(request)
-    return render(request, 'feed/home.html', context={'posts': tableify(posts)})
+    return render(request, 'feed/home.html', context={'posts': posts})
 
 
 # helper function to turn posts into a list of lists for easy grid view
@@ -52,7 +52,7 @@ def contact_us(request):
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed/categories.html', context={'posts':tableify(posts), 'name': 'Trending'})
+    return render(request, 'feed/categories.html', context={'posts':posts, 'name': 'Trending'})
 
 
 @login_required(login_url='feed:login')
@@ -158,7 +158,7 @@ def show_folder(request, folder_id, username):
         posts = Queries.get_posts_in_folder(folder_id)
         context_dict['username'] = user
         context_dict['folder']=folder
-        context_dict['posts'] = tableify(posts)
+        context_dict['posts'] = posts
 
     except Folder.DoesNotExist:
         context_dict['username'] = None
@@ -197,7 +197,7 @@ def show_user(request, username):
         followed_categories = Queries.get_category_following(request.user.id)
         folders = all_folders(request, show_user)
 
-        context_dict = {'user':show_user, 'posts':tableify(posts), 'followed_categories':followed_categories, 'folders':folders}
+        context_dict = {'user':show_user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
         
         return render(request,'feed/personalPage.html', context=context_dict)
 
@@ -207,7 +207,7 @@ def show_user(request, username):
         followed_categories = Queries.get_category_following(request.user.id)
 
         folders = all_folders(request, show_user)
-        context_dict = {'user': current_user, 'show_user': show_user,'posts': tableify(posts), 'followed_categories': followed_categories, 'folders': folders}
+        context_dict = {'user': current_user, 'show_user': show_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
 
         return render(request, 'feed/otherUserPage.html', context=context_dict)
 
@@ -223,7 +223,7 @@ def show_user(request, username):
 def show_category(request, name_category):
     posts = Queries.get_posts_in_category(name_category)
 
-    return render(request, 'feed/categories.html', context={'posts':tableify(posts), 'name': name_category})
+    return render(request, 'feed/categories.html', context={'posts':posts, 'name': name_category})
 
 # def show_category_helper( category_name):
 #     category = Category.objects.get(name=category_name)
@@ -463,7 +463,7 @@ def search_title(request):
                         matching_posts.append(p)
 
     return render(request,'feed/searchTitle.html',
-                  context={'matching_posts': tableify(matching_posts), 'query': query})
+                  context={'matching_posts': matching_posts, 'query': query})
 
 @login_required(login_url='feed:login')
 def update_profile(request,username):
