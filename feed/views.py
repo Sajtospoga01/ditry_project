@@ -472,18 +472,17 @@ def search_title(request):
 def update_profile(request,username):
     update_user = UserProfile.objects.get(username=username)
     current_user = UserProfile.objects.get(username=request.user.username)
+    form = None
 
     if update_user == current_user:
-        form = EditProfileForm()
         if request.method == 'POST':
            form = EditProfileForm(request.POST)
-
-           if form.is_valid:
+           if form.is_valid():
                form.save()
                return redirect(reverse('feed:account', kwargs={'username':current_user.username}))
 
-        #update_profile does not exist yet, might have to change name
-        return render(request, 'feed/updateProfile.html', context={'user_form':form})
+        
+        return render(request, 'feed/updateProfile.html', context={'form':form})
 
     else:
         # cannot update someone elses profile thus gets redirected to his own profile
@@ -565,9 +564,6 @@ def add_post_to_folder(request,post_id):
         post_object = Post.objects.get(id=post_id)
         form = AddPostToFolderForm(request.user)
 
-    
-    
-    
     context_dict = {}
     try:
         post = Post.objects.get(id = post_id)

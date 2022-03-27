@@ -2,7 +2,7 @@ from pydoc import describe
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from feed.models import Post, Folder, Comment, UserProfile, Categorises, Category, Queries, In_folder
+from feed.models import Post, Folder, Comment, UserProfile, Categorises, Category, Queries,In_folder
 from string import Template
 from django.utils.safestring import mark_safe
 
@@ -18,14 +18,6 @@ class UserForm(UserCreationForm):
                   'password1',
                   'password2'}
 
-
-class UserProfileForm(forms.Form):
-    # deprecated, delete
-    class meta:
-        model = UserProfile
-        fields = {'website',
-                  'bio',
-                  'profile_picture'}
 
 class UserLoginForm(forms.ModelForm):
     ## this is for logins
@@ -66,7 +58,7 @@ class EditProfileForm(forms.ModelForm):
     bio = forms.CharField(help_text="Describe youself... ",max_length=256)
     profile_picture = forms.ImageField(required=False)
 
-    class meta:
+    class Meta:
         model = UserProfile
         fields = {'website',
                   'bio',
