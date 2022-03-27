@@ -545,6 +545,35 @@ def user_logout(request):
     # Take the user back to the homepage.
     return redirect(reverse('feed:home'))
 
+def add_post_to_folder(request,post_id):
+    
+    
+    context_dict = {}
+    try:
+        post = Post.objects.get(id = post_id)
+        context_dict['post'] = post
+        context_dict['creator'] = post.creator
+        description = Queries.get_post_description(post.id)
+        context_dict['description'] = description
+        
+        # liked by user?
+
+        is_liked = Functions.has_liked(request.user.id,post_id)
+        context_dict['is_liked'] = is_liked
+        
+   
+    except Post.DoesNotExist:
+        context_dict['post'] = None
+        context_dict['comments'] = None
+        context_dict['creator'] = None
+        context_dict['numComments'] = 0
+        context_dict['description'] = None
+        context_dict['is_liked'] = False
+        
+    finally:
+        
+        return render(request,'feed/add_to_folder.html',context_dict)
+
 
 # helper function
 def get_server_side_cookie(request,cookie,default_val=None):

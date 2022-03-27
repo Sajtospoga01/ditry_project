@@ -1,7 +1,8 @@
 #page #cat {
-    width: 800px;
+    width: auto;
     height: 100px;
     justify-content: space-around;
+    flex-wrap: wrap;
     align-items: center;
     display: flex;
     flex-direction: row;
@@ -15,6 +16,8 @@
     flex-direction: column;
     color: #4F81FF;
     text-decoration: none;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #page #cat #homeButton:hover {
@@ -38,6 +41,8 @@
     letter-spacing: 0.5px;
     color: #ffffff;
     text-decoration: none;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #page #cat .otherButton:hover {
