@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
-from feed.forms import AddPostToFolderForm, UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm, PostCategoryForm
+from feed.forms import AddPostToFolderForm, UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, PostCategoryForm
 from datetime import datetime
 
 
