@@ -476,7 +476,7 @@ def update_profile(request,username):
 
     if update_user == current_user:
         if request.method == 'POST':
-           form = EditProfileForm(request.POST, instance=current_user)
+           form = EditProfileForm(request.POST, request.FILES,instance=current_user)
            if form.is_valid():
                form.save()
                return redirect(reverse('feed:account', kwargs={'username':current_user.username}))
