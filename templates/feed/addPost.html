@@ -48,14 +48,14 @@
             
                         <div class="text-input">
                             <span class="input-label">Tell everyone what your picture is about</span>
-                            {{ form.comment }}
-                            {{ form.comment.errors }}
+                            {{ form.description }}
+                            {{ form.description.errors }}
                         </div>
                     </div>
             
                     {% for field in form %}
                     {% for error in field.errors %}
-                        <small style="color:red;">{{ error }}</small>
+                        <small class = "error-message">{{ error }}</small>
                     {% endfor %}
                     {% endfor %}
                     <div class="button">

@@ -15,6 +15,8 @@ urlpatterns = [
     path('following/',views.userFollowing,name='following'),
     path('followers/',views.userFollowers,name='follower'),
     path('get-likes/',views.get_home_likes,name = 'get_likes'),
+    path('get_follows/',views.get_follows,name = "get_follows"),
+
     path('show-category/<str:name_category>/', views.show_category, name='show_category'),
     
     path('show-post/<int:post_id>/', views.show_post, name='show_post'),

@@ -47,13 +47,13 @@ class PictureWidget(forms.widgets.Widget):
 class UserPostsForm(forms.ModelForm):
     title = forms.CharField(max_length=24,required=True)
     picture = forms.ImageField(required=False)
-    comment = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20}), required=False)
+    description = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20}), required=False)
     
     likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     original = forms.IntegerField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = Post
-        fields = {'title','picture'}
+        fields = {'title','picture','description'}
 
 class PostCategoryForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all())
@@ -77,7 +77,7 @@ class UserCommentForm(forms.ModelForm):
         fields = {'comment'}
 
 class FolderForm(forms.ModelForm):
-    foldername = forms.CharField()
+    name = forms.CharField()
 
     class Meta:
         model = Folder

@@ -5,17 +5,21 @@
     Your page
 {% endblock %}
 
+{% block addfolder_block %}
+    <a href="{% url 'feed:add_folder' user.username %}" class="otherButton" style = "background-color: #e23c3c; border-color: #e23c3c;">Add folder</a>
+{% endblock %}
 {% block body_block %}
 <link rel="stylesheet" href="/static/css/personalPage.css" type="text/css">
 
 <div id="frame">
+    
     {% if user.is_authenticated %}
         <div id="author">
             <a href="">
                 {% if user.profile_picture %}
-                    <img id="authorProfile" src="{{user.profile_picture.url}}" alt="authorProfile" style = "object-fit: cover;width:100px; height:100px;border-radius: 50%;"/>
+                    <img class="authorPic" src="{{user.profile_picture.url}}" alt="authorProfile" />
                 {% else %}
-                    <img id="authorProfile" src="{{ MEDIA_URL }}profile.png" alt="authorProfile" style = "object-fit: cover;width:100px; height:100px;border-radius: 50%;"/>
+                    <img class="authorPic" src="{{ MEDIA_URL }}profile.png" alt="authorProfile"/>
                 {%endif%}
             </a>
             <div id="authorDetail">
@@ -44,9 +48,6 @@
             <div id="postButton">
                 <a href="{% url 'feed:follower' %}">Followers</a>
             </div>
-            <div id="postButton">
-                <a href="{% url 'feed:add_folder' user.username %}">Add Folder</a>
-            </div>
         </div>
 
         {% block content-block %}
@@ -59,7 +60,7 @@
                         <div class="folderFrame">
                             <span class="foldersText">Folders</span>
                             <div class="folder">
-                                <a href="" style="border-color:rgb(251, 255, 0)"  class="icon"></a>
+                                <a href="{% url 'feed:show_folder' user.username folder.id%}" class="icon1"></a>
                                 <a href="{% url 'feed:show_folder' user.username folder.id%}"><span>{{ folder.name }}</span></a>
                             </div>
                             <div class="operaFrame">
@@ -73,29 +74,26 @@
             {% else %}
                 No folders found.
             {% endif %}
-        </div>
-        <div id="postPics">
-            <table>
-                {% for post_row in posts %}
-                    <tr>
-                        {% for post in post_row %}
-                        <td>
-                            <div class="picLine">
-                                <div class="pic" style="height: 600px;">
-                                    <a href="{% url 'feed:show_post' post.id%}"><img class="image" style="width: 365; height: 600px; object-fit: cover;"
-                                        src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
-                                    <div class="allPicOpera">
-                                                {{ post.title }}
+            <div id="postPics">
+                <div class = "wrapper">
+                    {% for post in posts %}
+                        
+                                <div class="picLine">
+                                    <div class="picBackground">
+                                        <a href="{% url 'feed:show_post' post.id%}"><img class="coverImage"
+                                            src="{{ post.picture.url }}" alt="Image of {{ post.title }}"></a>
+                                        <div class="allPicOpera">
+                                                    {{ post.title }}
+                                        </div>
                                     </div>
                                 </div>
+                           
+                    
+                    {% endfor %}
                             </div>
-                        </td>
-                        {% endfor %}
-                    </tr>
-                
-                {% endfor %}
-                </table>
+            </div>
         </div>
+        
         {% endblock %}
     {% endif %}
     

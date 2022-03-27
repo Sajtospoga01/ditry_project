@@ -18,7 +18,7 @@ def home(request):
     # all posts uploaded to diTRY
     posts = Post.objects.all()
     visitor_cookie_handler(request)
-    return render(request, 'feed/home.html', context={'posts': tableify(posts)})
+    return render(request, 'feed/home.html', context={'posts': posts})
 
 
 # helper function to turn posts into a list of lists for easy grid view
@@ -52,7 +52,7 @@ def contact_us(request):
 def trending(request):
     # top ten posts with the most likes
     posts = Post.objects.order_by('-likes')[:10]
-    return render(request, 'feed/categories.html', context={'posts':tableify(posts), 'name': 'Trending'})
+    return render(request, 'feed/categories.html', context={'posts':posts, 'name': 'Trending'})
 
 
 @login_required(login_url='feed:login')
@@ -74,7 +74,7 @@ def follow_category(request, category_name_slug):
 def show_my_attempts(request,username):
     user = UserProfile.objects.get(username=username)
     my_attempts = Queries.get_user_attempts(user.id)
-    return render(request, 'feed/attempts.html', {'posts': tableify(my_attempts), 'user': user})
+    return render(request, 'feed/attempts.html', {'posts': my_attempts, 'user': user})
 
 
 @login_required
@@ -94,7 +94,7 @@ def add_post(request, original_id=None):
                 post.picture = request.FILES['picture']
             else:
                 context = {'no_pic_error': 'You must include a picture.', 'form': form, 'category_form': category_form }
-                return render(request, 'feed/addPost.html', context)
+                return render(request, 'feed/addPost.html', context)    
             post.save()
 
             # categorise
@@ -130,6 +130,8 @@ def show_post(request, post_id):
         context_dict['post'] = post
         context_dict['creator'] = post.creator
         comments = Queries.get_comment_on_post(post.id)
+        description = Queries.get_post_description(post.id)
+        context_dict['description'] = description
         context_dict['comments'] = comments
         # liked by user?
 
@@ -142,6 +144,7 @@ def show_post(request, post_id):
         context_dict['comments'] = None
         context_dict['creator'] = None
         context_dict['numComments'] = 0
+        context_dict['description'] = None
         context_dict['is_liked'] = False
         context_dict['form'] = None
     finally:
@@ -158,7 +161,7 @@ def show_folder(request, folder_id, username):
         posts = Queries.get_posts_in_folder(folder_id)
         context_dict['username'] = user
         context_dict['folder']=folder
-        context_dict['posts'] = tableify(posts)
+        context_dict['posts'] = posts
 
     except Folder.DoesNotExist:
         context_dict['username'] = None
@@ -197,7 +200,7 @@ def show_user(request, username):
         followed_categories = Queries.get_category_following(request.user.id)
         folders = all_folders(request, show_user)
 
-        context_dict = {'user':show_user, 'posts':tableify(posts), 'followed_categories':followed_categories, 'folders':folders}
+        context_dict = {'user':show_user, 'posts':posts, 'followed_categories':followed_categories, 'folders':folders}
         
         return render(request,'feed/personalPage.html', context=context_dict)
 
@@ -207,7 +210,7 @@ def show_user(request, username):
         followed_categories = Queries.get_category_following(request.user.id)
 
         folders = all_folders(request, show_user)
-        context_dict = {'user': current_user, 'show_user': show_user,'posts': tableify(posts), 'followed_categories': followed_categories, 'folders': folders}
+        context_dict = {'user': current_user, 'show_user': show_user,'posts': posts, 'followed_categories': followed_categories, 'folders': folders}
 
         return render(request, 'feed/otherUserPage.html', context=context_dict)
 
@@ -223,7 +226,7 @@ def show_user(request, username):
 def show_category(request, name_category):
     posts = Queries.get_posts_in_category(name_category)
 
-    return render(request, 'feed/categories.html', context={'posts':tableify(posts), 'name': name_category})
+    return render(request, 'feed/categories.html', context={'posts':posts, 'name': name_category})
 
 # def show_category_helper( category_name):
 #     category = Category.objects.get(name=category_name)
@@ -322,9 +325,9 @@ def add_folder(request,username):
 
             if form.is_valid():
                 # Saves new folder to the database.
-                form.save()
-                return redirect(reverse('feed:all_folders',kwargs={'username':username}))
-
+                folder = form.save(commit=False)
+                folder.user = current_user
+                folder.save()
             else:
                 print(form.errors)
 
@@ -463,7 +466,7 @@ def search_title(request):
                         matching_posts.append(p)
 
     return render(request,'feed/searchTitle.html',
-                  context={'matching_posts': tableify(matching_posts), 'query': query})
+                  context={'matching_posts': matching_posts, 'query': query})
 
 @login_required(login_url='feed:login')
 def update_profile(request,username):
@@ -585,5 +588,20 @@ def get_home_likes(request):
         return JsonResponse({'data':data})
     return JsonResponse({})
 
-
+def get_follows(request):
+    if(request.is_ajax()):
+        user = request.POST.get('user')
+        other_user = request.POST.get('other_user')
+        followed = Queries.get_user_following(user)
+        print(followed)
+        
+        is_following = followed.filter(id = other_user)
+        if(is_following != None):
+            if is_following.count()>0:
+                return JsonResponse({'followed':True})
+            else:
+                return JsonResponse({'followed':False})
+        else:
+            return JsonResponse({'followed':False})
+    return JsonResponse({})
 

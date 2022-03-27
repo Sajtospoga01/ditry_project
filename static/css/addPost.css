@@ -1,10 +1,10 @@
-#page #detail{
+#page #detail {
     display: flex;
     justify-content: space-around;
     width: 1000px;
 }
 
-#page #detail #frame{
+#page #detail #frame {
     box-shadow: rgb(119, 119, 119) 10px 10px 50px 5px;
     width: 900px;
     border-radius: 30px;
@@ -16,7 +16,7 @@
     justify-content: space-around;
 }
 
-#page #detail #frame #pic{
+#page #detail #frame #pic {
     display: flex;
     align-items: center;
     background-color: rgb(226, 226, 226);
@@ -27,21 +27,20 @@
     justify-content: center;
 }
 
-#page #detail #frame #pic #upload{
+#page #detail #frame #pic #upload {
     border-left: 50px solid #00000000;
 }
 
-#page #detail #frame #pic:hover{
+#page #detail #frame #pic:hover {
     border-color: #2d7ef7;
 }
 
-
-#page #detail #frame #pic input{
+#page #detail #frame #pic input {
     width: 300px;
-    border-left:100px solid rgb(226, 226, 226)
+    border-left: 100px solid rgb(226, 226, 226)
 }
 
-#page #detail #frame #authorCom{
+#page #detail #frame #authorCom {
     width: 400px;
     height: 600px;
     display: flex;
@@ -53,41 +52,41 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    align-items:flex-start;
+    align-items: flex-start;
 }
 
 #page #detail #frame #authorCom .Allopera #choose {
-    border-right:30px solid #ffffff;
+    border-right: 30px solid #ffffff;
     border-bottom: 50px solid rgb(255, 255, 255);
 }
 
-#page #detail #frame #authorCom .Allopera #choose select{
+#page #detail #frame #authorCom .Allopera #choose select {
     font-size: 20px;
     color: #000000;
     outline: none;
     letter-spacing: 2px;
     background-color: #e9e9e9;
-    border:5px solid;
-    border-right:15px;
-    border-left:15px;
+    border: 5px solid;
+    border-right: 15px;
+    border-left: 15px;
     border-radius: 7px;
-    border-color:#e9e9e9;
+    border-color: #e9e9e9;
 }
 
-#page #detail #frame #authorCom .Allopera #choose select:hover{
+#page #detail #frame #authorCom .Allopera #choose select:hover {
     color: #5b5b61;
 }
 
-#page #detail #frame #authorCom .Allopera #more a img{
+#page #detail #frame #authorCom .Allopera #more a img {
     width: 30px;
     border-top: 5px solid #ffffff;
 }
 
-#page #detail #frame #authorCom #author input:hover{
+#page #detail #frame #authorCom #author input:hover {
     border-bottom: 2px solid #2d7ef7;
 }
 
-#page #detail #frame .input-box .inputText{
+#page #detail #frame .input-box .inputText {
     height: 60px;
     width: 416px;
     font-weight: 600px;
@@ -100,26 +99,27 @@
     flex-direction: column;
 }
 
-#page #detail #frame #authorCom #author #authorFrame{
+#page #detail #frame #authorCom #author #authorFrame {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-#page #detail #frame #authorCom #author #authorFrame a #authorProfile{ 
+#page #detail #frame #authorCom #author #authorFrame a #authorProfile {
     width: 60px;
     border: 20px solid rgb(255, 255, 255);
     border-left: 0px;
     border-right: 0px;
 }
 
-#page #detail #frame #authorCom #author #authorFrame #name{
+#page #detail #frame #authorCom #author #authorFrame #name {
     border: 20px solid rgb(255, 255, 255);
-    border-left: 5px solid rgb(255, 255, 255);;
+    border-left: 5px solid rgb(255, 255, 255);
+    ;
     width: 240px;
 }
 
-#page #detail #frame #authorCom #author #descriText input:hover{
+#page #detail #frame #authorCom #author #descriText input:hover {
     border-bottom: 2px solid #2d7ef7;
 }
 
@@ -134,12 +134,12 @@
     border-bottom: 2px solid #e4e4e4;
 }
 
-#page #detail #frame #authorCom #save{
+#page #detail #frame #authorCom #save {
     display: flex;
     justify-content: flex-end;
 }
 
-#page #detail #frame #authorCom #save #saveFrame{
+#page #detail #frame #authorCom #save #saveFrame {
     border: 7px solid;
     border-top: 5px solid;
     border-right: 1px solid;
@@ -148,16 +148,16 @@
     border-radius: 8px;
 }
 
-#page #detail #frame #authorCom #save #saveFrame:hover{
+#page #detail #frame #authorCom #save #saveFrame:hover {
     border-color: #880a0a;
 }
 
-#page #detail #frame .button{
+#page #detail #frame .button {
     display: flex;
     justify-content: flex-end;
 }
 
-#page #detail #frame .button input{
+#page #detail #frame .button input {
     font-family: 'Passion One', cursive;
     border: 7px solid;
     border-left: 26px solid;
@@ -167,7 +167,7 @@
     letter-spacing: 0.5px;
     color: #ffffff;
     text-decoration: none;
-    background-color: #e23c3c; 
+    background-color: #e23c3c;
     border-color: #e23c3c;
 }
 
@@ -176,7 +176,7 @@
     border-color: #c40000;
 }
 
-span.input-label{
+span.input-label {
     font-family: 'Passion One', cursive;
     font-size: 24px;
     letter-spacing: 0.5px;
@@ -184,13 +184,14 @@ span.input-label{
     font-weight: 500;
     margin-bottom: 5px;
     outline: none;
-    border:5px solid;
-    border-right:15px;
-    border-left:15px;
+    border: 5px solid;
+    border-right: 15px;
+    border-left: 15px;
     border-radius: 7px;
-    border-color:#e9e9e9;
-  }
-.text-input input{
+    border-color: #e9e9e9;
+}
+
+.text-input input {
     height: 45px;
     width: 100%;
     outline: none;
@@ -200,8 +201,9 @@ span.input-label{
     border: 1px solid #ccc;
     border-bottom-width: 2px;
     transition: all 0.3s ease;
-  }
-  .text-input textarea{
+}
+
+.text-input textarea {
     height: 225px;
     width: 100%;
     outline: none;
@@ -211,7 +213,12 @@ span.input-label{
     border: 1px solid #ccc;
     border-bottom-width: 2px;
     transition: all 0.3s ease;
-  }
-  .pic-error {
-      align:center;
-  }
+}
+
+.pic-error {
+    align: center;
+}
+
+.error-message {
+    color: red;
+}

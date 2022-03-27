@@ -269,6 +269,13 @@ class Queries:
         except:
             return None
 
+    def get_post_description(post):
+        try:
+            post = Post.objects.get(id=post)
+            description = post.description
+            return description
+        except:
+            return None
     # gets the original post of an attempt post
     # takes a post id
     def get_original(post):
