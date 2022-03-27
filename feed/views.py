@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feed.models import Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
-from feed.forms import UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm, PostCategoryForm
+from feed.forms import AddPostToFolderForm, UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, UserProfileForm, PostCategoryForm
 from datetime import datetime
 
 
@@ -547,6 +547,7 @@ def user_logout(request):
 
 def add_post_to_folder(request,post_id):
     
+    form = AddPostToFolderForm(request.user)
     
     context_dict = {}
     try:
@@ -555,9 +556,9 @@ def add_post_to_folder(request,post_id):
         context_dict['creator'] = post.creator
         description = Queries.get_post_description(post.id)
         context_dict['description'] = description
-        
+        context_dict['form'] = form
         # liked by user?
-
+        
         is_liked = Functions.has_liked(request.user.id,post_id)
         context_dict['is_liked'] = is_liked
         
@@ -569,6 +570,7 @@ def add_post_to_folder(request,post_id):
         context_dict['numComments'] = 0
         context_dict['description'] = None
         context_dict['is_liked'] = False
+        context_dict['form'] = None
         
     finally:
         

@@ -6,4 +6,35 @@
 {% endblock %}
 
 {% block body_block %}
+<head>
+    <meta charset="UTF-8">
+      <title>
+         Update profile
+      </title>
+    <link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+      
+   </head>
+   <form method="POST" enctype="multipart/form-data" action="{% url 'feed:update_profile user.username %}">
+       {% csrf_token %}
+       <div id="page">
+           <div id="frame">
+               <div id="frame">
+                   <div class="upload">
+                        {{ form.picture.errors }}
+                        {{ form.picture }}
+                   </div>
+               </div>
+               <div id="authorCom">
+                   <div class="input-box">
+                       <div id="text_input">
+                           <span class="input-label">Add your socials!:</span>
+                           {{ form.website.errors }}
+                           {{ form.website }}
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </form>
 {% endblock %}

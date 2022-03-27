@@ -2,7 +2,7 @@ from pydoc import describe
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from feed.models import Post, Folder, Comment, UserProfile, Categorises, Category
+from feed.models import Post, Folder, Comment, UserProfile, Categorises, Category, Queries, In_folder
 from string import Template
 from django.utils.safestring import mark_safe
 
@@ -20,12 +20,12 @@ class UserForm(UserCreationForm):
 
 
 class UserProfileForm(forms.Form):
-    ## this is for editprofile
+    # deprecated, delete
     class meta:
         model = UserProfile
         fields = {'website',
                   'bio',
-                  'picture'}
+                  'profile_picture'}
 
 class UserLoginForm(forms.ModelForm):
     ## this is for logins
@@ -62,12 +62,15 @@ class PostCategoryForm(forms.ModelForm):
         fields = {'category',}
 
 class EditProfileForm(forms.ModelForm):
-    username = forms.CharField(max_length=36)
-    profile_picture = forms.ImageField()
+    website = forms.URLField(help_text="Enter one of your socials here!")
+    bio = forms.CharField(help_text="Describe youself... ",max_length=256)
+    profile_picture = forms.ImageField(required=False)
 
-    class Meta:
-        model = User
-        fields = {'username','profile_picture' }
+    class meta:
+        model = UserProfile
+        fields = {'website',
+                  'bio',
+                  'profile_picture'}
 
 class UserCommentForm(forms.ModelForm):
     comment = forms.CharField(max_length=128)
@@ -82,7 +85,17 @@ class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
         fields = {'name'}
-
+class AddPostToFolderForm(forms.ModelForm):
+    folder_list = None
+    folder = None
+    post = None
+    class Meta:
+        model = In_folder
+        fields = {'folder','post',}
+    def __init__(self,cur_user,*args,**kwargs):
+        ## this should technically pull the folders that the user has, but it returns the dummy folders 
+        super(AddPostToFolderForm,self).__init__(*args,**kwargs)
+        self.fields['folder_list'] = forms.ModelChoiceField(Queries.get_user_folders(cur_user.id))
 class ResetForm(forms.ModelForm):
     email = forms.EmailField()
     new_password = forms.PasswordInput()

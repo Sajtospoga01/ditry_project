@@ -4,6 +4,34 @@
     Add post to folder
 {% endblock %}
 
-{%block add_post%}
-    hey this is an add post!
-{%endblock%}
+{% block body_block %}
+    {%block add_post%}
+        <head>
+        <meta charset="UTF-8">
+          <title>
+             Add post to Folder 
+          </title>
+        <link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
+        <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+
+        </head>
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'feed:add_to_folder' post.id %}">
+            {% csrf_token %}
+            <div id="page">
+                <div id="detail">
+                    <div id="frame">
+                        <div id="choose">
+                            <span class="input-label">Choose a folder: </span>
+                            {{ form.folder_list }}
+                            {{ form.errors }}
+                        </div>
+                        <input id="submitbutton"type="submit" value="submit" value="Add to folder">
+                    </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    {%endblock%}
+{% endblock %}
