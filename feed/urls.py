@@ -22,6 +22,7 @@ urlpatterns = [
     path('show-post/<int:post_id>/', views.show_post, name='show_post'),
     path('show-post/<int:post_id>/like-post/', views.like_post, name='like_post'),
     path('show-post/<int:post_id>/save-post/', views.save_post, name='save_post'),
+    path('show-post/<int:post_id>/add-to-folder/', views.add_post_to_folder, name='add_to_folder'),
     path('show-post/<int:post_id>/comment-on-post/', views.comment_on_post, name='comment_on_post'),
     path('show-post/<int:post_id>/<int:comment_id>/like-comment/', views.like_comment, name='like_comment'),
     #path('show-post/<int:post_id>/<int:comment_id>/delete-comment/', views.delete_comment, name='delete_comment'),
@@ -30,6 +31,7 @@ urlpatterns = [
     path('add-post/<int:original_id>/', views.add_post, name='add_post'),
     path('account/<str:username>/', views.show_user, name='account'),
     path('<str:username>/folders/add-folder/', views.add_folder, name='add_folder'),
+
     path('<str:username>/folders/<int:folder_id>/', views.show_folder, name='show_folder'),
     #path('<str:username>/folders/<int:folder_id>/delete-folder/', views.delete_folder, name='delete_folder'),
     #path('<str:username>/folders/<int:folder_id>/<int:post_id>/del-saved-post/', views.delete_saved_post,

@@ -57,13 +57,16 @@
                     <div id="authorOpera">
                         <a id = "follow" class="button" href="{% url 'feed:follow_user' post.creator.username  %}">Follow</a>
                         <a class="button" href="{% url 'feed:add_post' post.id %}">Attempt</a>
+                        <a class="button" href="{% url 'feed:add_to_folder' post.id %}">Add to folder</a>
                     </div>
                 </div>
                 
             </div>
 			<div id="title">{{post.title}}</div>
             <div id="description">{{post.description}}</div>
-            <div id="comments"></div>
+            {% block add_post%}
+            
+
 			<div id="sumNum">{{comments.count}} Comments</div>
                 <div class="commFrame">
                     <form action="{% url 'feed:comment_on_post' post.id%}" method="POST">
@@ -82,6 +85,7 @@
 				{% endfor %}
                 
             </div>
+            {% endblock%}
             
         </div>
         {% endif %}
