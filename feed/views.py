@@ -94,7 +94,7 @@ def add_post(request, original_id=None):
                 post.picture = request.FILES['picture']
             else:
                 context = {'no_pic_error': 'You must include a picture.', 'form': form, 'category_form': category_form }
-                return render(request, 'feed/addPost.html', context)
+                return render(request, 'feed/addPost.html', context)    
             post.save()
 
             # categorise
@@ -130,6 +130,8 @@ def show_post(request, post_id):
         context_dict['post'] = post
         context_dict['creator'] = post.creator
         comments = Queries.get_comment_on_post(post.id)
+        description = Queries.get_post_description(post.id)
+        context_dict['description'] = description
         context_dict['comments'] = comments
         # liked by user?
 
@@ -142,6 +144,7 @@ def show_post(request, post_id):
         context_dict['comments'] = None
         context_dict['creator'] = None
         context_dict['numComments'] = 0
+        context_dict['description'] = None
         context_dict['is_liked'] = False
         context_dict['form'] = None
     finally:
