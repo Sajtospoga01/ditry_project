@@ -10,13 +10,13 @@ https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
 import os
 import sys
 
-path = 'home/ditry/ditry'
+path = 'home/ditry/ditry_project'
 if path not in sys.path:
     sys.path.append(path)
 
 os.chdir(path)
 
-os.environ['DJANGO_SETTINGS_MODULE']='ditry.settings'
+os.environ['DJANGO_SETTINGS_MODULE']='ditry_project.settings'
 
 import django
 django.setup()
