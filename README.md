@@ -17,9 +17,29 @@ DITry is a web application that allows the user to upload pictures of his own cr
 
 ## Run DITry
 After installing everything needed, you can now run the project by doing the following:
+Navigate to the folder, where the project is saved at:
 
 ````
-cd ditry_project
+cd <your_path>/ditry_project
+````
+The correct order of the following steps is crucial!
+
+````
+python manage.py migrate
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+````
+The following steps are not mandatory, but the order they need to be ran is still crucial. (that means you can choose to run both commands, one-one command, or neither only the order matters):
+````
+python population_script.py
+
+python manage.py createsuperuser
+````
+Finally:
+````
 
 python manage.py runserver
 ````
