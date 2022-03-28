@@ -30,11 +30,11 @@ python manage.py migrate
 python manage.py makemigrations
 
 python manage.py migrate
-````
-The following steps are not mandatory, but the order they need to be ran is still crucial. (that means you can choose to run both commands, one-one command, or neither only the order matters):
-````
-python population_script.py
 
+python population_script.py
+````
+The following command to create a superuser is optional:
+````
 python manage.py createsuperuser
 ````
 Finally:
