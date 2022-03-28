@@ -265,7 +265,7 @@
 .commentStyle {
     word-wrap: break-word;
     width: auto;
-    height: 20px;
+    height: auto;
     font-size: 20px;
     font-family: 'Passion One', cursive;
     color: #707070;
