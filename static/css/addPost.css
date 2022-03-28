@@ -156,8 +156,12 @@
     display: flex;
     justify-content: flex-end;
 }
-
-#page #detail #frame .button input {
+#page #detail #frame .button {
+    padding-left: 30px;
+    padding-right:30px;
+}
+#page #detail #frame .button input,
+#page #detail #frame .button a {
     font-family: 'Passion One', cursive;
     border: 7px solid;
     border-left: 26px solid;
@@ -175,6 +179,17 @@
     background-color: #c40000;
     border-color: #c40000;
 }
+
+#page #detail #frame .button a {
+    background-color: #00BAAD;
+    border-color: #00BAAD;
+}
+
+#page #detail #frame .button a:hover {
+    background-color: #00948a;
+    border-color: #00948a;
+}
+
 
 span.input-label {
     font-family: 'Passion One', cursive;

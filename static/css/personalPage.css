@@ -72,6 +72,7 @@
 #page #frame #author #authorDetail #authorOpera {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-around;
 }
 
@@ -87,6 +88,7 @@
     text-decoration: none;
     background-color: #16A082;
     font-weight: 900;
+    margin: 2px;
 }
 
 #page #frame #author #authorDetail #authorOpera .button:hover {

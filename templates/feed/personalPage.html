@@ -23,7 +23,11 @@
                 {%endif%}
             </a>
             <div id="authorDetail">
-                <a href="" id="name">{{ user.username }}</a>
+                <span id="name">{{ user.username }}</span>
+                <br>
+                <span> {{ user.bio }} </span>
+                <br>
+                <span> {{ user.website }} </span>
                 <div id="followFrame">
                     <div class="follow"><a href>{{ following_count }}</a></div>
                     <div class="follow"><a href>{{ follower_count }}</a></div>

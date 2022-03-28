@@ -55,7 +55,7 @@ class PostCategoryForm(forms.ModelForm):
 
 class EditProfileForm(forms.ModelForm):
     website = forms.URLField(help_text="Enter one of your socials here!")
-    bio = forms.CharField(help_text="Describe youself... ",max_length=256)
+    bio = forms.CharField(help_text="Describe youself... ",max_length=256, widget=forms.Textarea(attrs={"rows":5, "cols":20}))
     profile_picture = forms.ImageField(required=False)
 
     class Meta:

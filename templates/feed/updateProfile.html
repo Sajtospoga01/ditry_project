@@ -6,9 +6,10 @@
 {% endblock %}
 
 {% block body_block %}
-    <link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
+<link rel="stylesheet" href="/static/css/addPost.css" type="text/css">
+<br><br>
 <form method="POST" enctype="multipart/form-data" action="{% url 'feed:update_profile' user.username %}">
-       {% csrf_token %}
+    {% csrf_token %}
     <div id="page">
         <div id="detail">
             <div id="frame">
@@ -19,21 +20,28 @@
                     </div>
                 </div>
                 <div id="authorCom">
+                    <div id="authorCom">
                     <div class="input-box">
-                         <div id="text-input">
+                         <div class="text-input">
                              <span class="input-label">Add your website!:</span>
                                  {{ form.website.errors }}
                                  {{ form.website }}
                          </div>
-                         <div id="text-input">
+                         <div class="text-input">
                              <span class="input-label">Describe yourself: </span>
                                  {{ form.bio.errors }}
                                  {{ form.bio }}
                          </div>
                      </div>
                  </div> 
-                 <div class = "button">
+                 <div class="Allopera">
+                 <div class="button">
                      <input type="submit" value="Edit profile" name="submit">
+                 </div>
+                 <div class="button">
+                    <a href="{% url 'password_change' %}">Change password</a>
+                 </div>
+                 </div>
                  </div>
                 </div>
             </div>
