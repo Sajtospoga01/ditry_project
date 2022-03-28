@@ -235,8 +235,10 @@ def add_folder(request,username):
                 folder = form.save(commit=False)
                 folder.user = current_user
                 folder.save()
+                return redirect(reverse('feed:account', kwargs={'username':username}))
             else:
                 print(form.errors)
+            
 
         return render(request, 'feed/add_folder.html', context={'form':form })
 
