@@ -220,7 +220,7 @@ class PopulatedViewTests(TestCase):
         self.assertEqual(response.context['user'].username, "alicej", "show_user should be alicej")
         self.assertEqual(len(response.context['posts']), 1, "alicej should have 1 post")
 
-        self.assertTrue("""<a href="" id="name">alicej</a>""" in response_body, "doesn't display username")
+        self.assertTrue("""<span id="name">alicej</span>""" in response_body, "doesn't display username")
         self.assertTrue("""<a class="button" href="/feed/alicej/update-profile/">Edit profile</a>""" in response_body, "doesn't display edit profile button")
         self.assertTrue("""No folders found.""" in response_body, "doesn't display no folders message")
         self.assertTrue("test attempt" in response_body, "couldn't find post 'test attempt'")
@@ -249,7 +249,7 @@ class PopulatedViewTests(TestCase):
         self.assertEqual(response.context['user'].username, "alicej", "user should be alicej")
 
         self.assertTrue("test attempt" in response_body, "couldn't find post test attempt")
-        self.assertTrue("""<a href="" id="name">alicej</a>""" in response_body, "doesn't display username")
+        self.assertTrue("""<span id="name">alicej</span>""" in response_body, "doesn't display username")
         self.assertTrue("""<a class="button" href="/feed/alicej/update-profile/">Edit profile</a>""" in response_body, "doesn't display edit profile button")
 
     def test_follow_user_view(self):
@@ -305,7 +305,7 @@ class PopulatedViewTests(TestCase):
         self.assertTrue('enctype="multipart/form-data"' in response_body, "couldn't find correct form type")
         self.assertTrue("""<input type="file" name="profile_picture" accept="image/*" id="id_profile_picture">""" in response_body, "couldn't find profile picture input")
         self.assertTrue("""<input type="url" name="website" required id="id_website">""" in response_body, "couldn't find website input")
-        self.assertTrue("""<input type="text" name="bio" maxlength="256" required id="id_bio">""" in response_body, "couldn't find bio input")
+        self.assertTrue("""<textarea name="bio" cols="20" rows="5" maxlength="256" required id="id_bio">""" in response_body, "couldn't find bio input")
         self.assertTrue("""<input type="submit" value="Edit profile" name="submit">""" in response_body, "couldn't find change button")
 
 # all database related tests, done
