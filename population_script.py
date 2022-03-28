@@ -21,21 +21,21 @@ def populate():
     post_populate = [
         {"id":1,
          "title":"title1",
-         "likes":23,
+         "likes":0,
          "picture": "sample_1.jpg",
          "creator":1,
          "description":"populate 1"
         },
         {"id":2,
          "title":"title2",
-         "likes":54,
+         "likes":0,
          "picture": "sample_2.jpg",
          "creator":2,
          "description":"populate 2"
         },
         {"id":3,
          "title":"title3",
-         "likes":92,
+         "likes":0,
          "picture": "sample_3.jpg",
          "creator":1,
          "description":"populate 3"
@@ -195,6 +195,8 @@ def connect_likes(username,post_id):
     user_object = UserProfile.objects.get(username = username)
     post_object = Post.objects.get(id = post_id)
     connect = Functions.connect_user_likes_post(user_object,post_object)
+    post_object.likes += 1
+    post_object.save()
     print(connect)
 
 def connect_post_to_category(post_id,category_name):

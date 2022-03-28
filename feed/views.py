@@ -20,22 +20,6 @@ def home(request):
     visitor_cookie_handler(request)
     return render(request, 'feed/home.html', context={'posts': posts})
 
-
-# helper function to turn posts into a list of lists for easy grid view
-def tableify(posts):
-    if not posts: return posts
-    table = list()
-    index = 0
-    row = -1
-    for i in posts:
-        if index % 3 == 0:
-            row += 1
-            table.append(list())
-        table[row].append(i)
-        index += 1
-    return table
-
-
 def about(request):
     return render(request, 'feed/about.html')
 

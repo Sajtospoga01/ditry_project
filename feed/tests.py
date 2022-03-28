@@ -1,5 +1,6 @@
 import os
 import importlib
+from telnetlib import RSP
 from django.urls import reverse
 from django.test import TestCase
 from django.conf import settings
@@ -71,11 +72,10 @@ class BlankViewTests(TestCase):
         self.assertTrue('No diy posts yet.' in response_body, "'No diy posts yet.' message not displayed.")
         self.assertTrue(not response.context['posts'], "Non-empty posts context.")
     
-    def test_not_signed_in_views(self):
-        for view in []:
-            response = self.client.get(reverse(view))
-            self.assertEqual(response.status_code, 302, f"{view} page not returned with status code 302.")
-            self.assertEqual(response.url, reverse('feed:login'), f"{view} doesn't redirect to login when not logged in")
+    def test_trending_view_not_signed_in(self):
+        response = self.client.get(reverse(f'feed:trending'))
+        self.assertEqual(response.status_code, 302, f"trending page not returned with status code 302.")
+        self.assertTrue(reverse('feed:login') in response.url, f"trending doesn't redirect to login when not logged in")
 
     def test_trending_view_signed_in(self):
         self.client.login(username='alicej', password='testpassword')
@@ -93,6 +93,14 @@ class BlankViewTests(TestCase):
         self.assertEqual(response.url, reverse('feed:home'), "Should be redirected to home page.")
         self.assertTrue('_auth_user_id' not in self.client.session, "Not properly logged out.")
 
+    def test_personal_page_view(self):
+        self.client.login(username="alicej", password="testpassword")
+        response = self.client.get(reverse('feed:account', kwargs={'username':'alicej'}))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "account page not status code 200")
+        self.assertTrue("No folders found.", "couldn't find no folders message.")
+
 class PopulatedViewTests(TestCase):
     def setUp(self):
         Helper.create_model_setup()
@@ -102,10 +110,11 @@ class PopulatedViewTests(TestCase):
     def test_home_view_with_posts(self):
         response = self.client.get(reverse('feed:home'))
         response_body = response.content.decode()
-        self.assertEqual(Helper.num_posts_on_page(response), 2, f"Wrong number of posts passed in response.")
+        self.assertEqual(len(response.context['posts']), 2, f"Wrong number of posts passed in response.")
         #some general content tests
         self.assertTrue("""<a href="/feed/add-post/" class="otherButton" style = "background-color: #e23c3c; border-color: #e23c3c;">Add post</a>""" in response_body, "couldn't find add post button in home")
-        self.assertTrue("""<a href="/feed/show-category/Craft/" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>""")
+        self.assertTrue("""<a href="/feed/show-category/Craft/" class="otherButton" style="background-color: #00BAAD; border-color: #00BAAD;">Craft</a>""" in response_body, "couldn't find craft link in home page")
+        self.assertTrue("""<a href="/feed/show-post/1/">""" in response_body, "couldn't find link to first post in home page")
 
     def test_category_view_with_posts(self):
         post = Post.objects.create(id = 3, creator = UserProfile.objects.get(username = "alicej"), title = "food test", likes = 0)
@@ -115,16 +124,16 @@ class PopulatedViewTests(TestCase):
         response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'diy'}))
         response_body = response.content.decode()
         self.assertTrue("diy" in response_body)
-        self.assertEqual(Helper.num_posts_on_page(response), 2, "Wrong number of posts passed in response.")
+        self.assertEqual(len(response.context['posts']), 2, "Wrong number of posts passed in response.")
 
         response = self.client.get(reverse('feed:show_category', kwargs={'name_category':'food'}))
         self.assertTrue("food" in response.content.decode())
-        self.assertEqual(Helper.num_posts_on_page(response), 1, "Wrong number of posts passed in response.")
+        self.assertEqual(len(response.context['posts']), 1, "Wrong number of posts passed in response.")
     
     def test_contact_us_view(self):
         response = self.client.get(reverse('feed:contact_us'))
         self.assertEqual(response.status_code, 200, "Contact us page not returned with status code 200")
-        self.assertTrue("""<span style="font-size: 20px; font-weight: 400;">Currently there is no way of contacting us.</span>""" in response.content.decode(), "Didn't find expected content on contact us page.")
+        self.assertTrue("""<span class = "aboutText">Currently there is no way of contacting us.</span>""" in response.content.decode(), "Didn't find expected content on contact us page.")
     
     def test_user_following_view(self):
         response = self.client.get(reverse('feed:following'))
@@ -147,8 +156,9 @@ class PopulatedViewTests(TestCase):
         self.assertTrue('<div id="title">test</div>' in response_body, "could not find post title 'test'")
         self.assertTrue("""<img src="/static/images/hearted.png" alt="heart" />""" in response_body, "heart should be filled in - alicej has liked post 1")
         self.assertTrue("""<a href="/feed/account/bobs/" align = "center" id="name">bobs</a>""" in response_body, "couldn't find link to bobs' profile")
-        self.assertTrue("""<a class="button" href="/feed/follow-user/bobs/">Follow</a>""" in response_body, "couldn't find follow button")
+        self.assertTrue("""<a id = "follow" class="button" href="/feed/follow-user/bobs/">Follow</a>""" in response_body, "couldn't find follow button")
         self.assertTrue("""<a class="button" href="/feed/add-post/1/">Attempt</a>""" in response_body, "couldn't find attempt button")
+        self.assertTrue("""<a class="button" href="/feed/show-post/1/add-to-folder/">Add to folder</a>""" in response_body, "couldn't find add to folder button")
         self.assertTrue("""<input type="text" name="comment" maxlength="128" required id="id_comment">""" in response_body, "couldn't find comment box")
 
         self.assertEqual(len(response.context['comments']), 2, "should be two comments.")
@@ -190,6 +200,7 @@ class PopulatedViewTests(TestCase):
         # see forms tests for making post
         response = self.client.get(reverse('feed:add_post'))
         response_body = response.content.decode()
+
         self.assertEqual(response.status_code, 200, "add page not returned with status code 200")
         self.assertTrue(response.context.get('form')!=None, "add_post should pass back form")
         self.assertTrue(response.context.get('category_form')!=None, "add post should pass back category_form")
@@ -198,7 +209,7 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("""<input type="file" name="picture" accept="image/*" id="id_picture">""" in response_body, "picture field ot displayed")
         self.assertTrue("""<select name="category" required id="id_category">""" in response_body, "category select box not displayed")
         self.assertTrue("""<input type="text" name="title" maxlength="24" required id="id_title">""" in response_body, "title box not displayed")
-        self.assertTrue("""<input type="text" name="comment" required id="id_comment">""" in response_body, "comment box not displayed")
+        self.assertTrue("""<textarea name="description" cols="20" rows="5" id="id_description">""" in response_body, "description box not displayed")
         self.assertTrue("""<input type="submit" name="submit" value="Post">""" in response_body, "post button not displayed")
 
     def test_my_account_view(self):
@@ -207,7 +218,7 @@ class PopulatedViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200, "account page not returned with status code 200")
         self.assertEqual(response.context['user'].username, "alicej", "show_user should be alicej")
-        self.assertEqual(Helper.num_posts_on_page(response), 1, "alicej should have 1 post")
+        self.assertEqual(len(response.context['posts']), 1, "alicej should have 1 post")
 
         self.assertTrue("""<a href="" id="name">alicej</a>""" in response_body, "doesn't display username")
         self.assertTrue("""<a class="button" href="/feed/alicej/update-profile/">Edit profile</a>""" in response_body, "doesn't display edit profile button")
@@ -221,11 +232,11 @@ class PopulatedViewTests(TestCase):
         self.assertEqual(response.status_code, 200, "account page not returned with status code 200")
         self.assertEqual(response.context['show_user'].username, "bobs", "show_user should be bobs")
         self.assertEquals(response.context['user'].username, "alicej", "should have alicej as current user")
-        self.assertEqual(Helper.num_posts_on_page(response), 1, "bobs should have 1 post")
+        self.assertEqual(len(response.context['posts']), 1, "bobs should have 1 post")
 
         self.assertTrue("""<a href="" id="name">bobs</a>""" in response_body, "doesn't display username")
         self.assertFalse("""<a class="button" href="/feed/bobs/update-profile/">Edit profile</a>""" in response_body, "displays edit profile button")
-        self.assertTrue("""<a class="button" href="/feed/follow-user/bobs/">Follow</a>""" in response_body, "doesn't display follow button")
+        self.assertTrue("""<a id = "follow" class="button" href="/feed/follow-user/bobs/">Follow</a>""" in response_body, "doesn't display follow button")
         self.assertTrue("""<a href="/feed/bobs/folders/1/"><span>test folder</span></a>""" in response_body, "doesnt display folder")
         self.assertTrue("test" in response_body, "couldn't find post 'test'")
 
@@ -234,7 +245,7 @@ class PopulatedViewTests(TestCase):
         response_body = response.content.decode()
 
         self.assertEqual(response.status_code, 200, "my attempts page not returned with status code 200")
-        self.assertEqual(Helper.num_posts_on_page(response), 1, "alicej should have one attempt")
+        self.assertEqual(len(response.context['posts']), 1, "alicej should have one attempt")
         self.assertEqual(response.context['user'].username, "alicej", "user should be alicej")
 
         self.assertTrue("test attempt" in response_body, "couldn't find post test attempt")
@@ -257,7 +268,7 @@ class PopulatedViewTests(TestCase):
         response_body = response.content.decode()
 
         self.assertEqual(response.status_code, 200, "search page not returned with status 200")
-        self.assertEqual(Helper.num_posts_on_page(response, name='matching_posts'),2, "should be two posts matching 'test'")
+        self.assertEqual(len(response.context['matching_posts']),2, "should be two posts matching 'test'")
 
     def test_reset_password_view(self):
         response = self.client.get(reverse('reset_password'))
@@ -277,6 +288,25 @@ class PopulatedViewTests(TestCase):
         self.assertTrue("""<input type="password" name="new_password1" required id="id_new_password1">""" in response_body, "couldn't find input box for new password")
         self.assertTrue("""<input type="password" name="new_password2" required id="id_new_password2">""" in response_body, "couldn't find confirm password input box")
         self.assertTrue("""<input type="submit" value="Change password">""" in response_body, "couldn't find submit button")
+
+    def test_add_folder_view(self):
+        response = self.client.get(reverse('feed:add_folder', kwargs={'username':'alicej'}))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "add folder page not returned with status code 200")
+        self.assertTrue("""<input type="text" name="name" required id="id_name">""" in response_body, "couldn't find input box")
+        self.assertTrue("""<input type="submit" name="submit" value="Make folder">""" in response_body, "couldn't find make folder button")
+
+    def test_edit_profile_view(self):
+        response = self.client.get(reverse('feed:update_profile', kwargs={'username':'alicej'}))
+        response_body = response.content.decode()
+
+        self.assertEqual(response.status_code, 200, "edit profile page not returned with status code 200")
+        self.assertTrue('enctype="multipart/form-data"' in response_body, "couldn't find correct form type")
+        self.assertTrue("""<input type="file" name="profile_picture" accept="image/*" id="id_profile_picture">""" in response_body, "couldn't find profile picture input")
+        self.assertTrue("""<input type="url" name="website" required id="id_website">""" in response_body, "couldn't find website input")
+        self.assertTrue("""<input type="text" name="bio" maxlength="256" required id="id_bio">""" in response_body, "couldn't find bio input")
+        self.assertTrue("""<input type="submit" value="Edit profile" name="submit">""" in response_body, "couldn't find change button")
 
 # all database related tests, done
 
@@ -431,9 +461,9 @@ class PopulationScriptTests(TestCase):
         self.assertTrue('Cook' in categories_strs, f"The category 'Cook' was expected but not created by populate_feed.")
 
     def test_posts(self):
-        exp_posts = {'title1': {'id':1, 'creator':1},
-                    'title2': {'id':2, 'creator':2},
-                    'title3': {'id':3, 'creator':1}}
+        exp_posts = {'title1': {'id':1, 'creator':1, 'description': 'populate 1'},
+                    'title2': {'id':2, 'creator':2, 'description': 'populate 2'},
+                    'title3': {'id':3, 'creator':1, 'description': 'populate 3'}}
         posts = Post.objects.filter()
         self.assertEqual(len(posts), len(exp_posts), f" Expected {len(exp_posts)} but got {len(posts)}.")
 
@@ -444,11 +474,14 @@ class PopulationScriptTests(TestCase):
                 raise ValueError(f"The post {post} was not found in the database produced by populate_feed. ")
             self.assertEqual(post, p.title, f"The post {p.title} does not have the expected title: {post}.")
             self.assertEqual(exp_posts[post]["creator"], p.creator.id, f"The post {p.title} does not have the expected creator.")
+            self.assertEqual(exp_posts[post]["description"], p.description, "The post does not have the expected description.")
 
     def test_post_objects_have_likes(self):
         posts = Post.objects.filter()
         for post in posts:
-            self.assertTrue(post.likes>0, f"The post '{post.title}' has negative/zero likes.")
+            self.assertTrue(post.likes>=0, f"The post '{post.title}' has negative likes.")
+        post = Post.objects.get(id=1)
+        self.assertEqual(post.likes, 1, "post 1 should have 1 like")
     
     def test_users(self):
         users = [UserProfile.objects.get(username = un) for un in ["bob", "dummy2"]]
@@ -603,12 +636,6 @@ class FormTests(TestCase):
         response_body = response.content.decode()
         self.assertTrue("Hi, alicej" in response_body, "Can't see add post button on home page - now logged in.")
 
-    # def test_post_form_functionality(self):
-    #     self.client.login(username="alicej", password="testpassword")
-    #     self.client.post(reverse('feed:add_post', {'title':'test post', 'picture': tempfile.NamedTemporaryFile(suffix=".jpg").name, 'category': 'craft'}))
-    #     posts = Post.objects.filter(title = 'test post')
-    #     self.assertEqual(len(posts), 1, "The post form doesn't work.")
-
     def test_comment_form_functionality(self):
         self.client.login(username="alicej", password="testpassword")
         self.client.post(reverse('feed:comment_on_post', kwargs={'post_id':1}), 
@@ -616,8 +643,20 @@ class FormTests(TestCase):
         comments = Comment.objects.filter(comment = 'whoop another test')
         self.assertEqual(len(comments), 1, "The comment form doesn't work.")
 
-    def test_folder_form_functionality(self): # unimplemented
-        pass
+    def test_folder_form_functionality(self):
+        self.client.login(username="alicej", password="testpassword")
+        self.client.post(reverse('feed:add_folder', kwargs={'username':'alicej'}),
+            {'name':'a test folder'})
+        folder = Folder.objects.filter(name="a test folder")
+        self.assertEqual(len(folder), 1, "The folder form doesn't work")
+    
+    def test_edit_profile_form_functionality(self):
+        self.client.login(username="alicej", password="testpassword")
+        self.client.post(reverse('feed:update_profile', kwargs={'username':'alicej'}),
+            {'bio':'be gay, do crime', 'website':'https://example.com'}) # no idk how to test an image
+        user = UserProfile.objects.get(username='alicej')
+        self.assertEqual(user.bio, 'be gay, do crime', "bio not added, form didn't work")
+        self.assertEqual(user.website, 'https://example.com', 'website not websiteing')
 
     def test_change_password_form(self):
         self.client.login(username="alicej", password="testpassword")
@@ -652,10 +691,10 @@ class Helper:
         user2.profile_picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
         
 
-        post = Post.objects.create(id = 1, creator = user1, title = "test", likes = 0)
+        post = Post.objects.create(id = 1, creator = user1, title = "test", likes = 0, description="a beautiful post")
         post.picture.save("sample_1.jpg", ImageFile(open("sample_images/sample_1.jpg", "rb")))
 
-        attempt_post = Post.objects.create(id = 2, creator = user2, title = "test attempt", likes =0)
+        attempt_post = Post.objects.create(id = 2, creator = user2, title = "test attempt", likes =0, description="attempting test")
         attempt_post.picture.save("sample_2.jpg", ImageFile(open("sample_images/sample_2.jpg", "rb")))
         attempt_post.original = 1
         attempt_post.save()
@@ -686,17 +725,3 @@ class Helper:
         folder = Folder.objects.create(id = 1, name = "test folder", user = user1)
         folder.save()
         In_folder.objects.create(folder = folder, post = post).save()
-    
-    # gets number of posts on page when arranged in grid view
-    def num_posts_on_page(response, name='posts'):
-        return sum([len(row) for row in response.context[name]])
-
-    def get_template(path_to_template):
-        f = open(path_to_template, 'r')
-        template_str = ""
-
-        for line in f:
-            template_str = f"{template_str}{line}"
-
-        f.close()
-        return template_str
