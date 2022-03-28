@@ -199,88 +199,11 @@ def show_user(request, username):
         return render(request, 'feed/otherUserPage.html', context=context_dict)
 
 
-
-#@login_required
-#def all_followed_users(request):
- #   follows = Queries.get_user_following(request.user.id)
-    ## also needs sepaparate url if not helper function to display on personal page
-  #  return
-
 @login_required(login_url='feed:login')
 def show_category(request, name_category):
     posts = Queries.get_posts_in_category(name_category)
 
     return render(request, 'feed/categories.html', context={'posts':posts, 'name': name_category})
-
-# def show_category_helper( category_name):
-#     category = Category.objects.get(name=category_name)
-#     category_id = category.id
-#     posts = Queries.get_posts_in_category(category_id)
-#     return category, posts
-#
-# @login_required
-# def crafts(request, category_id):
-#     category, posts = show_category_helper(category_id)
-#     return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
-#
-# @login_required
-# def diys(request, category_id):
-#     category, posts = show_category_helper(category_id)
-#     return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
-#
-#
-# @login_required
-# def food(request, category_id):
-#     category, posts = show_category_helper(category_id)
-#     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
-#
-# @login_required
-# def crafts(request):
-#     category, posts = show_category_helper("Craft")
-#     return render(request, 'feed/crafts.html', context={'posts':posts, 'category':category})
-#
-# @login_required
-# def diys(request):
-#     category, posts = show_category_helper("Diy")
-#     return render(request, 'feed/diys.html', context={'posts':posts, 'category':category})
-#
-#
-# @login_required
-# def food(request):
-#     category, posts = show_category_helper("Cook")
-#     return render(request, 'feed/food.html', context={'posts':posts, 'category':category})
-
-
-# def helper_delete_post(request,post):
-#     if request.method == 'POST':
-#         post.delete()
-
-
-# @login_required(login_url='feed:login')
-# def delete_saved_post(request, post_id, folder_id):
-#     # needs to check if post in specific folder and if folder by request.user
-#     post = get_object_or_404(Post, id=post_id)
-#     helper_delete_post(request,post)
-#     return redirect(reverse('feed:show_folder',
-#                                         kwargs={'folder_id':
-#                                                 folder_id, 'username':request.user.username}))
-
-
-# @login_required(login_url='feed:login')
-# def delete_post(request, post_id):
-#     post = get_object_or_404(Post, id=post_id)
-#     user = UserProfile.objects.get(id = request.user.id)
-#     if post.creator == user:
-#         helper_delete_post(request, post)
-#     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
-
-
-# @login_required(login_url='feed:login')
-# def delete_folder(request, folder_id):
-#     folder = get_object_or_404(Post, id=folder_id)
-#     if request.method == 'POST':
-#         folder.delete()
-#     return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
 
 
 @login_required(login_url='feed:login')
@@ -416,18 +339,6 @@ def comment_on_post(request, post_id):
                             kwargs={'post_id': post_id}))
 
 
-# # might not need this view, if not needed, also delete url for it
-# @login_required(login_url='feed:login')
-# def delete_comment(request, comment_id):
-#     try:
-#         user = UserProfile.objects.get(id=request.user.id)
-#         this_comment = Comment.objects.get(id=comment_id, user_id=user)
-#         Comment.objects.filter(id=comment_id, user_id=user).delete()
-#         post_id = this_comment.post_id
-#         return redirect(reverse('feed:show_post', kwargs={'post_id':post_id}))
-#     except Comment.DoesNotExist:
-#         return redirect(reverse('feed:account',kwargs={'username':request.user.username}))
-
 
 @login_required(login_url='feed:login')
 def search_title(request):
@@ -451,6 +362,7 @@ def search_title(request):
 
     return render(request,'feed/searchTitle.html',
                   context={'matching_posts': matching_posts, 'query': query})
+
 
 @login_required(login_url='feed:login')
 def update_profile(request,username):
@@ -486,6 +398,7 @@ def register(request):
 
     return render(request,'feed/register.html',context)
 
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -513,6 +426,7 @@ def userFollowing(request):
 
     return render(request,'feed/userFollowing.html',context)
 
+
 @login_required(login_url='feed:login')
 def userFollowers(request):
     cur_user = UserProfile.objects.get(username=request.user.username)
@@ -521,12 +435,14 @@ def userFollowers(request):
     context['followers'] = get_followers
     return render(request,'feed/userFollower.html',context)
 
+
 @login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
     # Take the user back to the homepage.
     return redirect(reverse('feed:home'))
+
 
 def add_post_to_folder(request,post_id):
 
@@ -574,14 +490,6 @@ def add_post_to_folder(request,post_id):
     finally:
         
         return render(request,'feed/add_to_folder.html',context_dict)    
-        
-        
-            
-  
-
-
-
-
 
 
 # helper function
@@ -625,6 +533,7 @@ def get_home_likes(request):
                 data.append(like.id)
         return JsonResponse({'data':data})
     return JsonResponse({})
+
 
 def get_follows(request):
     if(request.is_ajax()):
