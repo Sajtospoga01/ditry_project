@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from feed.models import Post, Folder, UserProfile, Likes, Category
+from feed.models import In_folder, Post, Folder, UserProfile, Likes, Category
 from feed.models import Comment, Queries, Functions, FollowsUser, FollowsCategory, Categorises
 from feed.forms import AddPostToFolderForm, UserPostsForm, UserForm, FolderForm, EditProfileForm, UserCommentForm, UserCreationForm, PostCategoryForm
 from datetime import datetime
@@ -457,7 +457,11 @@ def add_post_to_folder(request,post_id):
             object = form.save(commit=False)
             
             object.post = post_object
-            object.save()
+            folder = In_folder.objects.filter(post = post_object).filter(folder = object.folder)
+            print(type(folder))
+            print(folder)
+            if(folder.count()==0):
+                object.save()
             return redirect(reverse('feed:show_folder', kwargs={'username':request.user.username,'folder_id':object.folder.id}))
         else:
             
